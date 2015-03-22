@@ -149,11 +149,13 @@ Status Execute::Do(Stack &stack, Heap &heap)
             break;
             case PUSH:
                 dataid[0] = *READBYTECODE;
-                status = heap.Lea(op_queue, &type, -1, *(int *)GETADRESS(1));
-            break;
-            case PUSHC:
-                dataid[0] = *READBYTECODE;
                 status = heap.Lea(op_queue, &type, -1, dataid[0]);
+            break;
+            case PUSHS:
+                dataid[0] = *READBYTECODE;
+                type = GETTYPE(0);
+                op1 = GETADRESS(0);
+                status = op_queue->Push(op1, type);
             break;
             case GETD:
                 op1 = POPADRESS;

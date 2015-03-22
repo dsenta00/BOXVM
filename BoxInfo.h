@@ -162,8 +162,8 @@
         CMPGE =		18,     // .
         CMPLE =		19,     // .
         SCAN =		24,     //              [pop adress from OpQ and insert value from keyboard]
-        PUSH =		25,     // [var]        [push adress from array element [var] (ptr stored on top of ptr tree) into OpQ)]
-        PUSHC =		26,     // [n]          [push adress from array element [n] (ptr stored on top of ptr tree) into OpQ)]
+        PUSH =		26,     // [n]          [push adress from array element of [n] (ptr stored on top of ptr tree) into OpQ)]
+        PUSHS =     27,     // [n]          [push static adress with count [n] into OpQ]
         PRINT =		31,     //              [pop adress from OpQ and print into console]
         FREE =		37,     // [ptr]        [memory deallocation]
         NEW =		38,     // [ptr][n]     [memory allocation by [n] number elements without heap defragmentation]
