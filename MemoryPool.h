@@ -77,7 +77,7 @@ Status MemoryPool::ExpandSize(Size _size)
 Adress MemoryPool::Malloc(Size _size)
 {
     Adress retAdress = NULL;
-    int diff = (int)(resaddr + _size - vmp - size);
+    Size diff = (Size)(resaddr + _size - vmp - size);
 
 	if (diff > 0)
         status = ExpandSize(diff);

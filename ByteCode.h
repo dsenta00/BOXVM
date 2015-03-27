@@ -43,7 +43,7 @@ void ByteCode::SkipByteCode(Size n)
 		switch (*bytecode)
 		{
             case ADD: case MUL: case DIV: case SUB: case RAND:
-            case SCAN: case PRINT: case MOD: case REPLOOP:
+            case SCAN: case PRINT: case PRINTLN: case MOD: case REPLOOP:
                 bytecode++;
             break;
             case MOV: case LEAC: case LEA:

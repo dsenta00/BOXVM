@@ -10,7 +10,7 @@ Status Testing();
 Status Testing()
 {
     Status status = 0;
-	char testpath[MAXPATHSIZE] = "/home/duje/Desktop/BOX-UBUNTU-64/TRANSLATOR-AND-LINKER-UBUNTU-64/ajde.box";
+	char testpath[MAXPATHSIZE] = "ajde.box";
 	CPUTime obj;
 	double BOX_time = 0, C_time = 0;
 
