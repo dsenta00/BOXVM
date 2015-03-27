@@ -30,15 +30,17 @@ Status Testing()
 		WriteLogErrorReport(testpath, status);
 	else
 	{
+        printf("\n\tCounting C time execution speed.\n");
+
 		obj.Start();
 		NativeC();
 		obj.Stop();
 
 		C_time = obj.GetCPUTime();
 
-		printf("\n\tVrijeme izvrsavanja BOX programa je:\t%lf", BOX_time);
-		printf("\n\tVrijeme izvrsavanja C programa je:\t%lf", C_time);
-		printf("\n\tSveukupni omjer brzina <BOX:C>:\t\t%lf\n\n", BOX_time / C_time);
+        printf("\n\tBOX program executing time:\t%lf", BOX_time);
+        printf("\n\tC program executing time:\t%lf", C_time);
+        printf("\n\t<BOX:C>:\t\t\t%lf\n\n", BOX_time / C_time);
 	}
 	
 	return status;
@@ -47,25 +49,26 @@ Status Testing()
 Status NativeC()
 {
     Status status = 0;
-	FILE *fp = NULL;
-	int i = 0;
-    int limit = 100000;
+    int i = 0, limit = 100000;
+    FILE *fp = NULL;
 
-	fp = fopen("test2.txt", "w+");
+    fp = fopen("TestNativeC.txt", "w+");
 
-	if (fp != NULL)
-	{
-		while (i < limit)
-		{
+    if(fp != NULL)
+    {
+        while (i < limit)
+        {
             printf("%d", i);
             fprintf(fp, "%d", i);
-			i++;
-		}
+            i++;
+        }
 
-		fclose(fp);
-	}
-	else
-		status = -1;
+        fclose(fp);
+    }
+    else
+    {
+        status = -1;
+    }
 
 	return status;
 }

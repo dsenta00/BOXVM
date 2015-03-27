@@ -38,7 +38,7 @@ ByteCode::ByteCode(Bcode _codesegment, Bcode _bytecode)
 
 void ByteCode::SkipByteCode(Size n)
 {
-	while (n-- > 0)
+    do
 	{
 		switch (*bytecode)
 		{
@@ -54,7 +54,10 @@ void ByteCode::SkipByteCode(Size n)
                 bytecode += 2;
 			break;
 		}
-	}
+
+        n--;
+
+    }while (n > 0);
 
 	bytecode--;
 }

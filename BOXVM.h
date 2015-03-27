@@ -4,14 +4,13 @@
 #include "BoxProgram.h"
 #include "WriteLogFileReport.h"
 
-Status RunProgram(char *);
-
 Status RunProgram(char *_execpath)
 {
     Status status = EVERYTHING_OK;
     BoxProgram program;
 
     srand((unsigned)time(NULL));
+
     status = program.ReadSourceCode(_execpath);
 
     if (status == EVERYTHING_OK)
@@ -27,7 +26,9 @@ Status RunProgram(char *_execpath)
                 status = program.SetHeap();
 
                 if (status == EVERYTHING_OK)
+                {
                     status = program.ExecuteProgram();
+                }
             }
         }
     }

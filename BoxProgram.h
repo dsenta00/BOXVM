@@ -64,68 +64,85 @@ Status BoxProgram::SetStack()
 	else
 		status = UNDEF_STACK_ERR;
 
-	while (status == 0)
-	{
-		boxfile->GetNextWord(&shortID);
+    if(status == EVERYTHING_OK)
+    {
+        do
+        {
+            boxfile->GetNextWord(&shortID);
 
-		if (shortID == ID_POOL)
-			break;
+            if (shortID == ID_POOL)
+                break;
 
-		switch (shortID)
-		{
-			case ID_STRING:		datatype = _STRING; break;
-			case ID_CHAR:		datatype = _CHAR;	break;
-			case ID_INT:		datatype = _INT;	break;
-			case ID_SHORT:		datatype = _SHORT;	break;
-			case ID_LONG:		datatype = _LONG;	break;
-			case ID_DOUBLE:		datatype = _DOUBLE;	break;
-			case ID_FLOAT:		datatype = _FLOAT;	break;
-			default:
-				datatype = 0;
-				status = STAT_TYPE_ERR;
-			break;
-		}
+            switch (shortID)
+            {
+                case ID_STRING:
+                    datatype = _STRING;
+                break;
+                case ID_CHAR:
+                    datatype = _CHAR;
+                break;
+                case ID_INT:
+                    datatype = _INT;
+                break;
+                case ID_SHORT:
+                    datatype = _SHORT;
+                break;
+                case ID_LONG:
+                    datatype = _LONG;
+                break;
+                case ID_DOUBLE:
+                    datatype = _DOUBLE;
+                break;
+                case ID_FLOAT:
+                    datatype = _FLOAT;
+                break;
+                default:
+                    datatype = 0;
+                    status = STAT_TYPE_ERR;
+                break;
+            }
 
-		switch (datatype)
-		{
-			case _CHAR:
-				boxfile->GetNextWord(&buffer[0]);
-			break;
-			case _INT: case _FLOAT:
-				boxfile->GetNextWord(&buffer[0]);
-				boxfile->GetNextWord(&buffer[1]);
-				boxfile->GetNextWord(&buffer[2]);
-				boxfile->GetNextWord(&buffer[3]);
-			break;
-			case _LONG: case _DOUBLE:
-				boxfile->GetNextWord(&buffer[0]);
-				boxfile->GetNextWord(&buffer[1]);
-				boxfile->GetNextWord(&buffer[2]);
-				boxfile->GetNextWord(&buffer[3]);
-				boxfile->GetNextWord(&buffer[4]);
-				boxfile->GetNextWord(&buffer[5]);
-				boxfile->GetNextWord(&buffer[6]);
-				boxfile->GetNextWord(&buffer[7]);
-			break;
-			case _SHORT:
-				boxfile->GetNextWord(&buffer[0]);
-				boxfile->GetNextWord(&buffer[1]);
-			break;
-			case _STRING:
-				i = 0;
+            switch (datatype)
+            {
+                case _CHAR:
+                    boxfile->GetNextWord(&buffer[0]);
+                break;
+                case _INT: case _FLOAT:
+                    boxfile->GetNextWord(&buffer[0]);
+                    boxfile->GetNextWord(&buffer[1]);
+                    boxfile->GetNextWord(&buffer[2]);
+                    boxfile->GetNextWord(&buffer[3]);
+                break;
+                case _LONG: case _DOUBLE:
+                    boxfile->GetNextWord(&buffer[0]);
+                    boxfile->GetNextWord(&buffer[1]);
+                    boxfile->GetNextWord(&buffer[2]);
+                    boxfile->GetNextWord(&buffer[3]);
+                    boxfile->GetNextWord(&buffer[4]);
+                    boxfile->GetNextWord(&buffer[5]);
+                    boxfile->GetNextWord(&buffer[6]);
+                    boxfile->GetNextWord(&buffer[7]);
+                break;
+                case _SHORT:
+                    boxfile->GetNextWord(&buffer[0]);
+                    boxfile->GetNextWord(&buffer[1]);
+                break;
+                case _STRING:
+                    i = 0;
 
-				boxfile->GetNextWord(&buffer[i]);
-				while (buffer[i] != 0) 	// 0 is end of string
-					boxfile->GetNextWord(&buffer[++i]);
+                    boxfile->GetNextWord(&buffer[i]);
+                    while (buffer[i] != 0) 	// 0 is end of string
+                        boxfile->GetNextWord(&buffer[++i]);
 
-				buffer[i] = '\0';
-			break;
-		}
+                    buffer[i] = '\0';
+                break;
+            }
 
-		if (status == EVERYTHING_OK)
-			status = stack.PushStack(datatype, buffer);
-	}
+            if (status == EVERYTHING_OK)
+                status = stack.PushStack(datatype, buffer);
 
+        }while (status == EVERYTHING_OK);
+    }
 	return status;
 }
 
@@ -154,7 +171,7 @@ Status BoxProgram::SetHeap()
 
 	if (shortID != ID_CODE)
 	{
-		while (status == 0)
+        do
 		{
 			switch (shortID)
 			{
@@ -185,7 +202,8 @@ Status BoxProgram::SetHeap()
 
 			if (shortID == ID_CODE)
 				break;
-		}
+
+        } while (status == EVERYTHING_OK);
 	}
 	else if (shortID == ID_CODE)
 		status = EVERYTHING_OK;

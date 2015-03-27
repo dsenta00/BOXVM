@@ -78,7 +78,7 @@ Status Execute::Do(Stack &stack, Heap &heap)
     Type type = 0;
     char dataid[MAXARGS] = { 0 }, op_index = START;
 
-    while (status >= EVERYTHING_OK && op_index != ESTART)
+    do
 	{
 		operation = READBYTECODE;
         op_index = *operation;
@@ -93,130 +93,134 @@ Status Execute::Do(Stack &stack, Heap &heap)
                 CHECKANDGETADRESS(op2, 1)
 
                 status = Operation(op_index, op1, op2, type);
-            break;
+            continue;
             case ADD: case SUB: case MUL: case DIV: case MOD:
                 op1 = POPADRESS;
                 op2 = POPADRESS;
 
                 status = Operation(op_index, op1, op2, type);
-            break;
+            continue;
             case ADI: case SUC: case MUC: case DIC: case MODC:
                 dataid[0] = *READBYTECODE;
                 op1 = POPADRESS;
 
                 status = Operation(op_index, op1, dataid[0], type);
-            break;
+            continue;
             case SCAN:
                 op1 = POPADRESS;
                 SCANOP(op1, type)
-            break;
+            continue;
             case PRINT:
                 op1 = POPADRESS;
                 PRINTOP(op1, type)
-            break;
+            continue;
+            case PRINTLN:
+                op1 = POPADRESS;
+                PRINTLNOP(op1, type)
+            continue;
             case NEW:
                 dataid[0] = *READBYTECODE;
                 dataid[1] = *READBYTECODE;
                 status = heap.MallocDefrag(dataid[0], dataid[1]);
-            break;
+            continue;
             case FNEW:
                 dataid[0] = *READBYTECODE;
                 dataid[1] = *READBYTECODE;
                 status = heap.Malloc(dataid[0], dataid[1]);
-            break;
+            continue;
             case NEWV:
                 dataid[0] = *READBYTECODE;
                 dataid[1] = *READBYTECODE;
                 status = heap.MallocDefrag(dataid[0], *(int *)GETADRESS(1));
-            break;
+            continue;
             case FNEWV:
                 dataid[0] = *READBYTECODE;
                 dataid[1] = *READBYTECODE;
                 status = heap.Malloc(dataid[0], *(int *)GETADRESS(1));
-            break;
+            continue;
             case FREE:
                 status = heap.Free(*READBYTECODE);
-            break;
+            continue;
             case LEA:
                 dataid[0] = *READBYTECODE;
                 dataid[1] = *READBYTECODE;
                 status = heap.Lea(op_queue, &type, dataid[0], *(int *)GETADRESS(1));
-            break;
+            continue;
             case LEAC:
                 dataid[0] = *READBYTECODE;
                 dataid[1] = *READBYTECODE;
                 status = heap.Lea(op_queue, &type, dataid[0], dataid[1]);
-            break;
+            continue;
             case PUSH:
                 dataid[0] = *READBYTECODE;
                 status = heap.Lea(op_queue, &type, -1, dataid[0]);
-            break;
+            continue;
             case PUSHS:
                 dataid[0] = *READBYTECODE;
                 type = GETTYPE(0);
                 op1 = GETADRESS(0);
                 status = op_queue->Push(op1, type);
-            break;
+            continue;
             case GETD:
                 op1 = POPADRESS;
                 FILEOP(ReadOperationFile, double);
-            break;
+            continue;
             case GETF:
                 op1 = POPADRESS;
                 FILEOP(ReadOperationFile, float);
-            break;
+            continue;
             case GETL:
                 op1 = POPADRESS;
                 FILEOP(ReadOperationFile, long);
-            break;
+            continue;
             case GETSH:
                 op1 = POPADRESS;
                 FILEOP(ReadOperationFile, short);
-            break;
+            continue;
             case GETC:
                 op1 = POPADRESS;
                 FILEOP(ReadOperationFile, char);
-            break;
+            continue;
             case GETI:
                 op1 = POPADRESS;
                 FILEOP(ReadOperationFile, int);
-            break;
+            continue;
             case GETS:
                 op1 = POPADRESS;
                 FILEOP(ReadOperationFileString, char);
-            break;
+            continue;
             case PUTD:
                 op1 = POPADRESS;
                 FILEOP(WriteOperationFile, double);
-            break;
+            continue;
             case PUTF:
                 op1 = POPADRESS;
                 FILEOP(WriteOperationFile, float);
-            break;
+            continue;
             case PUTL:
                 op1 = POPADRESS;
                 FILEOP(WriteOperationFile, long);
-            break;
+            continue;
             case PUTSH:
                 op1 = POPADRESS;
                 FILEOP(WriteOperationFile, short);
-            break;
+            continue;
             case PUTC:
                 op1 = POPADRESS;
                 FILEOP(WriteOperationFile, char);
-            break;
+            continue;
             case PUTI:
                 op1 = POPADRESS;
                 FILEOP(WriteOperationFile, int);
-            break;
+            continue;
             case PUTS:
                 op1 = POPADRESS;
                 FILEOP(WriteOperationFileString, char);
-            break;
+            continue;
             case GETLINE:
                 op1 = POPADRESS;
                 FILEOP(GetLine, char);
-            break;
+            continue;
             case CMPE:
                 CMPCHECKANDPUSH
                 dataid[0] = *READBYTECODE;
@@ -227,7 +231,7 @@ Status Execute::Do(Stack &stack, Heap &heap)
                     bytecode->SkipByteCode(dataid[0]);
                 }
 
-            break;
+            continue;
             case LOOPE:
                 LOOPCHECKANDPUSH
                 dataid[0] = *READBYTECODE;
@@ -244,7 +248,7 @@ Status Execute::Do(Stack &stack, Heap &heap)
 
                     loop_list->PopLoop();
                 }
-            break;
+            continue;
             case CMPNE:
                 CMPCHECKANDPUSH
                 dataid[0] = *READBYTECODE;
@@ -254,7 +258,7 @@ Status Execute::Do(Stack &stack, Heap &heap)
                     READBYTECODE;
                     bytecode->SkipByteCode(dataid[0]);
                 }
-            break;
+            continue;
             case LOOPNE:
                 LOOPCHECKANDPUSH
                 dataid[0] = *READBYTECODE;
@@ -271,7 +275,7 @@ Status Execute::Do(Stack &stack, Heap &heap)
 
                     loop_list->PopLoop();
                 }
-            break;
+            continue;
             case CMPG:
                 CMPCHECKANDPUSH
                 dataid[0] = *READBYTECODE;
@@ -281,7 +285,7 @@ Status Execute::Do(Stack &stack, Heap &heap)
                     READBYTECODE;
                     bytecode->SkipByteCode(dataid[0]);
                 }
-            break;
+            continue;
             case LOOPG:
                 LOOPCHECKANDPUSH
                 dataid[0] = *READBYTECODE;
@@ -298,7 +302,7 @@ Status Execute::Do(Stack &stack, Heap &heap)
 
                     loop_list->PopLoop();
                 }
-            break;
+            continue;
             case CMPL:
                 CMPCHECKANDPUSH
                 dataid[0] = *READBYTECODE;
@@ -308,7 +312,7 @@ Status Execute::Do(Stack &stack, Heap &heap)
                     READBYTECODE;
                     bytecode->SkipByteCode(dataid[0]);
                 }
-            break;
+            continue;
             case LOOPL:
                 LOOPCHECKANDPUSH
                 dataid[0] = *READBYTECODE;
@@ -325,7 +329,7 @@ Status Execute::Do(Stack &stack, Heap &heap)
 
                     loop_list->PopLoop();
                 }
-            break;
+            continue;
             case CMPGE:
                 CMPCHECKANDPUSH
                 dataid[0] = *READBYTECODE;
@@ -335,7 +339,7 @@ Status Execute::Do(Stack &stack, Heap &heap)
                     READBYTECODE;
                     bytecode->SkipByteCode(dataid[0]);
                 }
-            break;
+            continue;
             case LOOPGE:
                 LOOPCHECKANDPUSH
                 dataid[0] = *READBYTECODE;
@@ -352,7 +356,7 @@ Status Execute::Do(Stack &stack, Heap &heap)
 
                     loop_list->PopLoop();
                 }
-            break;
+            continue;
             case CMPLE:
                 CMPCHECKANDPUSH
                 dataid[0] = *READBYTECODE;
@@ -362,7 +366,7 @@ Status Execute::Do(Stack &stack, Heap &heap)
                     READBYTECODE;
                     bytecode->SkipByteCode(dataid[0]);
                 }
-            break;
+            continue;
             case LOOPLE:
                 LOOPCHECKANDPUSH
                 dataid[0] = *READBYTECODE;
@@ -379,47 +383,46 @@ Status Execute::Do(Stack &stack, Heap &heap)
 
                     loop_list->PopLoop();
                 }
-            break;
+            continue;
             case REPLOOP:
                 bytecode->SetByteCode(loop_list->GetStartLoop()-1);//
 
                 if (operation != loop_list->GetEndLoop())
                     loop_list->SetEndLoop(operation);
-            break;
+            continue;
             case OPENW:
                 dataid[0] = *READBYTECODE;
                 status = file_list->PushFile(dataid[0], GETADRESS(0), _WRITE);
-            break;
+            continue;
             case OPENR:
                 dataid[0] = *READBYTECODE;
                 status = file_list->PushFile(dataid[0], GETADRESS(0), _READ);
-            break;
+            continue;
             case OPENA:
                 dataid[0] = *READBYTECODE;
                 status = file_list->PushFile(dataid[0], GETADRESS(0), _APPEND);
-            break;
+            continue;
             case RAND:
                 dataid[0] = *READBYTECODE;
                 CHECKANDGETADRESS(op1, 0)
 
                 status = rand();
                 status = Operation(op_index, op1, (char *)&status, type);
-            break;
+            continue;
             case ESTART:
                 printf("\n\tPress any key to continue . . .\n");
-            break;
+            continue;
             default:
                 status = UKNOWN_OPER_ERR;
-            break;
+            continue;
 		}
-	}
+	}while (status >= EVERYTHING_OK && op_index != ESTART);
 
 	if (status > EVERYTHING_OK)
 		status = EVERYTHING_OK;
 
-	return status;
+    return status;
 }
-
 Execute::~Execute()
 {
 	if (bytecode != NULL)

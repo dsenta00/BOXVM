@@ -82,7 +82,7 @@ void WriteLogErrorReport(char *path, Status error_code)
                 fprintf(fp, "Error declaring heap data.");
             break;
             case BUFF_NULL_ERR:
-                fprintf(fp, "Operand stack reserved with corrupted memory [NULL] or unknown type from heap.");
+                fprintf(fp, "Operand queue reserved with corrupted memory [NULL] or unknown type from heap.");
             break;
             case HEAP_UNEX_ERR:
                 fprintf(fp, "Heap returned corrupted memory (NULL).");

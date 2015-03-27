@@ -194,16 +194,16 @@ Status Heap::ReserveMemory(Pointer *_mal, Size _size)
 		{
             case _INT: case _FLOAT:
                 adress = memoryPool->Malloc(_size * 4);
-                break;
+            break;
             case _SHORT:
                 adress = memoryPool->Malloc(_size * 2);
-                break;
+            break;
             case _LONG: case _DOUBLE:
                 adress = memoryPool->Malloc(_size * 8);
-                break;
+            break;
             case _CHAR:
                 adress = memoryPool->Malloc(_size);
-                break;
+            break;
             default:
                 status = DYN_TYPE_ERR;
 			break;

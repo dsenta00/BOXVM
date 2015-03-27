@@ -13,16 +13,23 @@
 */
 
 	#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-		#define _CRT_SECURE_NO_WARNINGS
-		#define _CRT_SECURE_NO_DEPRECATE
-		#include <Windows.h>
-	#endif
+        #define _CRT_SECURE_NO_WARNINGS
+        #define _CRT_SECURE_NO_DEPRECATE
+        #include <Windows.h>
+    #endif
 
 	#include <iostream>
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include <string.h>
     #include <time.h>
+
+    #if defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) && defined(__MACH__))
+        #include <unistd.h>
+        #include <sys/resource.h>
+        #include <sys/times.h>
+        #include <fcntl.h>
+    #endif
 
 	#define ID_STACK			0x7340
 	#define ID_DATA				0x6440
@@ -163,8 +170,9 @@
         CMPLE =		19,     // .
         SCAN =		24,     //              [pop adress from OpQ and insert value from keyboard]
         PUSH =		26,     // [n]          [push adress from array element of [n] (ptr stored on top of ptr tree) into OpQ)]
-        PUSHS =     27,     // [n]          [push static adress with count [n] into OpQ]
+        PUSHS =     27,     // [var]        [push static adress with count [n] into OpQ]
         PRINT =		31,     //              [pop adress from OpQ and print into console]
+        PRINTLN =   32,     //              [pop adress from OpQ and print into console with new line]
         FREE =		37,     // [ptr]        [memory deallocation]
         NEW =		38,     // [ptr][n]     [memory allocation by [n] number elements without heap defragmentation]
         OPENW =		39,     // [str]        [open file stream for write by path [str]]
