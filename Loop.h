@@ -49,7 +49,7 @@ Status Loop::PopLoop()
     {
         MakeLoop = Current;
 
-        if (Current == STARTLOOP)
+        if (Current != STARTLOOP)
             MakeLoop--;
     }
 

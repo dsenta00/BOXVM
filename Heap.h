@@ -5,7 +5,7 @@
 #include "MemoryPool.h"
 #include "PointerNode.h"
 #include "DataTree.h"
-#include "OperationQueue.h"
+#include "OperandQueue.h"
 
 class Heap : public Tree
 {
@@ -23,7 +23,7 @@ public:
 	~Heap();
 
     inline Pointer *SearchFor(Count);                   //	--	Returns pointer by ID
-    Status Lea(OperationQueue *, Type *, Count, int);   //	--	Sets in operation queue [base by id][count]
+    Status Lea(OperandQueue *, Type *, Count, int);   //	--	Sets in operation queue [base by id][count]
     Status PushPointer(Type);							//	--	Push new data type in tree
     Status Malloc(Count, Size);							//	--	Dynamic allocation of data by id of N elements
     Status MallocDefrag(Count, Size);
@@ -108,7 +108,7 @@ Heap::Heap()
 	memoryPool = NULL;
 }
 
-Status Heap::Lea(OperationQueue *opqueue, Type *_type, Count _count, int _position)
+Status Heap::Lea(OperandQueue *opqueue, Type *_type, Count _count, int _position)
 {
 	Pointer *dat = NULL;
     Adress starta = NULL;

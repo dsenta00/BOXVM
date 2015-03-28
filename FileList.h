@@ -28,8 +28,6 @@ public:
 
 FileList::FileList()
 {
-	memset(&Head, 0, sizeof(File));
-	Head.next = NULL;
 	pfile = NULL;
 	status = EVERYTHING_OK;
 }

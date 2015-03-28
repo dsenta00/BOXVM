@@ -8,9 +8,8 @@
 #define POPADRESS 			op_queue->Pop(type)
 #define READBYTECODE 		bytecode->ReadByteCode()
 
-#define FILEOP(_FOP, _TYPE)                         \
-dataid[0] = *READBYTECODE;                          \
-status = file_list->_FOP((_TYPE *)op1, dataid[0]);
+#define FILEOP(_FOP, _TYPE) \
+status = file_list->_FOP((_TYPE *)POPADRESS, *READBYTECODE);
 
 #define CHECKANDGETADRESS(_OP, _ARGC)               \
 if(dataid[_ARGC] == -2)                             \
@@ -22,6 +21,24 @@ else                                                \
                                                     \
     if(type == _CHAR)                               \
         type = _STRING;                             \
+}
+
+#define OPENFILE(__MODE)                            \
+dataid[0] = *READBYTECODE;                          \
+status = file_list->PushFile(dataid[0], GETADRESS(0), __MODE);
+
+#define EXITLOOPIF(...)                    \
+if (__VA_ARGS__)                                      \
+{                                                       \
+    if ((operation = loop_list->GetEndLoop()) != NULL)  \
+        bytecode->SetByteCode(operation);               \
+    else                                                \
+    {                                                   \
+        READBYTECODE; /*preskace se jedan byte*/        \
+        bytecode->SkipByteCode(dataid[0]);              \
+    }                                                   \
+                                                        \
+    loop_list->PopLoop();                               \
 }
 
 #define LOOPCHECKANDPUSH                            \

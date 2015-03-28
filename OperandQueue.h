@@ -1,27 +1,27 @@
-#ifndef OPERATIONQUEUE_H
-#define OPERATIONQUEUE_H
+#ifndef OperandQUEUE_H
+#define OperandQUEUE_H
 
 #include "BoxInfo.h"
 #include "StaticData.h"
 
-class OperationQueue
+class OperandQueue
 {
 	StaticData queuebuffer[MAXBUFFERSIZE];
 	StaticData *pstart;
 	StaticData *pend;
 public:
 
-    OperationQueue();
+    OperandQueue();
     Status Push(Adress, Type);
     Adress Pop(Type &);
 };
 
-OperationQueue::OperationQueue()
+OperandQueue::OperandQueue()
 {
     pstart = pend = STARTBUFFER;
 }
 
-Status OperationQueue::Push(Adress _adress, Type _type)
+Status OperandQueue::Push(Adress _adress, Type _type)
 {
     pend->SetExternData(_adress, _type);
 
@@ -33,7 +33,7 @@ Status OperationQueue::Push(Adress _adress, Type _type)
     return EVERYTHING_OK;
 }
 
-Adress OperationQueue::Pop(Type &_type)
+Adress OperandQueue::Pop(Type &_type)
 {
     StaticData *q = pstart;
 

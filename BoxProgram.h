@@ -152,12 +152,15 @@ Status BoxProgram::SetPool()
 
 	boxfile->GetNextWord(&intID);
 
-	heap = new Heap(intID);
+    if(intID != 0)
+    {
+        heap = new Heap(intID);
 
-	if (heap == NULL)
-		status = HEAPERR;
-	else
-		status = heap->GetStatus();
+        if (heap == NULL)
+            status = HEAPERR;
+        else
+            status = heap->GetStatus();
+    }
 
 	return status;
 }
@@ -223,7 +226,12 @@ Status BoxProgram::ExecuteProgram()
 	status = processor.GetStatus();
 
 	if (status == EVERYTHING_OK)
-		status = processor.Do(stack, *heap);
+    {
+        if(heap != NULL)
+            status = processor.Do(stack, *heap);
+        else
+            status = processor.Do(stack);
+    }
 
 	return status;
 }

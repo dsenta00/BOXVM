@@ -11,7 +11,6 @@ HEADERS += \
     PointerNode.h \
     StaticDataNode.h \
     LoopNode.h \
-    OperationQueue.h \
     BOXVM.h \
     FileOperationsMacro.h \
     ByteCode.h \
@@ -34,5 +33,6 @@ HEADERS += \
     AritmethicalOperations.h \
     CompareAdress.h \
     VirtualStackMemory.h \
-    InvokeBox.h
+    InvokeBox.h \
+    OperandQueue.h
 
