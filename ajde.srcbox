@@ -1,0 +1,23 @@
+$stack 21
+$data
+	%i limit 100000
+	%i count 0
+	%s file "TestBox.txt"
+$pool 0
+$heap
+$code
+	start
+
+	openw file
+	pushs count
+	pushs limit
+	loopl 6
+		print
+		puti file
+		adi 1
+		pushs count
+		pushs limit
+	reploop
+
+	estart
+$endcode

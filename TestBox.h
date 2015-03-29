@@ -10,7 +10,7 @@ Status Testing();
 Status Testing()
 {
     Status status = 0;
-    char testpath[MAXPATHSIZE] = "ajde.box";
+    char testpath[MAXPATHSIZE] = "/home/duje/BOXVM 0.5/BOXVM/ajde.box";
 	CPUTime obj;
 	double BOX_time = 0, C_time = 0;
 

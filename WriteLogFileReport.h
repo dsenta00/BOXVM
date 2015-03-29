@@ -27,6 +27,9 @@ void WriteLogErrorReport(char *path, Status error_code)
 
         switch(error_code)
         {
+            case REGISTRYUNEX:
+                fprintf(fp, "Trying to do operation on unknown registry count.");
+            break;
             case UNDEF_POOL_ERR:
                 fprintf(fp, "Undefined pool section.");
             break;

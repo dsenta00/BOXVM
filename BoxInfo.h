@@ -117,7 +117,8 @@
         HEAPERR =				-45,
         UNDEF_POOL_ERR =		-46,
         FREE_OPER_ERR =			-47,
-        ERROR_READ_BOX =		-48
+        ERROR_READ_BOX =		-48,
+        REGISTRYUNEX =          -49
     };
 
 	enum DATA_TYPES
@@ -138,6 +139,7 @@
     *   [ptr] - pointer variable        *
     *   [n]   - constant                *
     *   [str] - string static variable  *
+    *   [rx]  - registry                *
     *                                   *
     *   [OpQ]   operation queue         *
     *                                   *
@@ -152,7 +154,7 @@
     ************************************/
 
 	enum OPERATIONS
-	{
+    {                       // *OpQ mode*
         ADD =		1,      //              [pop adresses from OpQ and do add them]
         MUL =		2,      //              [pop adresses from OpQ and multiply them]
         DIV =		3,      //              [pop adresses from OpQ and divide them]
@@ -209,8 +211,40 @@
         REPLOOP =	54,     //              [branch to loop start>
         START =		55,     //              [start program marker>
         ESTART =	56,     //              [end program marker>
-        MOV =		57,     // [any][any]   [moves value from right argument to left argument]
+        MOV =		57,     // [any][any]   [copy value from right argument to left argument]
+        REG =       58,     //              [start marker for block of operations in registry mode]
+        ENDREG =    59      //              [end marker for block of operations in registry mode]
     };
+
+    /*** REGISTRY MODE DIFFERENCES **
+     *                              *
+     *      MOV [rx][rx]            *
+     *      ADD [rx][rx]            *
+     *      DIV [rx][rx]            *
+     *      SUB [rx][rx]            *
+     *      MUL [rx][rx]            *
+     *      MOD [rx][rx]            *
+     *                              *
+     *      SCAN    [rx]            *
+     *      PRINT   [rx]            *
+     *      RAND    [rx]            *
+     *      PRINTLN [rx]            *
+     *                              *
+     *      ADI     [rx][n]         *
+     *      MUC     [rx][n]         *
+     *      DIC     [rx][n]         *
+     *      SUC     [rx][n]         *
+     *      MODC    [rx][n]         *
+     *                              *
+     *      PUSHS   [var][rx]       *
+     *      PUT*    [var][rx]       *
+     *      GET*    [var][rx]       *
+     *      GETLINE [var][rx]       *
+     *                              *
+     *      CMP*    [rx][rx][n]     *
+     *      LOOP*   [rx][rx][n]     *
+     *                              *
+     *******************************/
 
 	enum FILE_MODES
 	{

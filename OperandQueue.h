@@ -14,11 +14,14 @@ public:
     OperandQueue();
     Status Push(Adress, Type);
     Adress Pop(Type &);
+    void ResetOperandQueue();
+    Status SetRegistry(Adress, Type, Count);
+    Status GetRegistry(Adress *, Type &, Count);
 };
 
 OperandQueue::OperandQueue()
 {
-    pstart = pend = STARTBUFFER;
+    this->ResetOperandQueue();
 }
 
 Status OperandQueue::Push(Adress _adress, Type _type)
@@ -45,6 +48,34 @@ Adress OperandQueue::Pop(Type &_type)
 
     _type = q->GetType();
     return q->GetStartAdress();
+}
+
+void OperandQueue::ResetOperandQueue()
+{
+    pend = pstart = STARTBUFFER;
+}
+
+Status OperandQueue::SetRegistry(Adress _adress, Type _type, Count _regnum)
+{
+    if(_regnum >= 0 && _regnum < MAXBUFFERSIZE)
+    {
+        queuebuffer[_regnum].SetExternData(_adress, _type);
+        return EVERYTHING_OK;
+    }
+    else
+        return REGISTRYUNEX;
+}
+
+Status OperandQueue::GetRegistry(Adress *_adress, Type &_type, Count _regnum)
+{
+    if(_regnum >= 0 && _regnum < MAXBUFFERSIZE)
+    {
+        *_adress = queuebuffer[_regnum].GetStartAdress();
+        _type = queuebuffer[_regnum].GetType();
+        return EVERYTHING_OK;
+    }
+    else
+        return REGISTRYUNEX;
 }
 
 #endif

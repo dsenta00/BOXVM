@@ -227,10 +227,7 @@ Status BoxProgram::ExecuteProgram()
 
 	if (status == EVERYTHING_OK)
     {
-        if(heap != NULL)
-            status = processor.Do(stack, *heap);
-        else
-            status = processor.Do(stack);
+        status = processor.Do(stack, *heap);
     }
 
 	return status;
