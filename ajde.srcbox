@@ -11,13 +11,12 @@ $code
 	openw file
 	pushs count
 	pushs limit
-	loopl 6
-		print
-		puti file
-		adi 1
-		pushs count
-		pushs limit
-	reploop
-
+	reg
+		loopl r0 r1 4
+			print r0
+			puti file r0
+			adi r0 1
+		reploop
+	endreg
 	estart
 $endcode

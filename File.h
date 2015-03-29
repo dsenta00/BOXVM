@@ -63,7 +63,7 @@ Status File::Open(char *_path, int _mode, Count _count)
         break;
     }
 
-	if (fp == NULL)
+    if (!fp)
         return ERROR_OPEN;
 	else
         return EVERYTHING_OK;
@@ -114,7 +114,7 @@ Status File::GetLine(char *buffer)
 {
 	if (mode != _READ)
         return ERROR_READ;
-	else if (fgets(buffer, BLOCK_SIZE, fp) == NULL)
+    else if (!fgets(buffer, BLOCK_SIZE, fp))
         return READ_END_ERR;
     else
         return EVERYTHING_OK;
@@ -131,7 +131,7 @@ Status File::ReadAllFile(char *container, DSize container_size)
 	{
 		rewind(fp);
 
-		if (fread(container, sizeof(char), file_size, fp) == 0)
+        if (!fread(container, sizeof(char), file_size, fp))
             return EMPTY_FILE;
         else
             return EVERYTHING_OK;
@@ -147,7 +147,7 @@ Count File::GetCount()
 
 File::~File()
 {
-	if (fp != NULL)
+    if (fp)
 		fclose(fp);
 }
 

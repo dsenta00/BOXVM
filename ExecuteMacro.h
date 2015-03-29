@@ -19,7 +19,7 @@
 dataid[0] = *READBYTECODE;                              \
 GETREGISTRY(op1)                                        \
                                                         \
-if(status == EVERYTHING_OK)                             \
+if(!status)                             \
     status = file_list->_FOP((_TYPE *)op1, dataid[0]);
 
 #define CHECKANDGETADRESS(_OP, _ARGC)               \
@@ -43,7 +43,7 @@ op1 = POPADRESS;                                    \
 op2 = POPADRESS;                                    \
 if(loop_list->GetStartLoop() != operation)          \
     status = loop_list->PushLoop(operation);        \
-if(status == EVERYTHING_OK)                         \
+if(!status)                         \
     status = CheckStatement(op1, op2, type);
 
 #define LOOPCHECKANDPUSH                            \
@@ -51,7 +51,7 @@ op1 = POPADRESS;                                    \
 op2 = POPADRESS;                                    \
 if(loop_list->GetStartLoop() != operation)          \
     status = loop_list->PushLoop(operation);        \
-if(status == EVERYTHING_OK)                         \
+if(!status)                         \
     status = CheckStatement(op1, op2, type);
 
 #define CMPCHECKANDPUSH                             \
@@ -61,24 +61,24 @@ status = CheckStatement(op1, op2, type);
 
 #define LOOPCHECKANDPUSHREG                         \
 GETREGISTRY(op1)                                    \
-if(status == EVERYTHING_OK)                         \
+if(!status)                         \
 {                                                   \
     GETREGISTRY(op2)                                \
-    if(status == EVERYTHING_OK)                     \
+    if(!status)                     \
     {                                               \
         if(loop_list->GetStartLoop() != operation)  \
             status = loop_list->PushLoop(operation);\
-        if(status == EVERYTHING_OK)                 \
+        if(!status)                 \
             status = CheckStatement(op1, op2, type);\
     }                                               \
 }
 
 #define CMPCHECKANDPUSHREG                          \
 GETREGISTRY(op1)                                    \
-if(status == EVERYTHING_OK)                         \
+if(!status)                         \
 {                                                   \
     GETREGISTRY(op2)                                \
-    if(status == EVERYTHING_OK)                     \
+    if(!status)                     \
     {                                               \
         status = CheckStatement(op1, op2, type);    \
     }                                               \
@@ -96,6 +96,7 @@ switch (__TYPE)                                               	\
     case _DOUBLE:	printf("%lf",   *(double *)__ADR);  break;	\
 }
 
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 #define PRINTLNOP(__ADR, __TYPE)                                    \
 switch (__TYPE)                                                     \
 {                                                                   \
@@ -107,6 +108,19 @@ switch (__TYPE)                                                     \
     case _FLOAT:	printf("%f\r\n",    *(float *)__ADR);	break;	\
     case _DOUBLE:	printf("%lf\r\n",   *(double *)__ADR);  break;	\
 }
+#else
+#define PRINTLNOP(__ADR, __TYPE)                                    \
+switch (__TYPE)                                                     \
+{                                                                   \
+    case _CHAR:		printf("%c\n",    *__ADR); 			break;	\
+    case _STRING:	printf("%s\n",    __ADR);             break;	\
+    case _INT:		printf("%d\n",    *(int *)__ADR); 	break;	\
+    case _SHORT:	printf("%hd\n",   *(short *)__ADR);	break;	\
+    case _LONG:		printf("%ld\n",   *(long *)__ADR);	break;	\
+    case _FLOAT:	printf("%f\n",    *(float *)__ADR);	break;	\
+    case _DOUBLE:	printf("%lf\n",   *(double *)__ADR);  break;	\
+}
+#endif
 
 #define SCANOP(__ADR, __TYPE)                               \
 switch (__TYPE)                                           	\

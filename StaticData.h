@@ -43,7 +43,7 @@ inline void StaticData::Set(T *_value)
 
 Status StaticData::SetValue(Adress _value)
 {
-	if (_value != NULL)
+    if (_value)
 	{
 		switch (type)
 		{

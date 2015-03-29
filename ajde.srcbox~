@@ -7,15 +7,16 @@ $pool 0
 $heap
 $code
 	start
-		openw file
-		pushs count
-		pushs limit
-		reg
-			loopl r0 r1 8
-				print r0
-				puti file r0
-				adi r0 1
-			reploop
-		endreg
+
+	openw file
+	pushs count
+	pushs limit
+	reg
+		loopl r0 r1 4
+			print r0
+			puti file r0
+			adi r0 1
+		reploop
+	endreg
 	estart
 $endcode

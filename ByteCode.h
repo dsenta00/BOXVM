@@ -19,7 +19,7 @@ public:
 
 ByteCode::~ByteCode()
 {
-	if (codesegment != NULL)
+    if (codesegment)
 		free(codesegment);
 	bytecode = codesegment = NULL;
 }

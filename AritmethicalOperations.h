@@ -5,7 +5,7 @@
 template <typename T>
 inline Status AddOperation(T *operand1, T *operand2)
 {
-    if(operand1 != NULL && operand2 != NULL)
+    if(operand1 && operand2)
         *operand1 += *operand2;
     else
         return OPER_NULL_ERR;
@@ -16,7 +16,7 @@ inline Status AddOperation(T *operand1, T *operand2)
 template <typename T>
 inline Status AddOperation(T *operand1, Size increment)
 {
-    if(operand1 != NULL)
+    if(operand1)
         *operand1 += increment;
     else
         return OPER_NULL_ERR;
@@ -27,7 +27,7 @@ inline Status AddOperation(T *operand1, Size increment)
 template <typename T>
 inline Status SubOperation(T *operand1, T *operand2)
 {
-    if(operand1 != NULL && operand2 != NULL)
+    if(operand1 && operand2)
         *operand1 -= *operand2;
     else
         return OPER_NULL_ERR;
@@ -38,7 +38,7 @@ inline Status SubOperation(T *operand1, T *operand2)
 template <typename T>
 inline Status SubOperation(T *operand1, Size increment)
 {
-    if(operand1 != NULL)
+    if(operand1)
         *operand1 -= increment;
     else
         return OPER_NULL_ERR;
@@ -49,7 +49,7 @@ inline Status SubOperation(T *operand1, Size increment)
 template <typename T>
 inline Status MulOperation(T *operand1, T *operand2)
 {
-    if(operand1 != NULL && operand2 != NULL)
+    if(operand1 && operand2)
         *operand1 *= *operand2;
     else
         return OPER_NULL_ERR;
@@ -60,7 +60,7 @@ inline Status MulOperation(T *operand1, T *operand2)
 template <typename T>
 inline Status MulOperation(T *operand1, Size increment)
 {
-    if(operand1 != NULL)
+    if(operand1)
         *operand1 *= increment;
     else
         return OPER_NULL_ERR;
@@ -71,11 +71,13 @@ inline Status MulOperation(T *operand1, Size increment)
 template <typename T>
 inline Status DivOperation(T *operand1, T *operand2)
 {
-    if(operand1 != NULL && operand2 != NULL)
-        if(*operand2 != 0)
+    if(operand1 && operand2)
+    {
+        if(*operand2)
             *operand1 /= *operand2;
         else
             return DIV_NULL_ERR;
+    }
     else
         return OPER_NULL_ERR;
 
@@ -85,11 +87,13 @@ inline Status DivOperation(T *operand1, T *operand2)
 template <typename T>
 inline Status DivOperation(T *operand1, Size increment)
 {
-    if(operand1 != NULL)
-        if(increment != 0)
+    if(operand1)
+    {
+        if(increment)
             *operand1 /= increment;
         else
             return DIV_NULL_ERR;
+    }
     else
         return OPER_NULL_ERR;
 
@@ -99,11 +103,13 @@ inline Status DivOperation(T *operand1, Size increment)
 template <typename T>
 inline Status ModOperation(T *operand1, T *operand2)
 {
-    if(operand1 != NULL && operand2 != NULL)
-        if(*operand2 != 0)
+    if(operand1 && operand2)
+    {
+        if(*operand2)
             *operand1 %= *operand2;
         else
             return DIV_NULL_ERR;
+    }
     else
         return OPER_NULL_ERR;
 
@@ -113,8 +119,8 @@ inline Status ModOperation(T *operand1, T *operand2)
 template <typename T>
 inline Status ModOperation(T *operand1, Size increment)
 {
-    if(operand1 != NULL)
-        if(increment != 0)
+    if(operand1)
+        if(increment)
             *operand1 %= increment;
         else
             return DIV_NULL_ERR;
@@ -127,7 +133,7 @@ inline Status ModOperation(T *operand1, Size increment)
 template <typename T>
 inline Status MovOperation(T *operand1, T *operand2)
 {
-    if(operand1 != NULL && operand2 != NULL)
+    if(operand1 && operand2)
         *operand1 = *operand2;
     else
         return STACK_SET_ERR;
@@ -160,7 +166,7 @@ Status Operation(char OP, Adress store_adress, Adress adress, Type type)
                 return MovOperation((double *)store_adress, (double *)adress);
             break;
             case _STRING:
-                if(store_adress != NULL && adress != NULL)
+                if(store_adress && adress)
                     strcpy(store_adress, adress);
                 else
                     return OPER_NULL_ERR;
@@ -191,7 +197,7 @@ Status Operation(char OP, Adress store_adress, Adress adress, Type type)
                 return AddOperation((double *)store_adress, (double *)adress);
             break;
             case _STRING:
-                if(store_adress != NULL && adress != NULL)
+                if(store_adress && adress)
                     strcat(store_adress, adress);
                 else
                     return OPER_NULL_ERR;
@@ -322,7 +328,7 @@ Status Operation(char OP, Adress store_adress, Size increment, Type type)
             case _STRING:
                 sprintf(p_itoa, "%d",(int)increment);
 
-                if(store_adress != NULL)
+                if(store_adress)
                     strcat(store_adress, p_itoa);
                 else
                     return OPER_NULL_ERR;

@@ -25,7 +25,7 @@ VirtualStackMemory::VirtualStackMemory()
 
 VirtualStackMemory::~VirtualStackMemory()
 {
-    if(memory != NULL)
+    if(memory)
     {
         memset(memory, 0, limit);
         free(memory);
@@ -42,7 +42,7 @@ inline Status VirtualStackMemory::Initialize(Size _limit)
         limit = _limit;
         memory = nextaddr = (Adress)calloc(limit, sizeof(char));
 
-        if (memory == NULL)
+        if (!memory)
             return VM_MALL_ERR;
     }
     else

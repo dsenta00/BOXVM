@@ -37,7 +37,7 @@ Heap::Heap(Size _poolsize)
 	status = EVERYTHING_OK;
 	memoryPool = new MemoryPool(_poolsize);
 
-	if (memoryPool != NULL)
+    if (memoryPool)
 		status = memoryPool->GetStatus();
 	else
 		status = POOL_MAL_ERR;
@@ -47,7 +47,7 @@ inline Pointer *Heap::SearchFor(Count _count)
 {
 	PointerNode *curr = root;
 
-	while (curr != NULL)
+    while (curr)
 	{
 		if (curr->GetCount() > _count)
 			curr = curr->Left;
@@ -57,7 +57,7 @@ inline Pointer *Heap::SearchFor(Count _count)
 			break;
 	}
 
-	if (curr != NULL)
+    if (curr)
 		return curr->GetPointer();
 	else
 		return NULL;
@@ -68,9 +68,9 @@ PointerNode *Heap::Push(Pointer *new_element)
     static Count counter = 0;
 	PointerNode *q = new PointerNode(new_element, ++counter);
 
-	if (q != NULL)
+    if (q)
 	{
-		if (root == NULL)
+        if (!root)
 			last = root = q;
 		else
 		{
@@ -87,7 +87,7 @@ void Heap::SetNewAdresses(PointerNode *element, Adress _adress, Size _size)
 {
     Adress curradr = NULL;
 
-	if (element != NULL)
+    if (element)
     {
         curradr = element->GetPointer()->GetAdress();
 
@@ -118,12 +118,12 @@ Status Heap::Lea(OperandQueue *opqueue, Type *_type, Count _count, int _position
 	else
 		dat = SearchFor(_count);
 
-	if (dat != NULL)
+    if (dat)
 	{
         starta = dat->GetAdress(_position);
         *_type = dat->GetType();
 
-        if (starta != NULL && *_type != 0)
+        if (starta && *_type != 0)
             status = opqueue->Push(starta, *_type);
 		else
             status = BUFF_NULL_ERR;
@@ -138,7 +138,7 @@ Status Heap::PushPointer(Type _type)
 {
     Pointer *ptr = new Pointer(_type);
 
-    if (ptr != NULL)
+    if (ptr)
         root = Push(ptr);
 	else
         status = HEAP_SET_ERR;
@@ -154,7 +154,7 @@ Status Heap::Free(Count _count)
 
 	del = SearchFor(_count);
 
-	if (del != NULL)
+    if (del)
 	{
 		adress = del->GetAdress();
 		size = del->GetSize();
@@ -188,7 +188,7 @@ Status Heap::ReserveMemory(Pointer *_mal, Size _size)
 {
     Adress adress = NULL;
 
-	if (_mal != NULL)
+    if (_mal)
 	{
 		switch (_mal->GetType())
 		{
@@ -211,7 +211,7 @@ Status Heap::ReserveMemory(Pointer *_mal, Size _size)
 
         if (status != DYN_TYPE_ERR)
         {
-            if (adress != NULL)
+            if (adress)
             {
                 _mal->SetAdress(adress);
                 _mal->SetSize(_size);
@@ -238,7 +238,7 @@ Status Heap::MallocDefrag(Count _count, Size _size)
     Size size = 0;
     Pointer *mal = SearchFor(_count);
 
-	if (mal != NULL)
+    if (mal)
 	{
         size = mal->GetSize();
 
@@ -264,7 +264,7 @@ Status Heap::MallocDefrag(Count _count, Size _size)
                 break;
             }
 
-            if (status == EVERYTHING_OK)
+            if (!status)
             {
                 adress = mal->GetAdress();
 
@@ -275,7 +275,7 @@ Status Heap::MallocDefrag(Count _count, Size _size)
                     memoryPool->Free(adress, size);
                     adress = memoryPool->Malloc(_size);
 
-                    if (adress != NULL)
+                    if (adress)
                     {
                         mal->SetAdress(adress);
                         mal->SetSize(_size);
@@ -297,7 +297,7 @@ Heap::~Heap()
 {
 	root = DeleteTree(root);
 
-	if (memoryPool != NULL)
+    if (memoryPool)
 		delete memoryPool;
 }
 

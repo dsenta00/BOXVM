@@ -34,7 +34,7 @@
     }
 
 #define FINDFILE(_count)    &Head;                      \
-while(pfile != NULL && pfile->GetCount() != _count)     \
+while(pfile && pfile->GetCount() != _count)     \
     pfile = pfile->next;
 
 #endif // FILEOPERATIONSMACRO_H

@@ -35,7 +35,7 @@ Status BoxProgram::ReadSourceCode(char *_filepath)
 {
     boxfile = new InvokeBox();
 
-    if (boxfile != NULL)
+    if (boxfile)
 		status = boxfile->ReadAll(_filepath);
 	else
 		status = BOXREADERR;
@@ -64,7 +64,7 @@ Status BoxProgram::SetStack()
 	else
 		status = UNDEF_STACK_ERR;
 
-    if(status == EVERYTHING_OK)
+    if(!status)
     {
         do
         {
@@ -131,17 +131,17 @@ Status BoxProgram::SetStack()
                     i = 0;
 
                     boxfile->GetNextWord(&buffer[i]);
-                    while (buffer[i] != 0) 	// 0 is end of string
+                    while (buffer[i]) 	// 0 is end of string
                         boxfile->GetNextWord(&buffer[++i]);
 
                     buffer[i] = '\0';
                 break;
             }
 
-            if (status == EVERYTHING_OK)
+            if (!status)
                 status = stack.PushStack(datatype, buffer);
 
-        }while (status == EVERYTHING_OK);
+        }while (!status);
     }
 	return status;
 }
@@ -152,14 +152,14 @@ Status BoxProgram::SetPool()
 
 	boxfile->GetNextWord(&intID);
 
-    if(intID != 0)
+    if(intID)
     {
         heap = new Heap(intID);
 
-        if (heap == NULL)
-            status = HEAPERR;
-        else
+        if (heap)
             status = heap->GetStatus();
+        else
+            status = HEAPERR;
     }
 
 	return status;
@@ -206,7 +206,7 @@ Status BoxProgram::SetHeap()
 			if (shortID == ID_CODE)
 				break;
 
-        } while (status == EVERYTHING_OK);
+        } while (!status);
 	}
 	else if (shortID == ID_CODE)
 		status = EVERYTHING_OK;
@@ -225,7 +225,7 @@ Status BoxProgram::ExecuteProgram()
 
 	status = processor.GetStatus();
 
-	if (status == EVERYTHING_OK)
+    if (!status)
     {
         status = processor.Do(stack, *heap);
     }
@@ -235,7 +235,7 @@ Status BoxProgram::ExecuteProgram()
 
 BoxProgram::~BoxProgram()
 {
-	if (boxfile != NULL)
+    if (boxfile)
 		delete boxfile;
 
 	boxfile = NULL;

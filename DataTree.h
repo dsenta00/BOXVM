@@ -31,7 +31,7 @@ Size Tree::Height(T *current)
 {
     Size l_height = 0, r_height = 0;
 
-	if (current != NULL)
+    if (current)
 	{
 		l_height = Height(current->Left);
 		r_height = Height(current->Right);
@@ -64,7 +64,7 @@ T *Tree::RR_Rotation(T *_parent)
 template <typename T>
 T *Tree::Balance(T *_current)
 {
-	if (_current->Right == NULL || _current->Right->Right == NULL)
+    if (!_current->Right || !_current->Right->Right)
 		return _current;
 	else
 		_current->Right = Balance(_current->Right);
@@ -78,11 +78,11 @@ T *Tree::Balance(T *_current)
 template <typename T>
 T *Tree::DeleteTree(T *_current)
 {
-	if (_current != NULL)
+    if (_current)
 	{
-		if (_current->Left != NULL)
+        if (_current->Left)
 			_current->Left = DeleteTree(_current->Left);
-		if (_current->Right != NULL)
+        if (_current->Right)
 			_current->Right = DeleteTree(_current->Right);
 
 		delete _current;

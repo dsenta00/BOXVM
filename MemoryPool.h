@@ -35,7 +35,7 @@ MemoryPool::MemoryPool(Size _size)
 		size = _size + EXTRASPACE;
         vmp = resaddr = (Adress)calloc(size, 1);
 
-        if (vmp != NULL)
+        if (vmp)
 			status = EVERYTHING_OK;
 		else
 			status = POOL_RESERVE_ERR;
@@ -61,7 +61,7 @@ Status MemoryPool::ExpandSize(Size _size)
 
     newVM = (Adress)realloc(vmp, size);
 
-	if (newVM != NULL)
+    if (newVM)
 	{
         if (newVM != vmp)
             free(vmp);
@@ -82,7 +82,7 @@ Adress MemoryPool::Malloc(Size _size)
 	if (diff > 0)
         status = ExpandSize(diff);
 
-	if (status == EVERYTHING_OK)
+    if (!status)
 	{
         retAdress = resaddr;
         resaddr += _size;
@@ -96,7 +96,7 @@ Status MemoryPool::Free(Adress _addr, Size _size)
     Adress nextaddr = _addr + _size;
     Size nextsize = (Size)(resaddr - nextaddr);
 
-    if (_addr != NULL)
+    if (_addr)
     {
         memcpy(_addr, nextaddr, nextsize);
         resaddr = _addr + nextsize;
@@ -110,7 +110,7 @@ Status MemoryPool::Free(Adress _addr, Size _size)
 
 MemoryPool::~MemoryPool()
 {
-    if (vmp != NULL)
+    if (vmp)
 	{
         memset(vmp, 0, size);
         free(vmp);

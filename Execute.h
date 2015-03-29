@@ -65,19 +65,19 @@ Execute::Execute(Bcode _codesegment, Bcode _bytecodestart)
     type = 0;
     opQ = new OperandQueue();
 
-    if (opQ != NULL)
+    if (opQ)
 	{
 		loop_list = new Loop();
 
-		if (loop_list != NULL)
+        if (loop_list)
 		{
 			file_list = new FileList();
 
-			if (file_list != NULL)
+            if (file_list)
 			{
                 bytecode = new ByteCode(_codesegment, _bytecodestart);
 
-				if (bytecode == NULL)
+                if (!bytecode)
 					status = BC_MAL_ERR;
 			}
 			else
@@ -251,7 +251,7 @@ Status Execute::OpQ(Stack &stack, Heap &heap)
 
                 if (status > AREEQUAL)
                 {
-                    if ((operation = loop_list->GetEndLoop()) != NULL)
+                    if ((operation = loop_list->GetEndLoop()))
                         bytecode->SetByteCode(operation);
                     else
                     {
@@ -278,7 +278,7 @@ Status Execute::OpQ(Stack &stack, Heap &heap)
 
                 if (status == AREEQUAL)
                 {
-                    if ((operation = loop_list->GetEndLoop()) != NULL)
+                    if ((operation = loop_list->GetEndLoop()))
                         bytecode->SetByteCode(operation);
                     else
                     {
@@ -305,7 +305,7 @@ Status Execute::OpQ(Stack &stack, Heap &heap)
 
                 if (status == AREEQUAL || status != FIRSTBIGGER)
                 {
-                    if ((operation = loop_list->GetEndLoop()) != NULL)
+                    if ((operation = loop_list->GetEndLoop()))
                         bytecode->SetByteCode(operation);
                     else
                     {
@@ -332,7 +332,7 @@ Status Execute::OpQ(Stack &stack, Heap &heap)
 
                 if (status == AREEQUAL || status != SECONDBIGGER)
                 {
-                    if ((operation = loop_list->GetEndLoop()) != NULL)
+                    if ((operation = loop_list->GetEndLoop()))
                         bytecode->SetByteCode(operation);
                     else
                     {
@@ -359,7 +359,7 @@ Status Execute::OpQ(Stack &stack, Heap &heap)
 
                 if (status == SECONDBIGGER)
                 {
-                    if ((operation = loop_list->GetEndLoop()) != NULL)
+                    if ((operation = loop_list->GetEndLoop()))
                         bytecode->SetByteCode(operation);
                     else
                     {
@@ -386,7 +386,7 @@ Status Execute::OpQ(Stack &stack, Heap &heap)
 
                 if (status == FIRSTBIGGER)
                 {
-                    if ((operation = loop_list->GetEndLoop()) != NULL)
+                    if ((operation = loop_list->GetEndLoop()))
                         bytecode->SetByteCode(operation);
                     else
                     {
@@ -450,11 +450,11 @@ Status Execute::Reg(Stack &stack, Heap &heap)
             case MOV: case ADD: case SUB: case MUL: case DIV: case MOD:
                 GETREGISTRY(op1)
 
-                if(status == EVERYTHING_OK)
+                if(!status)
                 {
                     GETREGISTRY(op2)
 
-                    if(status == EVERYTHING_OK)
+                    if(!status)
                     {
                         status = Operation(op_index, op1, op2, type);
                     }
@@ -464,7 +464,7 @@ Status Execute::Reg(Stack &stack, Heap &heap)
             case ADI: case SUC: case MUC: case DIC: case MODC:
                 GETREGISTRY(op1)
 
-                if(status == EVERYTHING_OK)
+                if(!status)
                 {
                     status = Operation(op_index, op1, *READBYTECODE, type);
                 }
@@ -472,7 +472,7 @@ Status Execute::Reg(Stack &stack, Heap &heap)
             //operation [rx]
             case SCAN:
                 GETREGISTRY(op1)
-                if(status == EVERYTHING_OK)
+                if(!status)
                 {
                     SCANOP(op1, type)
                 }
@@ -480,7 +480,7 @@ Status Execute::Reg(Stack &stack, Heap &heap)
             //operation [rx]
             case PRINT:
                 GETREGISTRY(op1)
-                if(status == EVERYTHING_OK)
+                if(!status)
                 {
                     PRINTOP(op1, type)
                 }
@@ -488,7 +488,7 @@ Status Execute::Reg(Stack &stack, Heap &heap)
             //operation [rx]
             case PRINTLN:
                 GETREGISTRY(op1)
-                if(status == EVERYTHING_OK)
+                if(!status)
                 {
                     PRINTLNOP(op1, type)
                 }
@@ -610,7 +610,7 @@ Status Execute::Reg(Stack &stack, Heap &heap)
 
                 if (status > AREEQUAL)
                 {
-                    if ((operation = loop_list->GetEndLoop()) != NULL)
+                    if ((operation = loop_list->GetEndLoop()))
                         bytecode->SetByteCode(operation);
                     else
                     {
@@ -637,7 +637,7 @@ Status Execute::Reg(Stack &stack, Heap &heap)
 
                 if (status == AREEQUAL)
                 {
-                    if ((operation = loop_list->GetEndLoop()) != NULL)
+                    if ((operation = loop_list->GetEndLoop()))
                         bytecode->SetByteCode(operation);
                     else
                     {
@@ -664,7 +664,7 @@ Status Execute::Reg(Stack &stack, Heap &heap)
 
                 if (status == AREEQUAL || status != FIRSTBIGGER)
                 {
-                    if ((operation = loop_list->GetEndLoop()) != NULL)
+                    if ((operation = loop_list->GetEndLoop()))
                         bytecode->SetByteCode(operation);
                     else
                     {
@@ -691,7 +691,7 @@ Status Execute::Reg(Stack &stack, Heap &heap)
 
                 if (status == AREEQUAL || status != SECONDBIGGER)
                 {
-                    if ((operation = loop_list->GetEndLoop()) != NULL)
+                    if ((operation = loop_list->GetEndLoop()))
                         bytecode->SetByteCode(operation);
                     else
                     {
@@ -718,7 +718,7 @@ Status Execute::Reg(Stack &stack, Heap &heap)
 
                 if (status == SECONDBIGGER)
                 {
-                    if ((operation = loop_list->GetEndLoop()) != NULL)
+                    if ((operation = loop_list->GetEndLoop()))
                         bytecode->SetByteCode(operation);
                     else
                     {
@@ -745,7 +745,7 @@ Status Execute::Reg(Stack &stack, Heap &heap)
 
                 if (status == FIRSTBIGGER)
                 {
-                    if ((operation = loop_list->GetEndLoop()) != NULL)
+                    if ((operation = loop_list->GetEndLoop()))
                         bytecode->SetByteCode(operation);
                     else
                     {
@@ -776,7 +776,7 @@ Status Execute::Reg(Stack &stack, Heap &heap)
             //operation [rx]
             case RAND:
                 GETREGISTRY(op1)
-                if(status == EVERYTHING_OK)
+                if(!status)
                 {
                     status = rand();
                     status = Operation(op_index, op1, (char *)&status, type);
@@ -801,16 +801,16 @@ Status Execute::Reg(Stack &stack, Heap &heap)
 
 Execute::~Execute()
 {
-	if (bytecode != NULL)
+    if (bytecode)
 		delete bytecode;
 
-    if (opQ != NULL)
+    if (opQ)
         delete opQ;
 
-	if (loop_list != NULL)
+    if (loop_list)
 		delete loop_list;
 
-	if (file_list != NULL)
+    if (file_list)
 		delete file_list;
 }
 

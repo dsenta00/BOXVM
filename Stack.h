@@ -29,7 +29,7 @@ inline StaticData *Stack::SearchFor(Count _count)
 {
 	StaticDataNode *curr = root;
 
-	while (curr != NULL)
+    while (curr)
 	{
 		if (curr->GetCount() > _count)
 			curr = curr->Left;
@@ -39,7 +39,7 @@ inline StaticData *Stack::SearchFor(Count _count)
 			break;
 	}
 
-	if (curr != NULL)
+    if (curr)
 		return curr->GetDataInfo();
 	else
 		return NULL;
@@ -50,9 +50,9 @@ StaticDataNode *Stack::Push(StaticData *_newelement)
 	static int counter = 0;
 	StaticDataNode *q = new StaticDataNode(_newelement, ++counter);
 
-	if (q != NULL)
+    if (q)
 	{
-		if (root == NULL)
+        if (!root)
 		{
 			root = q;
 			last = root;
@@ -79,11 +79,11 @@ Status Stack::PushStack(Type _type, Adress _value)
     StaticData *dataS = NULL;
     Adress startadr = vsm.GetNext();
 
-    if (startadr != NULL)
+    if (startadr)
 	{
         dataS = new StaticData(startadr, _type);
 
-        if (dataS != NULL)
+        if (dataS)
 		{
             status = dataS->SetValue(_value);
 
@@ -108,7 +108,7 @@ Adress Stack::GetAdress(Count _count)
 {
     StaticData *search_data = SearchFor(_count);
 
-	if (search_data == NULL)
+    if (!search_data)
 		return NULL;
 	else
 		return search_data->GetStartAdress();
@@ -118,7 +118,7 @@ Type Stack::GetType(Count _count)
 {
     StaticData *search_data = SearchFor(_count);
 
-	if (search_data == NULL)
+    if (!search_data)
 		return UKNOWN_TYPE_ERR;
 	else
 		return search_data->GetType();

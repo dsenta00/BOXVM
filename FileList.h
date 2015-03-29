@@ -40,18 +40,18 @@ Status FileList::PushFile(Count _count, char *_path, int _mode)
 	{
 		pfile = FINDFILE(_count);
 
-		if (pfile != NULL)
+        if (pfile)
 			status = ALLRDY_OPEN;
 		else
 			pfile = new File();
 
-        if (status == EVERYTHING_OK)
+        if (!status)
         {
-            if (pfile != NULL)
+            if (pfile)
             {
                 status = pfile->Open(_path, _mode, _count);
 
-                if (status == EVERYTHING_OK)
+                if (!status)
                 {
                     pfile->next = Head.next;
                     Head.next = pfile;
@@ -70,7 +70,7 @@ Status FileList::ReadOperationFile(T *read_data, Count _count)
 {
     pfile = FINDFILE(_count);
 
-	if (pfile == NULL)
+    if (!pfile)
 		status = FILE_OPER_ERR;
 	else
 		status = pfile->ReadOperationFile(read_data);
@@ -83,7 +83,7 @@ Status FileList::WriteOperationFile(T *write_data, Count _count)
 {
     pfile = FINDFILE(_count);
 
-	if (pfile == NULL)
+    if (!pfile)
 		status = FILE_OPER_ERR;
 	else
 		status = pfile->WriteOperationFile(write_data);
@@ -95,7 +95,7 @@ Status FileList::ReadOperationFileString(Adress read_data, Count _count)
 {
     pfile = FINDFILE(_count);
 
-	if (pfile == NULL)
+    if (!pfile)
 		status = FILE_OPER_ERR;
 	else
 		status = pfile->ReadOperationFileString(read_data);
@@ -107,7 +107,7 @@ Status FileList::WriteOperationFileString(Adress read_data, Count _count)
 {
     pfile = FINDFILE(_count);
 
-	if (pfile == NULL)
+    if (!pfile)
 		status = FILE_OPER_ERR;
 	else
 		status = pfile->WriteOperationFileString(read_data);
@@ -120,7 +120,7 @@ Status FileList::ReadAllFile(Adress read_data, Size _size, Count _count)
 
     pfile = FINDFILE(_count);
 
-	if (pfile == NULL)
+    if (!pfile)
 		status = FILE_OPER_ERR;
 	else
 		status = pfile->ReadAllFile(read_data, _size);
@@ -132,7 +132,7 @@ Status FileList::GetLine(Adress read_data, Count _count)
 {
     pfile = FINDFILE(_count);
 
-	if (pfile == NULL)
+    if (!pfile)
 		status = FILE_OPER_ERR;
 	else
 		status = pfile->GetLine(read_data);
@@ -142,7 +142,7 @@ Status FileList::GetLine(Adress read_data, Count _count)
 
 FileList::~FileList()
 {
-	while (Head.next != NULL)
+    while (Head.next)
 	{
 		pfile = Head.next;
 		Head.next = pfile->next;

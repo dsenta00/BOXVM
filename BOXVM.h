@@ -13,19 +13,19 @@ Status RunProgram(char *_execpath)
 
     status = program.ReadSourceCode(_execpath);
 
-    if (status == EVERYTHING_OK)
+    if (!status)
     {
         status = program.SetStack();
 
-        if (status == EVERYTHING_OK)
+        if (!status)
         {
             status = program.SetPool();
 
-            if (status == EVERYTHING_OK)
+            if (!status)
             {
                 status = program.SetHeap();
 
-                if (status == EVERYTHING_OK)
+                if (!status)
                 {
                     status = program.ExecuteProgram();
                 }

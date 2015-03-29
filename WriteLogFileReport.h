@@ -3,7 +3,8 @@
 
 #include "BoxInfo.h"
 
-void WriteLogErrorReport(char *path, Status error_code)
+void
+WriteLogErrorReport(char *path, Status error_code)
 {
     char *p_path = NULL;
     FILE *fp = NULL;
@@ -13,13 +14,13 @@ void WriteLogErrorReport(char *path, Status error_code)
 
     p_path = strchr(path, '.');
 
-    if(p_path != NULL)
+    if(p_path)
     {
         strcpy(p_path, ".logbox");
         fp = fopen(path, "w+");
     }
 
-    if(fp != NULL)
+    if(fp)
     {
         printf("\n\tPlease read the error report located at <\"%s\">\n", path);
         fprintf(fp, "\n\tBOXVM RUNTIME ERROR REPORT:");

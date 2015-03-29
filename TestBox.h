@@ -54,7 +54,7 @@ Status NativeC()
 
     fp = fopen("TestNativeC.txt", "w+");
 
-    if(fp != NULL)
+    if(fp)
     {
         while (i < limit)
         {

@@ -31,7 +31,8 @@ Pointer *PointerNode::GetPointer()
 
 PointerNode::~PointerNode()
 {
-	delete ptr;
+    if(ptr)
+        delete ptr;
 }
 
 #endif

@@ -52,7 +52,7 @@ Status InvokeBox::ReadAll(char *_boxfilepath)
 
     fp = fopen(_boxfilepath, "r+b");
 
-    if (fp != NULL)
+    if (fp)
     {
         fseek(fp, 0, SEEK_END);
         file_size = ftell(fp);
@@ -65,7 +65,7 @@ Status InvokeBox::ReadAll(char *_boxfilepath)
         {
             p_codeSeg = codeSeg = (Bcode)calloc(file_size + 1, sizeof(char));
 
-            if (codeSeg != NULL)
+            if (codeSeg)
             {
                 rewind(fp);
                 read_size = fread(codeSeg, sizeof(char), file_size, fp);

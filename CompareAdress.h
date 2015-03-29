@@ -5,7 +5,7 @@
 template <typename T>
 inline int CheckAdressEquality(T *adress1, T* adress2)
 {
-    if (adress1 != NULL && adress2 != NULL)
+    if (adress1 && adress2)
     {
         if (*adress1 == *adress2)
             return AREEQUAL;
