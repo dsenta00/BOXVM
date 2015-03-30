@@ -5,9 +5,9 @@
  *	@file		BOXVM.cpp
  *	@purpose	An abstract virtual machine that interprets programs written in an executable .box file format.
  *
- *	@author		Duje Senta 
+ *	@author		Duje Senta
  *	@company	Faculty of Electrical Engineering, Mechanical Engineering and Naval Architecture, Split
- *	@version	0.3	15/03/2015
+ *	@version	0.5	30/03/2015
  *
  *****************************************************************************************************************/
 
@@ -16,7 +16,7 @@
 
 int main(int argc, char *argv[])
 {
-    Status status = EVERYTHING_OK;
+	Status status = EVERYTHING_OK;
 
 	if (argc == 1)
 	{

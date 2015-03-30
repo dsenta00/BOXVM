@@ -5,21 +5,21 @@
 
 class ByteCode
 {
-    Bcode bytecode;
-    Bcode codesegment;
+	Bcode bytecode;
+	Bcode codesegment;
 public:
 	ByteCode();
-    ByteCode(Bcode, Bcode);
+	ByteCode(Bcode, Bcode);
 	~ByteCode();
 
-    Bcode ReadByteCode();
-    void SetByteCode(Bcode);
-    void SkipByteCode(Size);
+	Bcode ReadByteCode();
+	void SetByteCode(Bcode);
+	void SkipByteCode(Size);
 };
 
 ByteCode::~ByteCode()
 {
-    if (codesegment)
+	if (codesegment)
 		free(codesegment);
 	bytecode = codesegment = NULL;
 }
@@ -38,26 +38,26 @@ ByteCode::ByteCode(Bcode _codesegment, Bcode _bytecode)
 
 void ByteCode::SkipByteCode(Size n)
 {
-    do
+	do
 	{
 		switch (*bytecode)
 		{
-            case ADD: case MUL: case DIV: case SUB: case RAND:
-            case SCAN: case PRINT: case PRINTLN: case MOD: case REPLOOP:
-                bytecode++;
-            break;
-            case MOV: case LEAC: case LEA:
-            case FNEW: case NEW: case NEWV: case FNEWV:
-                bytecode += 3;
-            break;
-            default:
-                bytecode += 2;
+		case ADD: case MUL: case DIV: case SUB: case RAND:
+		case SCAN: case PRINT: case PRINTLN: case MOD: case REPLOOP:
+			bytecode++;
+			break;
+		case MOV: case LEAC: case LEA:
+		case FNEW: case NEW: case NEWV: case FNEWV:
+			bytecode += 3;
+			break;
+		default:
+			bytecode += 2;
 			break;
 		}
 
-        n--;
+		n--;
 
-    }while (n > 0);
+	} while (n > 0);
 
 	bytecode--;
 }
@@ -69,7 +69,7 @@ Bcode ByteCode::ReadByteCode()
 
 void ByteCode::SetByteCode(Bcode adress)
 {
-    bytecode = adress;
+	bytecode = adress;
 }
 
 #endif

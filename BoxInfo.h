@@ -8,7 +8,7 @@
 *
 *	@author		Duje Senta
 *	@company	Faculty of Electrical Engineering, Mechanical Engineering and Naval Architecture, Split
-*	@version	0.3	15/03/2015
+*	@version	0.5	30/03/2015
 *
 */
 

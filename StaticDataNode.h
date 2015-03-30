@@ -11,7 +11,7 @@ public:
 	StaticDataNode *Left;
 	StaticDataNode *Right;
 
-    StaticDataNode(StaticData *, Count);
+	StaticDataNode(StaticData *, Count);
 	StaticData *GetDataInfo();
 	~StaticDataNode();
 };

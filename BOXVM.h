@@ -6,32 +6,32 @@
 
 Status RunProgram(char *_execpath)
 {
-    Status status = EVERYTHING_OK;
-    BoxProgram program;
+	Status status = EVERYTHING_OK;
+	BoxProgram program;
 
-    srand((unsigned)time(NULL));
+	srand((unsigned)time(NULL));
 
-    status = program.ReadSourceCode(_execpath);
+	status = program.ReadSourceCode(_execpath);
 
-    if (!status)
-    {
-        status = program.SetStack();
+	if (!status)
+	{
+		status = program.SetStack();
 
-        if (!status)
-        {
-            status = program.SetPool();
+		if (!status)
+		{
+			status = program.SetPool();
 
-            if (!status)
-            {
-                status = program.SetHeap();
+			if (!status)
+			{
+				status = program.SetHeap();
 
-                if (!status)
-                {
-                    status = program.ExecuteProgram();
-                }
-            }
-        }
-    }
+				if (!status)
+				{
+					status = program.ExecuteProgram();
+				}
+			}
+		}
+	}
 
 	return status;
 }

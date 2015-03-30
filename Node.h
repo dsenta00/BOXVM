@@ -5,11 +5,11 @@
 
 class Node {
 protected:
-    Count count;
+	Count count;
 public:
 	Node();
-    Node(Count);
-    Count GetCount();
+	Node(Count);
+	Count GetCount();
 };
 
 Node::Node()

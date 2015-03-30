@@ -13,21 +13,21 @@ class Heap : public Tree
 	PointerNode *last;
 	MemoryPool *memoryPool;
 
-    PointerNode *Push(Pointer *);                   //	--	Pushing element in pointer tree
-    void SetNewAdresses(PointerNode *, Adress, Size);//  --  Sets new adresses in pointer tree.
-    Status ReserveMemory(Pointer *, Size);
+	PointerNode *Push(Pointer *);                   //	--	Pushing element in pointer tree
+	void SetNewAdresses(PointerNode *, Adress, Size);//  --  Sets new adresses in pointer tree.
+	Status ReserveMemory(Pointer *, Size);
 public:
 
 	Heap();
-    Heap(Size);
+	Heap(Size);
 	~Heap();
 
-    inline Pointer *SearchFor(Count);                   //	--	Returns pointer by ID
-    Status Lea(OperandQueue *, Type *, Count, int);   //	--	Sets in operation queue [base by id][count]
-    Status PushPointer(Type);							//	--	Push new data type in tree
-    Status Malloc(Count, Size);							//	--	Dynamic allocation of data by id of N elements
-    Status MallocDefrag(Count, Size);
-    Status Free(Count);
+	inline Pointer *SearchFor(Count);                   //	--	Returns pointer by ID
+	Status Lea(OperandQueue *, Type *, Count, int);   //	--	Sets in operation queue [base by id][count]
+	Status PushPointer(Type);							//	--	Push new data type in tree
+	Status Malloc(Count, Size);							//	--	Dynamic allocation of data by id of N elements
+	Status MallocDefrag(Count, Size);
+	Status Free(Count);
 };
 
 Heap::Heap(Size _poolsize)
@@ -37,7 +37,7 @@ Heap::Heap(Size _poolsize)
 	status = EVERYTHING_OK;
 	memoryPool = new MemoryPool(_poolsize);
 
-    if (memoryPool)
+	if (memoryPool)
 		status = memoryPool->GetStatus();
 	else
 		status = POOL_MAL_ERR;
@@ -47,7 +47,7 @@ inline Pointer *Heap::SearchFor(Count _count)
 {
 	PointerNode *curr = root;
 
-    while (curr)
+	while (curr)
 	{
 		if (curr->GetCount() > _count)
 			curr = curr->Left;
@@ -57,7 +57,7 @@ inline Pointer *Heap::SearchFor(Count _count)
 			break;
 	}
 
-    if (curr)
+	if (curr)
 		return curr->GetPointer();
 	else
 		return NULL;
@@ -65,12 +65,12 @@ inline Pointer *Heap::SearchFor(Count _count)
 
 PointerNode *Heap::Push(Pointer *new_element)
 {
-    static Count counter = 0;
+	static Count counter = 0;
 	PointerNode *q = new PointerNode(new_element, ++counter);
 
-    if (q)
+	if (q)
 	{
-        if (!root)
+		if (!root)
 			last = root = q;
 		else
 		{
@@ -85,18 +85,18 @@ PointerNode *Heap::Push(Pointer *new_element)
 
 void Heap::SetNewAdresses(PointerNode *element, Adress _adress, Size _size)
 {
-    Adress curradr = NULL;
+	Adress curradr = NULL;
 
-    if (element)
-    {
-        curradr = element->GetPointer()->GetAdress();
+	if (element)
+	{
+		curradr = element->GetPointer()->GetAdress();
 
-        SetNewAdresses(element->Left, _adress, _size);
+		SetNewAdresses(element->Left, _adress, _size);
 
 		if (_adress < curradr)
-            element->GetPointer()->SetAdress(curradr - _size);
+			element->GetPointer()->SetAdress(curradr - _size);
 
-        SetNewAdresses(element->Right, _adress, _size);
+		SetNewAdresses(element->Right, _adress, _size);
 	}
 }
 
@@ -111,65 +111,65 @@ Heap::Heap()
 Status Heap::Lea(OperandQueue *opqueue, Type *_type, Count _count, int _position)
 {
 	Pointer *dat = NULL;
-    Adress starta = NULL;
+	Adress starta = NULL;
 
 	if (_count == -1)
 		dat = root->GetPointer();
 	else
 		dat = SearchFor(_count);
 
-    if (dat)
+	if (dat)
 	{
-        starta = dat->GetAdress(_position);
-        *_type = dat->GetType();
+		starta = dat->GetAdress(_position);
+		*_type = dat->GetType();
 
-        if (starta && *_type != 0)
-            status = opqueue->Push(starta, *_type);
+		if (starta && *_type != 0)
+			status = opqueue->Push(starta, *_type);
 		else
-            status = BUFF_NULL_ERR;
+			status = BUFF_NULL_ERR;
 	}
 	else
-        status = HEAP_UNEX_ERR;
+		status = HEAP_UNEX_ERR;
 
-    return status;
+	return status;
 }
 
 Status Heap::PushPointer(Type _type)
 {
-    Pointer *ptr = new Pointer(_type);
+	Pointer *ptr = new Pointer(_type);
 
-    if (ptr)
-        root = Push(ptr);
+	if (ptr)
+		root = Push(ptr);
 	else
-        status = HEAP_SET_ERR;
+		status = HEAP_SET_ERR;
 
-    return status;
+	return status;
 }
 
 Status Heap::Free(Count _count)
 {
 	Pointer *del = NULL;
-    Adress adress = NULL;
-    Size size = 0;
+	Adress adress = NULL;
+	Size size = 0;
 
 	del = SearchFor(_count);
 
-    if (del)
+	if (del)
 	{
 		adress = del->GetAdress();
 		size = del->GetSize();
 
 		switch (del->GetType())
 		{
-            case _INT: case _FLOAT:
-                size *= 4;
-            break;
-            case _SHORT:
-                size *= 2;
-            break;
-            case _LONG: case _DOUBLE:
-                size *= 3;
-            break;
+		case _INT: case _FLOAT:
+			size *= 4;
+			break;
+		case _SHORT:
+			size *= 2;
+			break;
+		case _LONG: case _DOUBLE:
+			size *= 3;
+			break;
 		}
 
 		status = memoryPool->Free(adress, size);
@@ -179,51 +179,51 @@ Status Heap::Free(Count _count)
 		del->SetSize(0);
 	}
 	else
-        status = FREE_OPER_ERR;
+		status = FREE_OPER_ERR;
 
-    return status;
+	return status;
 }
 
 Status Heap::ReserveMemory(Pointer *_mal, Size _size)
 {
-    Adress adress = NULL;
+	Adress adress = NULL;
 
-    if (_mal)
+	if (_mal)
 	{
 		switch (_mal->GetType())
 		{
-            case _INT: case _FLOAT:
-                adress = memoryPool->Malloc(_size * 4);
-            break;
-            case _SHORT:
-                adress = memoryPool->Malloc(_size * 2);
-            break;
-            case _LONG: case _DOUBLE:
-                adress = memoryPool->Malloc(_size * 8);
-            break;
-            case _CHAR:
-                adress = memoryPool->Malloc(_size);
-            break;
-            default:
-                status = DYN_TYPE_ERR;
+		case _INT: case _FLOAT:
+			adress = memoryPool->Malloc(_size * 4);
+			break;
+		case _SHORT:
+			adress = memoryPool->Malloc(_size * 2);
+			break;
+		case _LONG: case _DOUBLE:
+			adress = memoryPool->Malloc(_size * 8);
+			break;
+		case _CHAR:
+			adress = memoryPool->Malloc(_size);
+			break;
+		default:
+			status = DYN_TYPE_ERR;
 			break;
 		}
 
-        if (status != DYN_TYPE_ERR)
-        {
-            if (adress)
-            {
-                _mal->SetAdress(adress);
-                _mal->SetSize(_size);
-            }
-            else
-                status = DYN_MALLOC_ERR;
-        }
+		if (status != DYN_TYPE_ERR)
+		{
+			if (adress)
+			{
+				_mal->SetAdress(adress);
+				_mal->SetSize(_size);
+			}
+			else
+				status = DYN_MALLOC_ERR;
+		}
 	}
 	else
-        status = HEAP_MALL_ERR;
+		status = HEAP_MALL_ERR;
 
-    return status;
+	return status;
 }
 
 Status Heap::Malloc(Count _count, Size _size)
@@ -234,70 +234,70 @@ Status Heap::Malloc(Count _count, Size _size)
 
 Status Heap::MallocDefrag(Count _count, Size _size)
 {
-    Adress adress = NULL;
-    Size size = 0;
-    Pointer *mal = SearchFor(_count);
+	Adress adress = NULL;
+	Size size = 0;
+	Pointer *mal = SearchFor(_count);
 
-    if (mal)
+	if (mal)
 	{
-        size = mal->GetSize();
+		size = mal->GetSize();
 
-        if (size == 0)
-            status = ReserveMemory(mal, _size);
+		if (size == 0)
+			status = ReserveMemory(mal, _size);
 		else
-        {
-            switch (mal->GetType())
-            {
-                case _SHORT:
-                    size *= 2; _size *= 2;
-                break;
-                case _INT: case _FLOAT:
-                    size *= 4; _size *= 4;
-                break;
-                case _LONG: case _DOUBLE:
-                    size *= 8; _size *= 8;
-                break;
-                case _CHAR:
-                break;
-                default:
-                    status = DYN_TYPE_ERR;
-                break;
-            }
+		{
+			switch (mal->GetType())
+			{
+			case _SHORT:
+				size *= 2; _size *= 2;
+				break;
+			case _INT: case _FLOAT:
+				size *= 4; _size *= 4;
+				break;
+			case _LONG: case _DOUBLE:
+				size *= 8; _size *= 8;
+				break;
+			case _CHAR:
+				break;
+			default:
+				status = DYN_TYPE_ERR;
+				break;
+			}
 
-            if (!status)
-            {
-                adress = mal->GetAdress();
+			if (!status)
+			{
+				adress = mal->GetAdress();
 
-                if (size == _size)
-                    memset(adress, 0, size);
-                else
-                {
-                    memoryPool->Free(adress, size);
-                    adress = memoryPool->Malloc(_size);
+				if (size == _size)
+					memset(adress, 0, size);
+				else
+				{
+					memoryPool->Free(adress, size);
+					adress = memoryPool->Malloc(_size);
 
-                    if (adress)
-                    {
-                        mal->SetAdress(adress);
-                        mal->SetSize(_size);
-                    }
-                    else
-                        status = DYN_MALLOC_ERR;
-                }
-            }
+					if (adress)
+					{
+						mal->SetAdress(adress);
+						mal->SetSize(_size);
+					}
+					else
+						status = DYN_MALLOC_ERR;
+				}
+			}
 		}
 
 	}
 	else
-        status = HEAP_MALL_ERR;
+		status = HEAP_MALL_ERR;
 
-    return status;
+	return status;
 }
 
 Heap::~Heap()
 {
 	root = DeleteTree(root);
 
-    if (memoryPool)
+	if (memoryPool)
 		delete memoryPool;
 }
 

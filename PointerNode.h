@@ -12,7 +12,7 @@ public:
 	PointerNode *Left;
 	PointerNode *Right;
 
-    PointerNode(Pointer *, Count);
+	PointerNode(Pointer *, Count);
 	Pointer *GetPointer();
 	~PointerNode();
 };
@@ -31,8 +31,8 @@ Pointer *PointerNode::GetPointer()
 
 PointerNode::~PointerNode()
 {
-    if(ptr)
-        delete ptr;
+	if (ptr)
+		delete ptr;
 }
 
 #endif
