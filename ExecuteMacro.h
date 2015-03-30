@@ -46,14 +46,6 @@ if(loop_list->GetStartLoop() != operation)          \
 if(!status)                         \
     status = CheckStatement(op1, op2, type);
 
-#define LOOPCHECKANDPUSH                            \
-op1 = POPADRESS;                                    \
-op2 = POPADRESS;                                    \
-if(loop_list->GetStartLoop() != operation)          \
-    status = loop_list->PushLoop(operation);        \
-if(!status)                         \
-    status = CheckStatement(op1, op2, type);
-
 #define CMPCHECKANDPUSH                             \
 op1 = POPADRESS;                                    \
 op2 = POPADRESS;                                    \
