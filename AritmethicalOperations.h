@@ -120,10 +120,12 @@ template <typename T>
 inline Status ModOperation(T *operand1, Size increment)
 {
 	if (operand1)
-	if (increment)
-		*operand1 %= increment;
-	else
-		return DIV_NULL_ERR;
+    {
+        if (increment)
+            *operand1 %= increment;
+        else
+            return DIV_NULL_ERR;
+    }
 	else
 		return OPER_NULL_ERR;
 
@@ -147,152 +149,152 @@ Status Operation(char OP, Adress store_adress, Adress adress, Type type)
 	{
 		switch (type)
 		{
-		case _CHAR:
-			return MovOperation(store_adress, adress);
-			break;
-		case _INT:
-			return MovOperation((int *)store_adress, (int *)adress);
-			break;
-		case _SHORT:
-			return MovOperation((short *)store_adress, (short *)adress);
-			break;
-		case _LONG:
-			return MovOperation((long *)store_adress, (long *)adress);
-			break;
-		case _FLOAT:
-			return MovOperation((float *)store_adress, (float *)adress);
-			break;
-		case _DOUBLE:
-			return MovOperation((double *)store_adress, (double *)adress);
-			break;
-		case _STRING:
-			if (store_adress && adress)
-				strcpy(store_adress, adress);
-			else
-				return OPER_NULL_ERR;
-			return EVERYTHING_OK;
-			break;
+            case _CHAR:
+                return MovOperation(store_adress, adress);
+            break;
+            case _INT:
+                return MovOperation((int *)store_adress, (int *)adress);
+            break;
+            case _SHORT:
+                return MovOperation((short *)store_adress, (short *)adress);
+            break;
+            case _LONG:
+                return MovOperation((long *)store_adress, (long *)adress);
+            break;
+            case _FLOAT:
+                return MovOperation((float *)store_adress, (float *)adress);
+            break;
+            case _DOUBLE:
+                return MovOperation((double *)store_adress, (double *)adress);
+            break;
+            case _STRING:
+                if (store_adress && adress)
+                    strcpy(store_adress, adress);
+                else
+                    return OPER_NULL_ERR;
+                return EVERYTHING_OK;
+            break;
 		}
 	}
 	else if (OP == ADD)
 	{
 		switch (type)
 		{
-		case _CHAR:
-			return AddOperation(store_adress, adress);
-			break;
-		case _INT:
-			return AddOperation((int *)store_adress, (int *)adress);
-			break;
-		case _SHORT:
-			return AddOperation((short *)store_adress, (short *)adress);
-			break;
-		case _LONG:
-			return AddOperation((long *)store_adress, (long *)adress);
-			break;
-		case _FLOAT:
-			return AddOperation((float *)store_adress, (float *)adress);
-			break;
-		case _DOUBLE:
-			return AddOperation((double *)store_adress, (double *)adress);
-			break;
-		case _STRING:
-			if (store_adress && adress)
-				strcat(store_adress, adress);
-			else
-				return OPER_NULL_ERR;
-			return EVERYTHING_OK;
-			break;
+            case _CHAR:
+                return AddOperation(store_adress, adress);
+            break;
+            case _INT:
+                return AddOperation((int *)store_adress, (int *)adress);
+            break;
+            case _SHORT:
+                return AddOperation((short *)store_adress, (short *)adress);
+            break;
+            case _LONG:
+                return AddOperation((long *)store_adress, (long *)adress);
+            break;
+            case _FLOAT:
+                return AddOperation((float *)store_adress, (float *)adress);
+            break;
+            case _DOUBLE:
+                return AddOperation((double *)store_adress, (double *)adress);
+            break;
+            case _STRING:
+                if (store_adress && adress)
+                    strcat(store_adress, adress);
+                else
+                    return OPER_NULL_ERR;
+                return EVERYTHING_OK;
+            break;
 		}
 	}
 	else if (OP == MUL)
 	{
 		switch (type)
 		{
-		case _CHAR:
-			MulOperation(store_adress, adress);
-			break;
-		case _INT:
-			return MulOperation((int *)store_adress, (int *)adress);
-			break;
-		case _SHORT:
-			return MulOperation((short *)store_adress, (short *)adress);
-			break;
-		case _LONG:
-			return MulOperation((long *)store_adress, (long *)adress);
-			break;
-		case _FLOAT:
-			return MulOperation((float *)store_adress, (float *)adress);
-			break;
-		case _DOUBLE:
-			return MulOperation((double *)store_adress, (double *)adress);
-			break;
+            case _CHAR:
+                MulOperation(store_adress, adress);
+            break;
+            case _INT:
+                return MulOperation((int *)store_adress, (int *)adress);
+            break;
+            case _SHORT:
+                return MulOperation((short *)store_adress, (short *)adress);
+            break;
+            case _LONG:
+                return MulOperation((long *)store_adress, (long *)adress);
+            break;
+            case _FLOAT:
+                return MulOperation((float *)store_adress, (float *)adress);
+            break;
+            case _DOUBLE:
+                return MulOperation((double *)store_adress, (double *)adress);
+            break;
 		}
 	}
 	else if (OP == DIV)
 	{
 		switch (type)
 		{
-		case _CHAR:
-			return DivOperation(store_adress, adress);
-			break;
-		case _INT:
-			return DivOperation((int *)store_adress, (int *)adress);
-			break;
-		case _SHORT:
-			return DivOperation((short *)store_adress, (short *)adress);
-			break;
-		case _LONG:
-			return DivOperation((long *)store_adress, (long *)adress);
-			break;
-		case _FLOAT:
-			return DivOperation((float *)store_adress, (float *)adress);
-			break;
-		case _DOUBLE:
-			return DivOperation((double *)store_adress, (double *)adress);
-			break;
+            case _CHAR:
+                return DivOperation(store_adress, adress);
+            break;
+            case _INT:
+                return DivOperation((int *)store_adress, (int *)adress);
+            break;
+            case _SHORT:
+                return DivOperation((short *)store_adress, (short *)adress);
+            break;
+            case _LONG:
+                return DivOperation((long *)store_adress, (long *)adress);
+            break;
+            case _FLOAT:
+                return DivOperation((float *)store_adress, (float *)adress);
+            break;
+            case _DOUBLE:
+                return DivOperation((double *)store_adress, (double *)adress);
+            break;
 		}
 	}
 	else if (OP == SUB)
 	{
 		switch (type)
 		{
-		case _CHAR:
-			return SubOperation(store_adress, adress);
-			break;
-		case _INT:
-			return SubOperation((int *)store_adress, (int *)adress);
-			break;
-		case _SHORT:
-			return SubOperation((short *)store_adress, (short *)adress);
-			break;
-		case _LONG:
-			return SubOperation((long *)store_adress, (long *)adress);
-			break;
-		case _FLOAT:
-			return SubOperation((float *)store_adress, (float *)adress);
-			break;
-		case _DOUBLE:
-			return SubOperation((double *)store_adress, (double *)adress);
-			break;
+            case _CHAR:
+                return SubOperation(store_adress, adress);
+            break;
+            case _INT:
+                return SubOperation((int *)store_adress, (int *)adress);
+            break;
+            case _SHORT:
+                return SubOperation((short *)store_adress, (short *)adress);
+            break;
+            case _LONG:
+                return SubOperation((long *)store_adress, (long *)adress);
+            break;
+            case _FLOAT:
+                return SubOperation((float *)store_adress, (float *)adress);
+            break;
+            case _DOUBLE:
+                return SubOperation((double *)store_adress, (double *)adress);
+            break;
 		}
 	}
 	else if (OP == MOD)
 	{
 		switch (type)
 		{
-		case _CHAR:
-			return ModOperation(store_adress, adress);
-			break;
-		case _INT:
-			return ModOperation((int *)store_adress, (int *)adress);
-			break;
-		case _SHORT:
-			return ModOperation((short *)store_adress, (short *)adress);
-			break;
-		case _LONG:
-			return ModOperation((long *)store_adress, (long *)adress);
-			break;
+            case _CHAR:
+                return ModOperation(store_adress, adress);
+            break;
+            case _INT:
+                return ModOperation((int *)store_adress, (int *)adress);
+            break;
+            case _SHORT:
+                return ModOperation((short *)store_adress, (short *)adress);
+            break;
+            case _LONG:
+                return ModOperation((long *)store_adress, (long *)adress);
+            break;
 		}
 	}
 
@@ -307,123 +309,123 @@ Status Operation(char OP, Adress store_adress, Size increment, Type type)
 	{
 		switch (type)
 		{
-		case _CHAR:
-			return AddOperation(store_adress, increment);
-			break;
-		case _INT:
-			return AddOperation((int *)store_adress, increment);
-			break;
-		case _SHORT:
-			return AddOperation((short *)store_adress, increment);
-			break;
-		case _LONG:
-			return AddOperation((long *)store_adress, increment);
-			break;
-		case _FLOAT:
-			return AddOperation((float *)store_adress, increment);
-			break;
-		case _DOUBLE:
-			return AddOperation((double *)store_adress, increment);
-			break;
-		case _STRING:
-			sprintf(p_itoa, "%d", (int)increment);
+            case _CHAR:
+                return AddOperation(store_adress, increment);
+            break;
+            case _INT:
+                return AddOperation((int *)store_adress, increment);
+            break;
+            case _SHORT:
+                return AddOperation((short *)store_adress, increment);
+            break;
+            case _LONG:
+                return AddOperation((long *)store_adress, increment);
+            break;
+            case _FLOAT:
+                return AddOperation((float *)store_adress, increment);
+            break;
+            case _DOUBLE:
+                return AddOperation((double *)store_adress, increment);
+            break;
+            case _STRING:
+                sprintf(p_itoa, "%d", (int)increment);
 
-			if (store_adress)
-				strcat(store_adress, p_itoa);
-			else
-				return OPER_NULL_ERR;
-			return EVERYTHING_OK;
-			break;
+                if (store_adress)
+                    strcat(store_adress, p_itoa);
+                else
+                    return OPER_NULL_ERR;
+                return EVERYTHING_OK;
+            break;
 		}
 	}
 	else if (OP == MUC)
 	{
 		switch (type)
 		{
-		case _CHAR:
-			return MulOperation(store_adress, increment);
-			break;
-		case _INT:
-			return MulOperation((int *)store_adress, increment);
-			break;
-		case _SHORT:
-			return MulOperation((short *)store_adress, increment);
-			break;
-		case _LONG:
-			return MulOperation((long *)store_adress, increment);
-			break;
-		case _FLOAT:
-			return MulOperation((float *)store_adress, increment);
-			break;
-		case _DOUBLE:
-			return MulOperation((double *)store_adress, increment);
-			break;
+            case _CHAR:
+                return MulOperation(store_adress, increment);
+            break;
+            case _INT:
+                return MulOperation((int *)store_adress, increment);
+            break;
+            case _SHORT:
+                return MulOperation((short *)store_adress, increment);
+            break;
+            case _LONG:
+                return MulOperation((long *)store_adress, increment);
+            break;
+            case _FLOAT:
+                return MulOperation((float *)store_adress, increment);
+            break;
+            case _DOUBLE:
+                return MulOperation((double *)store_adress, increment);
+            break;
 		}
 	}
 	else if (OP == DIC)
 	{
 		switch (type)
 		{
-		case _CHAR:
-			return DivOperation(store_adress, increment);
-			break;
-		case _INT:
-			return DivOperation((int *)store_adress, increment);
-			break;
-		case _SHORT:
-			return DivOperation((short *)store_adress, increment);
-			break;
-		case _LONG:
-			return DivOperation((long *)store_adress, increment);
-			break;
-		case _FLOAT:
-			return DivOperation((float *)store_adress, increment);
-			break;
-		case _DOUBLE:
-			return DivOperation((double *)store_adress, increment);
-			break;
+            case _CHAR:
+                return DivOperation(store_adress, increment);
+            break;
+            case _INT:
+                return DivOperation((int *)store_adress, increment);
+            break;
+            case _SHORT:
+                return DivOperation((short *)store_adress, increment);
+            break;
+            case _LONG:
+                return DivOperation((long *)store_adress, increment);
+            break;
+            case _FLOAT:
+                return DivOperation((float *)store_adress, increment);
+            break;
+            case _DOUBLE:
+                return DivOperation((double *)store_adress, increment);
+            break;
 		}
 	}
 	else if (OP == SUC)
 	{
 		switch (type)
 		{
-		case _CHAR:
-			return SubOperation(store_adress, increment);
-			break;
-		case _INT:
-			return SubOperation((int *)store_adress, increment);
-			break;
-		case _SHORT:
-			return SubOperation((short *)store_adress, increment);
-			break;
-		case _LONG:
-			return SubOperation((long *)store_adress, increment);
-			break;
-		case _FLOAT:
-			return SubOperation((float *)store_adress, increment);
-			break;
-		case _DOUBLE:
-			return SubOperation((double *)store_adress, increment);
-			break;
+            case _CHAR:
+                return SubOperation(store_adress, increment);
+            break;
+            case _INT:
+                return SubOperation((int *)store_adress, increment);
+            break;
+            case _SHORT:
+                return SubOperation((short *)store_adress, increment);
+            break;
+            case _LONG:
+                return SubOperation((long *)store_adress, increment);
+            break;
+            case _FLOAT:
+                return SubOperation((float *)store_adress, increment);
+            break;
+            case _DOUBLE:
+                return SubOperation((double *)store_adress, increment);
+            break;
 		}
 	}
 	else if (OP == MODC)
 	{
 		switch (type)
 		{
-		case _CHAR:
-			return ModOperation(store_adress, increment);
-			break;
-		case _INT:
-			return ModOperation((int *)store_adress, increment);
-			break;
-		case _SHORT:
-			return ModOperation((short *)store_adress, increment);
-			break;
-		case _LONG:
-			return ModOperation((long *)store_adress, increment);
-			break;
+            case _CHAR:
+                return ModOperation(store_adress, increment);
+            break;
+            case _INT:
+                return ModOperation((int *)store_adress, increment);
+            break;
+            case _SHORT:
+                return ModOperation((short *)store_adress, increment);
+            break;
+            case _LONG:
+                return ModOperation((long *)store_adress, increment);
+            break;
 		}
 	}
 

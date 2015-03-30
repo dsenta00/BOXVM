@@ -52,21 +52,21 @@ Adress Pointer::GetAdress(int _index)
 	{
 		switch (this->type)
 		{
-		case _CHAR:
-			return HeapReturnAdress(1);
-			break;
-		case _INT:  case _FLOAT:
-			return HeapReturnAdress(4);
-			break;
-		case _SHORT:
-			return HeapReturnAdress(2);
-			break;
-		case _LONG: case _DOUBLE:
-			return HeapReturnAdress(8);
-			break;
-		default:
-			return NULL;
-			break;
+            case _CHAR:
+                return HeapReturnAdress(1);
+            break;
+            case _INT:  case _FLOAT:
+                return HeapReturnAdress(4);
+            break;
+            case _SHORT:
+                return HeapReturnAdress(2);
+            break;
+            case _LONG: case _DOUBLE:
+                return HeapReturnAdress(8);
+            break;
+            default:
+                return NULL;
+            break;
 		}
 	}
 }

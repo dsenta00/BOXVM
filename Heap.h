@@ -13,8 +13,8 @@ class Heap : public Tree
 	PointerNode *last;
 	MemoryPool *memoryPool;
 
-	PointerNode *Push(Pointer *);                   //	--	Pushing element in pointer tree
-	void SetNewAdresses(PointerNode *, Adress, Size);//  --  Sets new adresses in pointer tree.
+    PointerNode *Push(Pointer *);                       //	--	Pushing element in pointer tree
+    void SetNewAdresses(PointerNode *, Adress, Size);   //  --  Sets new adresses in pointer tree.
 	Status ReserveMemory(Pointer *, Size);
 public:
 
@@ -22,10 +22,10 @@ public:
 	Heap(Size);
 	~Heap();
 
-	inline Pointer *SearchFor(Count);                   //	--	Returns pointer by ID
-	Status Lea(OperandQueue *, Type *, Count, int);   //	--	Sets in operation queue [base by id][count]
-	Status PushPointer(Type);							//	--	Push new data type in tree
-	Status Malloc(Count, Size);							//	--	Dynamic allocation of data by id of N elements
+    inline Pointer *SearchFor(Count);               //	--	Returns pointer by ID
+    Status Lea(OperandQueue *, Type *, Count, int); //	--	Sets in operation queue [base by id][count]
+    Status PushPointer(Type);                       //	--	Push new data type in tree
+    Status Malloc(Count, Size);                     //	--	Dynamic allocation of data by id of N elements
 	Status MallocDefrag(Count, Size);
 	Status Free(Count);
 };
@@ -161,15 +161,15 @@ Status Heap::Free(Count _count)
 
 		switch (del->GetType())
 		{
-		case _INT: case _FLOAT:
-			size *= 4;
-			break;
-		case _SHORT:
-			size *= 2;
-			break;
-		case _LONG: case _DOUBLE:
-			size *= 3;
-			break;
+            case _INT: case _FLOAT:
+                size *= 4;
+            break;
+            case _SHORT:
+                size *= 2;
+            break;
+            case _LONG: case _DOUBLE:
+                size *= 3;
+            break;
 		}
 
 		status = memoryPool->Free(adress, size);
@@ -192,21 +192,21 @@ Status Heap::ReserveMemory(Pointer *_mal, Size _size)
 	{
 		switch (_mal->GetType())
 		{
-		case _INT: case _FLOAT:
-			adress = memoryPool->Malloc(_size * 4);
-			break;
-		case _SHORT:
-			adress = memoryPool->Malloc(_size * 2);
-			break;
-		case _LONG: case _DOUBLE:
-			adress = memoryPool->Malloc(_size * 8);
-			break;
-		case _CHAR:
-			adress = memoryPool->Malloc(_size);
-			break;
-		default:
-			status = DYN_TYPE_ERR;
-			break;
+            case _INT: case _FLOAT:
+                adress = memoryPool->Malloc(_size * 4);
+            break;
+            case _SHORT:
+                adress = memoryPool->Malloc(_size * 2);
+            break;
+            case _LONG: case _DOUBLE:
+                adress = memoryPool->Malloc(_size * 8);
+            break;
+            case _CHAR:
+                adress = memoryPool->Malloc(_size);
+            break;
+            default:
+                status = DYN_TYPE_ERR;
+            break;
 		}
 
 		if (status != DYN_TYPE_ERR)
@@ -248,20 +248,20 @@ Status Heap::MallocDefrag(Count _count, Size _size)
 		{
 			switch (mal->GetType())
 			{
-			case _SHORT:
-				size *= 2; _size *= 2;
-				break;
-			case _INT: case _FLOAT:
-				size *= 4; _size *= 4;
-				break;
-			case _LONG: case _DOUBLE:
-				size *= 8; _size *= 8;
-				break;
-			case _CHAR:
-				break;
-			default:
-				status = DYN_TYPE_ERR;
-				break;
+                case _SHORT:
+                    size *= 2; _size *= 2;
+                break;
+                case _INT: case _FLOAT:
+                    size *= 4; _size *= 4;
+                break;
+                case _LONG: case _DOUBLE:
+                    size *= 8; _size *= 8;
+                break;
+                case _CHAR:
+                break;
+                default:
+                    status = DYN_TYPE_ERR;
+                break;
 			}
 
 			if (!status)

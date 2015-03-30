@@ -23,18 +23,18 @@ public:
 	Count GetCount();
 
 	WRITEOPDECL(int)
-		WRITEOPDECL(short)
-		WRITEOPDECL(long)
-		WRITEOPDECL(char)
-		WRITEOPDECL(float)
-		WRITEOPDECL(double)
-		WRITEOPDECL(char *)
-		READOPDECL(int)
-		READOPDECL(short)
-		READOPDECL(long)
-		READOPDECL(char)
-		READOPDECL(float)
-		READOPDECL(double)
+    WRITEOPDECL(short)
+    WRITEOPDECL(long)
+    WRITEOPDECL(char)
+    WRITEOPDECL(float)
+    WRITEOPDECL(double)
+    WRITEOPDECL(char *)
+    READOPDECL(int)
+    READOPDECL(short)
+    READOPDECL(long)
+    READOPDECL(char)
+    READOPDECL(float)
+    READOPDECL(double)
 };
 
 File::File()
@@ -52,15 +52,15 @@ Status File::Open(char *_path, int _mode, Count _count)
 
 	switch (mode)
 	{
-	case _WRITE:
-		fp = fopen(_path, "w+");
-		break;
-	case _READ:
-		fp = fopen(_path, "r");
-		break;
-	case _APPEND:
-		fp = fopen(_path, "a");
-		break;
+        case _WRITE:
+            fp = fopen(_path, "w+");
+        break;
+        case _READ:
+            fp = fopen(_path, "r");
+        break;
+        case _APPEND:
+            fp = fopen(_path, "a");
+        break;
 	}
 
 	if (!fp)
