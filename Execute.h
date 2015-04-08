@@ -139,13 +139,13 @@ Status Execute::OpQ(Stack &stack, Heap &heap)
                 status = Operation(op_index, POPADRESS, *READBYTECODE, type);
             continue;
             case SCAN:
-                SCANOP(POPADRESS, type);
+                Scan(POPADRESS, type);
             continue;
             case PRINT:
-                PRINTOP(POPADRESS, type);
+                Print(POPADRESS, type);
             continue;
             case PRINTLN:
-                PRINTLNOP(POPADRESS, type);
+                Println(POPADRESS, type);
             continue;
             case NEW:
                 dataid[0] = *READBYTECODE;
@@ -423,7 +423,6 @@ Status Execute::OpQ(Stack &stack, Heap &heap)
                 mode = REGISTRYMODE;
             continue;
             case ESTART:
-                printf("\n\tPress any key to continue . . .\n");
             continue;
             default:
                 status = UKNOWN_OPER_ERR;
@@ -471,21 +470,21 @@ Status Execute::Reg(Stack &stack, Heap &heap)
                 GETREGISTRY(op1);
                 if (!status)
                 {
-                    SCANOP(op1, type)
+                    Scan(op1, type);
                 }
             continue;
             case PRINT:
                 GETREGISTRY(op1);
                 if (!status)
                 {
-                    PRINTOP(op1, type)
+                    Print(op1, type);
                 }
             continue;
             case PRINTLN:
                 GETREGISTRY(op1);
                 if (!status)
                 {
-                    PRINTLNOP(op1, type)
+                    Println(op1, type);
                 }
             continue;
             case NEW:
@@ -765,7 +764,6 @@ Status Execute::Reg(Stack &stack, Heap &heap)
                 }
             continue;
             case ESTART:
-                printf("\n\tPress any key to continue . . .\n");
                 return status;
             continue;
             case ENDREG:
