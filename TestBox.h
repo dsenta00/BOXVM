@@ -35,7 +35,7 @@ Status NativeC()
 Status Testing()
 {
 	Status status = 0;
-	char testpath[MAXPATHSIZE] = "C:\\Users\\Danijela\\Desktop\\BOXVM-master\\ajde.box";
+	char testpath[MAXPATHSIZE] = "ajde.box";
 	CPUTime obj;
 	double BOX_time = 0, C_time = 0;
 
