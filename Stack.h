@@ -12,6 +12,7 @@ class Stack : public Tree
 	StaticDataNode *root;
 	StaticDataNode *last;
 	VirtualStackMemory vsm;
+    int counter;
 
 	inline StaticData *SearchFor(Count);        //	--	Returns adress value of data by ID
 	StaticDataNode *Push(StaticData *);         //	--	Pushing element on AVL tree /Adelson-Velskii & Landis/
@@ -47,7 +48,6 @@ inline StaticData *Stack::SearchFor(Count _count)
 
 StaticDataNode *Stack::Push(StaticData *_newelement)
 {
-	static int counter = 0;
 	StaticDataNode *q = new StaticDataNode(_newelement, ++counter);
 
 	if (q)
@@ -72,6 +72,7 @@ Stack::Stack()
 	root = NULL;
 	last = NULL;
 	status = EVERYTHING_OK;
+    counter = 0;
 }
 
 Status Stack::PushStack(Type _type, Adress _value)
