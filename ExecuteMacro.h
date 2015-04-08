@@ -3,8 +3,11 @@
 #include "BoxInfo.h"
 #include "CompareAdress.h"
 
-#define REGISTRYMODE        1
-#define OPQMODE             2
+enum EXECUTEMODES
+{
+    REGISTRYMODE    =   1,
+    OPQMODE         =   2
+};
 
 #define GETADRESS(_ARG_NUM) stack.GetAdress(dataid[_ARG_NUM])
 #define GETTYPE(_ARG_NUM) 	stack.GetType(dataid[_ARG_NUM])
@@ -76,54 +79,59 @@ if(!status)                         \
     }                                               \
 }
 
-#define PRINTOP(__ADR, __TYPE)                                  \
-switch (__TYPE)                                               	\
-{                                                             	\
-    case _CHAR:		printf("%c",    *__ADR); 			break;	\
-    case _STRING:	printf("%s",    __ADR);             break;	\
-    case _INT:		printf("%d",    *(int *)__ADR); 	break;	\
-    case _SHORT:	printf("%hd",   *(short *)__ADR);	break;	\
-    case _LONG:		printf("%ld",   *(long *)__ADR);	break;	\
-    case _FLOAT:	printf("%f",    *(float *)__ADR);	break;	\
-    case _DOUBLE:	printf("%lf",   *(double *)__ADR);  break;	\
+inline void Print(Adress __ADR, Type _type)
+{
+    switch (_type)
+    {
+        case _CHAR:		printf("%c",    *__ADR); 			break;
+        case _STRING:	printf("%s",    __ADR);             break;
+        case _INT:		printf("%d",    *(int *)__ADR); 	break;
+        case _SHORT:	printf("%hd",   *(short *)__ADR);	break;
+        case _LONG:		printf("%ld",   *(long *)__ADR);	break;
+        case _FLOAT:	printf("%f",    *(float *)__ADR);	break;
+        case _DOUBLE:	printf("%lf",   *(double *)__ADR);  break;
+    }
 }
 
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-#define PRINTLNOP(__ADR, __TYPE)                                    \
-switch (__TYPE)                                                     \
-{                                                                   \
-    case _CHAR:		printf("%c\r\n",    *__ADR); 			break;	\
-    case _STRING:	printf("%s\r\n",    __ADR);             break;	\
-    case _INT:		printf("%d\r\n",    *(int *)__ADR); 	break;	\
-    case _SHORT:	printf("%hd\r\n",   *(short *)__ADR);	break;	\
-    case _LONG:		printf("%ld\r\n",   *(long *)__ADR);	break;	\
-    case _FLOAT:	printf("%f\r\n",    *(float *)__ADR);	break;	\
-    case _DOUBLE:	printf("%lf\r\n",   *(double *)__ADR);  break;	\
+inline void Println(Adress __ADR, Type _type)
+{
+    #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+        switch (_type)
+        {
+            case _CHAR:		printf("%c\r\n",    *__ADR); 			break;
+            case _STRING:	printf("%s\r\n",    __ADR);             break;
+            case _INT:		printf("%d\r\n",    *(int *)__ADR); 	break;
+            case _SHORT:	printf("%hd\r\n",   *(short *)__ADR);	break;
+            case _LONG:		printf("%ld\r\n",   *(long *)__ADR);	break;
+            case _FLOAT:	printf("%f\r\n",    *(float *)__ADR);	break;
+            case _DOUBLE:	printf("%lf\r\n",   *(double *)__ADR);  break;
+        }
+    #else                               \
+        switch (_type)
+        {
+            case _CHAR:		printf("%c\n",    *__ADR);          break;
+            case _STRING:	printf("%s\n",    __ADR);           break;
+            case _INT:		printf("%d\n",    *(int *)__ADR); 	break;
+            case _SHORT:	printf("%hd\n",   *(short *)__ADR);	break;
+            case _LONG:		printf("%ld\n",   *(long *)__ADR);	break;
+            case _FLOAT:	printf("%f\n",    *(float *)__ADR);	break;
+            case _DOUBLE:	printf("%lf\n",   *(double *)__ADR);break;
+        }
+    #endif
 }
-#else
-#define PRINTLNOP(__ADR, __TYPE)                                    \
-switch (__TYPE)                                                     \
-{                                                                   \
-    case _CHAR:		printf("%c\n",    *__ADR); 			break;	\
-    case _STRING:	printf("%s\n",    __ADR);             break;	\
-    case _INT:		printf("%d\n",    *(int *)__ADR); 	break;	\
-    case _SHORT:	printf("%hd\n",   *(short *)__ADR);	break;	\
-    case _LONG:		printf("%ld\n",   *(long *)__ADR);	break;	\
-    case _FLOAT:	printf("%f\n",    *(float *)__ADR);	break;	\
-    case _DOUBLE:	printf("%lf\n",   *(double *)__ADR);  break;	\
-}
-#endif
 
-#define SCANOP(__ADR, __TYPE)                               \
-switch (__TYPE)                                           	\
-{                                                         	\
-    case _CHAR:		scanf(" %c", __ADR); 			break;	\
-    case _STRING:	scanf(" %s", __ADR);			break;	\
-    case _INT:		scanf(" %d", (int *)__ADR); 	break;	\
-    case _SHORT:	scanf(" %hd", (short *)__ADR);	break;	\
-    case _LONG:		scanf(" %ld", (long *)__ADR);	break;	\
-    case _FLOAT:	scanf(" %f", (float *)__ADR);	break;	\
-    case _DOUBLE:	scanf(" %lf", (double *)__ADR); break;	\
+inline void Scan(Adress __ADR, Type __TYPE)
+{
+    switch (__TYPE)
+    {
+        case _CHAR:		scanf(" %c", __ADR); 			break;
+        case _STRING:	scanf(" %s", __ADR);			break;
+        case _INT:		scanf(" %d", (int *)__ADR); 	break;
+        case _SHORT:	scanf(" %hd", (short *)__ADR);	break;
+        case _LONG:		scanf(" %ld", (long *)__ADR);	break;
+        case _FLOAT:	scanf(" %f", (float *)__ADR);	break;
+        case _DOUBLE:	scanf(" %lf", (double *)__ADR); break;
+    }
 }
 
 #endif // EXECUTEMACRO_H
