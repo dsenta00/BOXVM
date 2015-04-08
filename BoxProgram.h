@@ -75,67 +75,67 @@ Status BoxProgram::SetStack()
 
 			switch (shortID)
 			{
-                case ID_STRING:
-                    datatype = _STRING;
-                break;
-                case ID_CHAR:
-                    datatype = _CHAR;
-                break;
-                case ID_INT:
-                    datatype = _INT;
-                break;
-                case ID_SHORT:
-                    datatype = _SHORT;
-                break;
-                case ID_LONG:
-                    datatype = _LONG;
-                break;
-                case ID_DOUBLE:
-                    datatype = _DOUBLE;
-                break;
-                case ID_FLOAT:
-                    datatype = _FLOAT;
-                break;
-                default:
-                    datatype = 0;
-                    status = STAT_TYPE_ERR;
-                break;
+				case ID_STRING:
+				    datatype = _STRING;
+				break;
+				case ID_CHAR:
+				    datatype = _CHAR;
+				break;
+				case ID_INT:
+				    datatype = _INT;
+				break;
+				case ID_SHORT:
+				    datatype = _SHORT;
+				break;
+				case ID_LONG:
+				    datatype = _LONG;
+				break;
+				case ID_DOUBLE:
+				    datatype = _DOUBLE;
+				break;
+				case ID_FLOAT:
+				    datatype = _FLOAT;
+				break;
+				default:
+				    datatype = 0;
+				    status = STAT_TYPE_ERR;
+				break;
 			}
 
 			switch (datatype)
 			{
-                case _CHAR:
-                    boxfile->GetNextWord(&buffer[0]);
-                break;
-                case _INT: case _FLOAT:
-                    boxfile->GetNextWord(&buffer[0]);
-                    boxfile->GetNextWord(&buffer[1]);
-                    boxfile->GetNextWord(&buffer[2]);
-                    boxfile->GetNextWord(&buffer[3]);
-                break;
-                case _LONG: case _DOUBLE:
-                    boxfile->GetNextWord(&buffer[0]);
-                    boxfile->GetNextWord(&buffer[1]);
-                    boxfile->GetNextWord(&buffer[2]);
-                    boxfile->GetNextWord(&buffer[3]);
-                    boxfile->GetNextWord(&buffer[4]);
-                    boxfile->GetNextWord(&buffer[5]);
-                    boxfile->GetNextWord(&buffer[6]);
-                    boxfile->GetNextWord(&buffer[7]);
-                break;
-                case _SHORT:
-                    boxfile->GetNextWord(&buffer[0]);
-                    boxfile->GetNextWord(&buffer[1]);
-                break;
-                case _STRING:
-                    i = 0;
-
-                    boxfile->GetNextWord(&buffer[i]);
-                    while (buffer[i]) 	// 0 is end of string
-                        boxfile->GetNextWord(&buffer[++i]);
-
-                    buffer[i] = '\0';
-                break;
+		                case _CHAR:
+		                    boxfile->GetNextWord(&buffer[0]);
+		                break;
+		                case _INT: case _FLOAT:
+		                    boxfile->GetNextWord(&buffer[0]);
+		                    boxfile->GetNextWord(&buffer[1]);
+		                    boxfile->GetNextWord(&buffer[2]);
+		                    boxfile->GetNextWord(&buffer[3]);
+		                break;
+		                case _LONG: case _DOUBLE:
+		                    boxfile->GetNextWord(&buffer[0]);
+		                    boxfile->GetNextWord(&buffer[1]);
+		                    boxfile->GetNextWord(&buffer[2]);
+		                    boxfile->GetNextWord(&buffer[3]);
+		                    boxfile->GetNextWord(&buffer[4]);
+		                    boxfile->GetNextWord(&buffer[5]);
+		                    boxfile->GetNextWord(&buffer[6]);
+		                    boxfile->GetNextWord(&buffer[7]);
+		                break;
+		                case _SHORT:
+		                    boxfile->GetNextWord(&buffer[0]);
+		                    boxfile->GetNextWord(&buffer[1]);
+		                break;
+		                case _STRING:
+		                    i = 0;
+		
+		                    boxfile->GetNextWord(&buffer[i]);
+		                    while (buffer[i]) 	// 0 is end of string
+		                        boxfile->GetNextWord(&buffer[++i]);
+		
+		                    buffer[i] = '\0';
+		                break;
 			}
 
 			if (!status)
@@ -178,27 +178,27 @@ Status BoxProgram::SetHeap()
 		{
 			switch (shortID)
 			{
-                case ID_CHAR:
-                    status = heap->PushPointer(_CHAR);
-                break;
-                case ID_INT:
-                    status = heap->PushPointer(_INT);
-                break;
-                case ID_SHORT:
-                    status = heap->PushPointer(_SHORT);
-                break;
-                case ID_LONG:
-                    status = heap->PushPointer(_LONG);
-                break;
-                case ID_DOUBLE:
-                    status = heap->PushPointer(_DOUBLE);
-                break;
-                case ID_FLOAT:
-                    status = heap->PushPointer(_FLOAT);
-                break;
-                default:
-                    status = STAT_TYPE_ERR;
-                break;
+		                case ID_CHAR:
+		                    status = heap->PushPointer(_CHAR);
+		                break;
+		                case ID_INT:
+		                    status = heap->PushPointer(_INT);
+		                break;
+		                case ID_SHORT:
+		                    status = heap->PushPointer(_SHORT);
+		                break;
+		                case ID_LONG:
+		                    status = heap->PushPointer(_LONG);
+		                break;
+		                case ID_DOUBLE:
+		                    status = heap->PushPointer(_DOUBLE);
+		                break;
+		                case ID_FLOAT:
+		                    status = heap->PushPointer(_FLOAT);
+		                break;
+		                default:
+		                    status = STAT_TYPE_ERR;
+		                break;
 			}
 
 			boxfile->GetNextWord(&shortID);
