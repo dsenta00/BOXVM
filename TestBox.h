@@ -4,13 +4,38 @@
 #include "CPUTime.h"
 #include "BoxInfo.h"
 
-Status NativeC();
-Status Testing();
+Status NativeC()
+{
+    Status status = 0;
+    int i = 0, limit = 100000;
+    FILE *fp = NULL;
+
+    fp = fopen("TestNativeC.txt", "w+");
+
+    if(fp)
+    {
+        do
+        {
+            printf("%d", i);
+            fprintf(fp, "%d", i);
+            i++;
+        }
+        while (i < limit);
+
+        fclose(fp);
+    }
+    else
+    {
+        status = -1;
+    }
+
+    return status;
+}
 
 Status Testing()
 {
-    Status status = 0;
-    char testpath[MAXPATHSIZE] = "/home/duje/BOXVM 0.5/BOXVM/ajde.box";
+	Status status = 0;
+	char testpath[MAXPATHSIZE] = "C:\\Users\\Danijela\\Desktop\\BOXVM-master\\ajde.box";
 	CPUTime obj;
 	double BOX_time = 0, C_time = 0;
 
@@ -30,7 +55,7 @@ Status Testing()
 		WriteLogErrorReport(testpath, status);
 	else
 	{
-        printf("\n\tCounting C time execution speed.\n");
+		printf("\n\tCounting C time execution speed.\n");
 
 		obj.Start();
 		NativeC();
@@ -38,40 +63,12 @@ Status Testing()
 
 		C_time = obj.GetCPUTime();
 
-        printf("\n\tBOX program executing time:\t%lf", BOX_time);
-        printf("\n\tC program executing time:\t%lf", C_time);
-        printf("\n\t<BOX:C>:\t\t\t%lf\n\n", BOX_time / C_time);
+		printf("\n\tBOX program executing time:\t%lf", BOX_time);
+		printf("\n\tC program executing time:\t%lf", C_time);
+		printf("\n\t<BOX:C>:\t\t\t%lf\n\n", BOX_time / C_time);
 	}
 	
 	return status;
 }
-
-Status NativeC()
-{
-    Status status = 0;
-    int i = 0, limit = 100000;
-    FILE *fp = NULL;
-
-    fp = fopen("TestNativeC.txt", "w+");
-
-    if(fp)
-    {
-        while (i < limit)
-        {
-            printf("%d", i);
-            fprintf(fp, "%d", i);
-            i++;
-        }
-
-        fclose(fp);
-    }
-    else
-    {
-        status = -1;
-    }
-
-	return status;
-}
-
 #endif
 
