@@ -238,6 +238,10 @@ BoxProgram::~BoxProgram()
 	if (boxfile)
 		delete boxfile;
 
+	if(heap)
+		delete heap;
+
+	heap = NULL;
 	boxfile = NULL;
 }
 
