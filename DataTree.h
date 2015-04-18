@@ -2,32 +2,81 @@
 #define DATATREE_H
 
 #include "BoxInfo.h"
+#include "DataNode.h"
 
-class Tree {
-protected:
-	Status status;
+class DataTree {
 public:
-	template <typename T>
-	Size Height(T *);
-	template <typename T>
-	Size Difference(T *);
-	template <typename T>
-	T *RR_Rotation(T *);
-	template <typename T>
-	T *Balance(T *);
-	template <typename T>
-	T *DeleteTree(T *);
+    DataTree();
+    Size Height(DataNode *);
+    Size Difference(DataNode*);
+    DataNode *RR_Rotation(DataNode *);
+    DataNode *Balance(DataNode *);
+    DataNode *DeleteTree(DataNode *);
+    inline Data *SearchFor(Count);
+    Status GetStatus();
+    ~DataTree();
+protected:
+    DataNode *Push(Data *);
 
-	Status GetStatus();
+    DataNode *root;
+    DataNode *last;
+    Count counter;
+	Status status;
 };
 
-Status Tree::GetStatus()
+DataTree::DataTree()
+{
+    counter = 0;
+    status = EVERYTHING_OK;
+}
+
+DataNode *DataTree::Push(Data *_element)
+{
+    DataNode *q = new DataNode(_element, ++counter);
+
+    if (q)
+    {
+        if (!root)
+        {
+            root = q;
+            last = root;
+        }
+        else
+        {
+            last->Right = q;
+            last = q;
+            root = Balance(root);
+        }
+    }
+    return root;
+}
+
+inline Data *DataTree::SearchFor(Count _count)
+{
+    DataNode *curr = root;
+
+    while (curr)
+    {
+        if (curr->GetCount() > _count)
+            curr = curr->Left;
+        else if (curr->GetCount() < _count)
+            curr = curr->Right;
+        else
+            break;
+    }
+
+    if (curr)
+        return curr->GetDataInfo();
+    else
+        return NULL;
+}
+
+Status DataTree::GetStatus()
 {
 	return status;
 }
 
-template <typename T>
-Size Tree::Height(T *current)
+Size DataTree::Height(DataNode *current)
 {
 	Size l_height = 0, r_height = 0;
 
@@ -43,16 +92,14 @@ Size Tree::Height(T *current)
 		return l_height + 1;
 }
 
-template <typename T>
-Size Tree::Difference(T *_current)
+Size DataTree::Difference(DataNode *_current)
 {
 	return Height(_current->Right) - Height(_current->Left);
 }
 
-template <typename T>
-T *Tree::RR_Rotation(T *_parent)
+DataNode *DataTree::RR_Rotation(DataNode *_parent)
 {
-	T *temp = NULL;
+    DataNode *temp = NULL;
 
 	temp = _parent->Right;
 	_parent->Right = temp->Left;
@@ -61,8 +108,7 @@ T *Tree::RR_Rotation(T *_parent)
 	return temp;
 }
 
-template <typename T>
-T *Tree::Balance(T *_current)
+DataNode *DataTree::Balance(DataNode *_current)
 {
 	if (!_current->Right || !_current->Right->Right)
 		return _current;
@@ -75,8 +121,7 @@ T *Tree::Balance(T *_current)
 	return _current;
 }
 
-template <typename T>
-T *Tree::DeleteTree(T *_current)
+DataNode *DataTree::DeleteTree(DataNode *_current)
 {
 	if (_current)
 	{
@@ -90,6 +135,11 @@ T *Tree::DeleteTree(T *_current)
 	}
 
 	return _current;
+}
+
+DataTree::~DataTree()
+{
+    last = root = DeleteTree(root);
 }
 
 #endif // DATA_TREE_H

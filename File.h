@@ -39,10 +39,7 @@ public:
 
 File::File()
 {
-	fp = NULL;
-	mode = _UNOPEN;
-	count = 0;
-	next = NULL;
+    memset(this, 0, sizeof(File));
 }
 
 Status File::Open(char *_path, int _mode, Count _count)

@@ -3,31 +3,27 @@
 
 #include "BoxInfo.h"
 #include "MemoryPool.h"
-#include "PointerNode.h"
+#include "DataNode.h"
 #include "DataTree.h"
 #include "OperandQueue.h"
 
-class Heap : public Tree
-{
-	PointerNode *root;
-	PointerNode *last;
-	MemoryPool *memoryPool;
-
-    PointerNode *Push(Pointer *);                       //	--	Pushing element in pointer tree
-    void SetNewAdresses(PointerNode *, Adress, Size);   //  --  Sets new adresses in pointer tree.
-	Status ReserveMemory(Pointer *, Size);
+class Heap : public DataTree {
 public:
+    Heap();
+    Heap(Size);
+    ~Heap();
 
-	Heap();
-	Heap(Size);
-	~Heap();
-
-    inline Pointer *SearchFor(Count);               //	--	Returns pointer by ID
-    Status Lea(OperandQueue *, Type *, Count, int); //	--	Sets in operation queue [base by id][count]
+    Status Lea(OperandQueue *, Type *, Count, Count); //	--	Sets in operation queue [base by id][count]
+    Status LeaReg(OperandQueue *, Type *, Count, Count, Count); //	--	Sets in register [base by id][count][register]
     Status PushPointer(Type);                       //	--	Push new data type in tree
     Status Malloc(Count, Size);                     //	--	Dynamic allocation of data by id of N elements
-	Status MallocDefrag(Count, Size);
-	Status Free(Count);
+    Status MallocDefrag(Count, Size);
+    Status Free(Count);
+private:
+    void SetNewAdresses(DataNode *, Adress, Size);  //  --  Sets new adresses in Data tree.
+    Status ReserveMemory(Data *, Size);
+protected:
+    MemoryPool *memoryPool;
 };
 
 Heap::Heap(Size _poolsize)
@@ -43,58 +39,18 @@ Heap::Heap(Size _poolsize)
 		status = POOL_MAL_ERR;
 }
 
-inline Pointer *Heap::SearchFor(Count _count)
-{
-	PointerNode *curr = root;
-
-	while (curr)
-	{
-		if (curr->GetCount() > _count)
-			curr = curr->Left;
-		else if (curr->GetCount() < _count)
-			curr = curr->Right;
-		else
-			break;
-	}
-
-	if (curr)
-		return curr->GetPointer();
-	else
-		return NULL;
-}
-
-PointerNode *Heap::Push(Pointer *new_element)
-{
-	static Count counter = 0;
-	PointerNode *q = new PointerNode(new_element, ++counter);
-
-	if (q)
-	{
-		if (!root)
-			last = root = q;
-		else
-		{
-			last->Right = q;
-			last = q;
-			root = Balance(root);
-		}
-	}
-
-	return root;
-}
-
-void Heap::SetNewAdresses(PointerNode *element, Adress _adress, Size _size)
+void Heap::SetNewAdresses(DataNode *element, Adress _adress, Size _size)
 {
 	Adress curradr = NULL;
 
 	if (element)
 	{
-		curradr = element->GetPointer()->GetAdress();
+        curradr = element->GetDataInfo()->GetAdress();
 
 		SetNewAdresses(element->Left, _adress, _size);
 
 		if (_adress < curradr)
-			element->GetPointer()->SetAdress(curradr - _size);
+            element->GetDataInfo()->SetAdress(curradr - _size);
 
 		SetNewAdresses(element->Right, _adress, _size);
 	}
@@ -108,25 +64,28 @@ Heap::Heap()
 	memoryPool = NULL;
 }
 
-Status Heap::Lea(OperandQueue *opqueue, Type *_type, Count _count, int _position)
+Status Heap::Lea(OperandQueue *opqueue, Type *_type, Count _count, Count _position)
 {
-	Pointer *dat = NULL;
-	Adress starta = NULL;
+    Data *dat = NULL;
 
 	if (_count == -1)
-		dat = root->GetPointer();
+        dat = root->GetDataInfo();
 	else
 		dat = SearchFor(_count);
 
 	if (dat)
-	{
-		starta = dat->GetAdress(_position);
+    {
 		*_type = dat->GetType();
 
-		if (starta && *_type != 0)
-			status = opqueue->Push(starta, *_type);
+        if (*_type)
+        {
+            if(_position)
+                status = opqueue->Push(dat, _position);
+            else
+                status = opqueue->Push(dat);
+        }
 		else
-			status = BUFF_NULL_ERR;
+            status = BUFF_NULL_ERR;
 	}
 	else
 		status = HEAP_UNEX_ERR;
@@ -134,9 +93,38 @@ Status Heap::Lea(OperandQueue *opqueue, Type *_type, Count _count, int _position
 	return status;
 }
 
+Status Heap::LeaReg(OperandQueue *opqueue, Type *_type, Count _count, Count _position, Count _regnum)
+{
+    Data *dat = NULL;
+
+    if (_count == -1)
+        dat = root->GetDataInfo();
+    else
+        dat = SearchFor(_count);
+
+    if (dat)
+    {
+        *_type = dat->GetType();
+
+        if (*_type)
+        {
+            if(_position)
+                status = opqueue->SetRegistry(dat, _regnum, _position);
+            else
+                status = opqueue->Push(dat, _regnum);
+        }
+        else
+            status = BUFF_NULL_ERR;
+    }
+    else
+        status = HEAP_UNEX_ERR;
+
+    return status;
+}
+
 Status Heap::PushPointer(Type _type)
 {
-	Pointer *ptr = new Pointer(_type);
+    Data *ptr = new Data(_type);
 
 	if (ptr)
 		root = Push(ptr);
@@ -148,7 +136,7 @@ Status Heap::PushPointer(Type _type)
 
 Status Heap::Free(Count _count)
 {
-	Pointer *del = NULL;
+    Data *del = NULL;
 	Adress adress = NULL;
 	Size size = 0;
 
@@ -184,7 +172,7 @@ Status Heap::Free(Count _count)
 	return status;
 }
 
-Status Heap::ReserveMemory(Pointer *_mal, Size _size)
+Status Heap::ReserveMemory(Data *_mal, Size _size)
 {
 	Adress adress = NULL;
 
@@ -228,7 +216,7 @@ Status Heap::ReserveMemory(Pointer *_mal, Size _size)
 
 Status Heap::Malloc(Count _count, Size _size)
 {
-	Pointer *mal = SearchFor(_count);
+    Data *mal = SearchFor(_count);
 	return ReserveMemory(mal, _size);
 }
 
@@ -236,7 +224,7 @@ Status Heap::MallocDefrag(Count _count, Size _size)
 {
 	Adress adress = NULL;
 	Size size = 0;
-	Pointer *mal = SearchFor(_count);
+    Data *mal = SearchFor(_count);
 
 	if (mal)
 	{
@@ -295,7 +283,7 @@ Status Heap::MallocDefrag(Count _count, Size _size)
 
 Heap::~Heap()
 {
-	root = DeleteTree(root);
+    root = DeleteTree(root);
 
 	if (memoryPool)
 		delete memoryPool;

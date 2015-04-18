@@ -4,74 +4,77 @@
 #include "CPUTime.h"
 #include "BoxInfo.h"
 
-Status NativeC();
-Status Testing();
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+    #include <conio.h>
+#endif
+
+inline void BoxSleep()
+{
+    #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+        Sleep(1000);
+    #else
+        sleep(1);
+    #endif
+}
+
+Status NativeC()
+{
+    double pi = 0;
+    const double constant = 4;
+    double i = 1, limit = 100000;
+
+    while(i < limit)
+    {
+        pi += constant/i - constant/(i+2);
+        i += 4;
+    }
+
+    return 0;
+}
 
 Status Testing()
 {
     Status status = 0;
     char testpath[MAXPATHSIZE] = "/home/duje/BOXVM 0.5/BOXVM/ajde.box";
-	CPUTime obj;
-	double BOX_time = 0, C_time = 0;
+    CPUTime testspeed;
+    double BOX_time = 0, C_time = 0, C_val = 0, BOX_val = 0;
 
-	#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-		Sleep(1000);
-	#else
-		sleep(1);
-	#endif
+    printf("\n\tRunning test program...\n");
 
-	obj.Start();
-	status = RunProgram(testpath);
-	obj.Stop();
+    BoxSleep();
 
-	BOX_time = obj.GetCPUTime();
+    status = RunProgramPercentage(testpath);
 
-	if (status < 0)
-		WriteLogErrorReport(testpath, status);
-	else
-	{
-        printf("\n\tCounting C time execution speed.\n");
+    testspeed.Start();
+    status = RunProgram(testpath);
+    testspeed.Stop();
 
-		obj.Start();
-		NativeC();
-		obj.Stop();
+    BOX_time = testspeed.GetCPUTime();
+    BOX_val = testspeed.GetCPU();
 
-		C_time = obj.GetCPUTime();
-
-        printf("\n\tBOX program executing time:\t%lf", BOX_time);
-        printf("\n\tC program executing time:\t%lf", C_time);
-        printf("\n\t<BOX:C>:\t\t\t%lf\n\n", BOX_time / C_time);
-	}
-	
-	return status;
-}
-
-Status NativeC()
-{
-    Status status = 0;
-    int i = 0, limit = 100000;
-    FILE *fp = NULL;
-
-    fp = fopen("TestNativeC.txt", "w+");
-
-    if(fp)
+    if (status < 0)
     {
-        while (i < limit)
-        {
-            printf("%d", i);
-            fprintf(fp, "%d", i);
-            i++;
-        }
-
-        fclose(fp);
+        WriteLogErrorReport(testpath, status);
     }
     else
     {
-        status = -1;
+        testspeed.Start();
+        status = NativeC();
+        testspeed.Stop();
+
+        C_time = testspeed.GetCPUTime();
+        C_val = testspeed.GetCPU();
     }
 
-	return status;
+    if(!status)
+    {
+        std::cout.precision(15);
+
+        std::cout << "\n\tBOX program executing time:\t" << BOX_time << " ms";
+        std::cout << "\n\tC program executing time:\t" << C_time << " ms";
+        std::cout << "\n\t<BOX:C>:\t\t\t" << BOX_val / C_val << "\n\n";
+    }
+
+    return status;
 }
-
 #endif
-

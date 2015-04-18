@@ -1,22 +1,31 @@
-$stack 21
+$stack 40
 $data
-	%i limit 100000
-	%i count 0
-	%s file "TestBox.txt"
+	%d pi 0
+	%d temp 0
+	%d i 1
+	%d limit 100000
+	%d constant 4
 $pool 0
 $heap
 $code
 	start
+		reg
+			pushs i r0
+			pushs limit r1
+			pushs constant r2
+			pushs pi r3
+			pushs temp r4
 
-	openw file
-	pushs count
-	pushs limit
-	reg
-		loopl r0 r1 4
-			print r0
-			puti file r0
-			adi r0 1
-		reploop
-	endreg
+			loopl r0 r1 9
+				mov r4 r2
+				div r4 r0
+				add r3 r4
+				adi r0 2
+				mov r4 r2
+				div r4 r0
+				sub r3 r4
+				adi r0 2
+			reploop
+		endreg
 	estart
 $endcode

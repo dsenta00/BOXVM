@@ -2,34 +2,51 @@
 #define OperandQUEUE_H
 
 #include "BoxInfo.h"
-#include "StaticData.h"
+#include "Data.h"
 
-class OperandQueue
-{
-	StaticData queuebuffer[MAXBUFFERSIZE];
-	StaticData *pstart;
-	StaticData *pend;
+class OperandQueue {
 public:
-
     OperandQueue();
-    Status Push(Adress, Type);
+    Status Push(Data *);
+    Status Push(Data *, Count);
     Adress Pop(Type &);
-    void ResetOperandQueue();
-    Status SetRegistry(Adress, Type, Count);
+    Status SetRegistry(Data *, Count);
+    Status SetRegistry(Data *, Count, Count);
     Status GetRegistry(Adress *, Type &, Count);
+    void ResetOperandQueue();
+protected:
+
+    Data *buffer[MAXBUFFERSIZE];
+    Count index[MAXBUFFERSIZE];
+    Count start;
+    Count end;
 };
 
 OperandQueue::OperandQueue()
 {
-    this->ResetOperandQueue();
+    memset(this, 0, sizeof(OperandQueue));
 }
 
-Status OperandQueue::Push(Adress _adress, Type _type)
+Status OperandQueue::Push(Data *_data)
 {
-    pend->SetExternData(_adress, _type);
+    buffer[end] = _data;
+    index[end] = 0;
 
-    if (pend < ENDBUFFER)
-        pend++;
+    if (end < 7)
+        end++;
+    else
+        return QUEUE_OVERFLOW;
+
+    return EVERYTHING_OK;
+}
+
+Status OperandQueue::Push(Data *_data, Count _index)
+{
+    buffer[end] = _data;
+    index[end] = _index;
+
+    if (end < 7)
+        end++;
     else
         return QUEUE_OVERFLOW;
 
@@ -38,28 +55,45 @@ Status OperandQueue::Push(Adress _adress, Type _type)
 
 Adress OperandQueue::Pop(Type &_type)
 {
-    StaticData *q = pstart;
+    Data *q = buffer[start];
 
-    if (pend != STARTBUFFER)
+    if (end)
     {
-        if (++pstart == pend)
-            pstart = pend = STARTBUFFER;
+        if (++start == end)
+            start = end = 0;
     }
 
     _type = q->GetType();
-    return q->GetStartAdress();
+
+    if(index[start])
+        return q->GetAdress(index[start]);
+    else
+        return q->GetAdress();
 }
 
 void OperandQueue::ResetOperandQueue()
 {
-    pend = pstart = STARTBUFFER;
+    start = end = 0;
 }
 
-Status OperandQueue::SetRegistry(Adress _adress, Type _type, Count _regnum)
+Status OperandQueue::SetRegistry(Data *data, Count _regnum)
 {
     if(_regnum >= 0 && _regnum < MAXBUFFERSIZE)
     {
-        queuebuffer[_regnum].SetExternData(_adress, _type);
+        buffer[_regnum] = data;
+        index[_regnum] = 0;
+        return EVERYTHING_OK;
+    }
+    else
+        return REGISTRYUNEX;
+}
+
+Status OperandQueue::SetRegistry(Data *data, Count _regnum, Count _index)
+{
+    if(_regnum >= 0 && _regnum < MAXBUFFERSIZE)
+    {
+        buffer[_regnum] = data;
+        index[_regnum] = _index;
         return EVERYTHING_OK;
     }
     else
@@ -70,12 +104,18 @@ Status OperandQueue::GetRegistry(Adress *_adress, Type &_type, Count _regnum)
 {
     if(_regnum >= 0 && _regnum < MAXBUFFERSIZE)
     {
-        *_adress = queuebuffer[_regnum].GetStartAdress();
-        _type = queuebuffer[_regnum].GetType();
+        if(index[_regnum])
+            *_adress = buffer[_regnum]->GetAdress(index[_regnum]);
+        else
+            *_adress = buffer[_regnum]->GetAdress();
+
+        _type = buffer[_regnum]->GetType();
+
         return EVERYTHING_OK;
     }
     else
         return REGISTRYUNEX;
 }
+
 
 #endif

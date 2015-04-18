@@ -1,0 +1,38 @@
+$stack 40
+$data
+	%d pi 0
+	%d temp 0
+	%d i 1
+	%d limit 100000
+	%d constant 4
+$pool 0
+$heap
+$code
+	start
+		pushs i
+		pushs limit
+
+		loopl 21
+			mov temp constant
+			pushs temp
+			pushs i
+			div
+			pushs pi
+			pushs temp
+			add
+			pushs i
+			adi 2
+			mov temp constant
+			pushs temp
+			pushs i
+			div
+			pushs pi
+			pushs temp
+			sub
+			pushs i
+			adi 2
+			pushs i
+			pushs limit
+		reploop
+	estart
+$endcode

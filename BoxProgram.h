@@ -2,27 +2,25 @@
 #define BOXPROGRAM_H
 
 #include "BoxInfo.h"
-#include "Node.h"
+#include "DataNode.h"
 #include "InvokeBox.h"
 #include "Execute.h"
 
-class BoxProgram
-{
-	InvokeBox *boxfile;
-	Stack stack;
-	Heap *heap;
-	Status status;
+class BoxProgram {
 public:
 	BoxProgram();
 	~BoxProgram();
-
 	Status ReadSourceCode(char *);
 	Status SetStack();
 	Status SetPool();
 	Status SetHeap();
-	Status ExecuteProgram();
+    Status ExecuteProgram();
+protected:
+    InvokeBox *boxfile;
+    Stack stack;
+    Heap *heap;
+    Status status;
 };
-
 
 BoxProgram::BoxProgram()
 {

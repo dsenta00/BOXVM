@@ -19,8 +19,7 @@ int main(int argc, char *argv[])
 	Status status = EVERYTHING_OK;
 
 	if (argc == 1)
-	{
-		printf("\n\tRunning test program...\n");
+    {
 		status = Testing();
 	}
 	else

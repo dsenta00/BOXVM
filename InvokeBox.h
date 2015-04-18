@@ -19,12 +19,12 @@ public:
 
 InvokeBox::InvokeBox()
 {
-    p_codeSeg = codeSeg = NULL;
+    memset(this, 0, sizeof(InvokeBox));
 }
 
 InvokeBox::~InvokeBox()
 {
-    p_codeSeg = codeSeg = NULL; //Koristi se u ByteCode, stoga ne smijes oslobadjat!!!
+    memset(this, 0, sizeof(InvokeBox)); //Koristi se u ByteCode, stoga ne smijes oslobadjat!!!
 }
 
 Bcode InvokeBox::GetCodeSegment()

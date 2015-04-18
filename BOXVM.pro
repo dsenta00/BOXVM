@@ -7,18 +7,13 @@ SOURCES += \
     BOXVM.cpp
 
 HEADERS += \
-    Node.h \
-    PointerNode.h \
-    StaticDataNode.h \
     LoopNode.h \
     BOXVM.h \
     FileOperationsMacro.h \
     ByteCode.h \
     TestBox.h \
-    Pointer.h \
     DataTree.h \
     MemoryPool.h \
-    StaticData.h \
     Loop.h \
     File.h \
     Stack.h \
@@ -34,5 +29,7 @@ HEADERS += \
     CompareAdress.h \
     VirtualStackMemory.h \
     InvokeBox.h \
-    OperandQueue.h
+    OperandQueue.h \
+    Data.h \
+    DataNode.h
 

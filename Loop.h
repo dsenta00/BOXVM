@@ -8,7 +8,7 @@ class Loop
 {
 	LoopNode LoopBuffer[MAXLOOPSIZE];
 	LoopNode *Current;
-	LoopNode *MakeLoop;
+    LoopNode *MakeLoop;
 	Status status;
 public:
 
@@ -29,9 +29,9 @@ Loop::Loop()
 
 Status Loop::PushLoop(Bcode _adress)
 {
-	if (MakeLoop == ENDLOOP)
+    if (MakeLoop == ENDLOOP)
 		status = LOOP_OVERFLOW;
-	else
+    else
 	{
 		MakeLoop->NewLoopNode(_adress);
 		Current = MakeLoop;

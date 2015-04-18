@@ -21,6 +21,8 @@ class Execute
 	Adress op1;
 	Adress op2;
 	Type type;
+    Type temp;
+    Data *data;
 	char dataid[MAXARGS];
 	char op_index;
 	Status mode;
@@ -43,14 +45,14 @@ Status Execute::GetStatus()
 
 Execute::Execute()
 {
-	opQ = NULL;
-	bytecode = NULL;
-	file_list = NULL;
-	loop_list = NULL;
-	operation = NULL;
-	op1 = op2 = NULL;
-	mode = OPQMODE;
-	type = 0;
+    opQ = NULL;
+    bytecode = NULL;
+    file_list = NULL;
+    loop_list = NULL;
+    operation = NULL;
+    op1 = op2 = NULL;
+    mode = OPQMODE;
+    type = temp = 0;
 	op_index = START;
 	status = EVERYTHING_OK;
 }
@@ -59,10 +61,10 @@ Execute::Execute(Bcode _codesegment, Bcode _bytecodestart)
 {
 	status = EVERYTHING_OK;
 	mode = OPQMODE;
-	op_index = START;
-	operation = NULL;
-	op1 = op2 = NULL;
-	type = 0;
+    op_index = START;
+    operation = NULL;
+    op1 = op2 = NULL;
+    type = temp = 0;
 	opQ = new OperandQueue();
 
 	if (opQ)
@@ -92,7 +94,7 @@ Execute::Execute(Bcode _codesegment, Bcode _bytecodestart)
 
 Status Execute::Do(Stack &stack, Heap &heap)
 {
-	while (status >= EVERYTHING_OK && op_index != ESTART)
+    do
 	{
 		switch (mode)
 		{
@@ -106,7 +108,7 @@ Status Execute::Do(Stack &stack, Heap &heap)
 			return status;
 			break;
 		}
-	}
+    }while (status >= EVERYTHING_OK && op_index != ESTART);
 
 	return status;
 }
@@ -139,13 +141,13 @@ Status Execute::OpQ(Stack &stack, Heap &heap)
                 status = Operation(op_index, POPADRESS, *READBYTECODE, type);
             continue;
             case SCAN:
-                SCANOP(POPADRESS, type);
+                Scan(POPADRESS, type);
             continue;
             case PRINT:
-                PRINTOP(POPADRESS, type);
+                Print(POPADRESS, type);
             continue;
             case PRINTLN:
-                PRINTLNOP(POPADRESS, type);
+                PrintLN(POPADRESS, type);
             continue;
             case NEW:
                 dataid[0] = *READBYTECODE;
@@ -184,10 +186,7 @@ Status Execute::OpQ(Stack &stack, Heap &heap)
                 status = heap.Lea(opQ, &type, -1, *READBYTECODE);
             continue;
             case PUSHS:
-                dataid[0] = *READBYTECODE;
-                type = GETTYPE(0);
-                op1 = GETADRESS(0);
-                status = opQ->Push(op1, type);
+                status = opQ->Push(stack.SearchFor(*READBYTECODE));
             continue;
             case GETD:
                 FILEOP(ReadOperationFile, double);
@@ -423,7 +422,6 @@ Status Execute::OpQ(Stack &stack, Heap &heap)
                 mode = REGISTRYMODE;
             continue;
             case ESTART:
-                printf("\n\tPress any key to continue . . .\n");
             continue;
             default:
                 status = UKNOWN_OPER_ERR;
@@ -437,7 +435,7 @@ Status Execute::OpQ(Stack &stack, Heap &heap)
 
 Status Execute::Reg(Stack &stack, Heap &heap)
 {
-	opQ->ResetOperandQueue();
+    opQ->ResetOperandQueue();
 
 	do
 	{
@@ -448,14 +446,14 @@ Status Execute::Reg(Stack &stack, Heap &heap)
         {
             case MOV: case ADD: case SUB: case MUL: case DIV: case MOD:
                 GETREGISTRY(op1);
-
+                temp = type;
                 if (!status)
                 {
                     GETREGISTRY(op2);
 
                     if (!status)
                     {
-                        status = Operation(op_index, op1, op2, type);
+                        status = Operation(op_index, op1, op2, temp);
                     }
                 }
             continue;
@@ -471,21 +469,21 @@ Status Execute::Reg(Stack &stack, Heap &heap)
                 GETREGISTRY(op1);
                 if (!status)
                 {
-                    SCANOP(op1, type)
+                    Scan(op1, type);
                 }
             continue;
             case PRINT:
                 GETREGISTRY(op1);
                 if (!status)
                 {
-                    PRINTOP(op1, type)
+                    Print(op1, type);
                 }
             continue;
             case PRINTLN:
                 GETREGISTRY(op1);
                 if (!status)
                 {
-                    PRINTLNOP(op1, type)
+                    PrintLN(op1, type);
                 }
             continue;
             case NEW:
@@ -514,23 +512,20 @@ Status Execute::Reg(Stack &stack, Heap &heap)
             case LEA:
                 dataid[0] = *READBYTECODE;
                 dataid[1] = *READBYTECODE;
-                status = heap.Lea(opQ, &type, dataid[0], *(int *)GETADRESS(1));
+                status = heap.LeaReg(opQ, &type, dataid[0], *(int *)GETADRESS(1), *READBYTECODE);
             continue;
             case LEAC:
                 dataid[0] = *READBYTECODE;
                 dataid[1] = *READBYTECODE;
-                status = heap.Lea(opQ, &type, dataid[0], dataid[1]);
+                status = heap.LeaReg(opQ, &type, dataid[0], dataid[1], *READBYTECODE);
             continue;
             case PUSH:
-                status = heap.Lea(opQ, &type, -1, *READBYTECODE);
+                dataid[0] = *READBYTECODE;
+                status = heap.LeaReg(opQ, &type, -1, dataid[0], *READBYTECODE);
             continue;
             case PUSHS:
-
-                dataid[0] = *READBYTECODE;
-                type = GETTYPE(0);
-                op1 = GETADRESS(0);
-
-                SETREGISTRY(op1);
+                data = stack.SearchFor(*READBYTECODE);
+                opQ->SetRegistry(data, *READBYTECODE);
             continue;
             case GETD:
                 FILEOPREG(ReadOperationFile, double);
@@ -765,7 +760,6 @@ Status Execute::Reg(Stack &stack, Heap &heap)
                 }
             continue;
             case ESTART:
-                printf("\n\tPress any key to continue . . .\n");
                 return status;
             continue;
             case ENDREG:

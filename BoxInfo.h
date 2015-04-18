@@ -50,7 +50,7 @@
     #define STARTBUFFER         &queuebuffer[0]
 
 	#define MAXFILESIZE         1048576
-	#define MAXARGS             2
+    #define MAXARGS             2
 	#define MAXPATHSIZE         1024
 	#define MAXBUFFERWORD       128
 
@@ -237,6 +237,9 @@
      *      MODC    [rx][n]         *
      *                              *
      *      PUSHS   [var][rx]       *
+     *      LEA     [ptr][n][rx]    *
+     *      LEAC    [ptr][n][rx]    *
+     *      PUSH    [ptr][rx]       *
      *      PUT*    [var][rx]       *
      *      GET*    [var][rx]       *
      *      GETLINE [var][rx]       *
@@ -260,6 +263,6 @@
     typedef char *Bcode;
     typedef short Size;
     typedef int DSize;
-    typedef char Count;
+    typedef short Count;
 
 #endif
