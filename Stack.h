@@ -7,19 +7,7 @@
 #include "DataTree.h"
 #include "VirtualStackMemory.h"
 
-<<<<<<< HEAD
 class Stack : public DataTree {
-=======
-class Stack : public Tree
-{
-	StaticDataNode *root;
-	StaticDataNode *last;
-	VirtualStackMemory vsm;
-    int counter;
-
-	inline StaticData *SearchFor(Count);        //	--	Returns adress value of data by ID
-	StaticDataNode *Push(StaticData *);         //	--	Pushing element on AVL tree /Adelson-Velskii & Landis/
->>>>>>> dc573c73fbc89a1fd726f4bd7e6faffc7f3b1af8
 public:
     Stack();
     Status PushStack(Type, Adress);				//	--	Push data on stack
@@ -30,50 +18,6 @@ protected:
     VirtualStackMemory vsm;
 };
 
-<<<<<<< HEAD
-=======
-inline StaticData *Stack::SearchFor(Count _count)
-{
-	StaticDataNode *curr = root;
-
-	while (curr)
-	{
-		if (curr->GetCount() > _count)
-			curr = curr->Left;
-		else if (curr->GetCount() < _count)
-			curr = curr->Right;
-		else
-			break;
-	}
-
-	if (curr)
-		return curr->GetDataInfo();
-	else
-		return NULL;
-}
-
-StaticDataNode *Stack::Push(StaticData *_newelement)
-{
-	StaticDataNode *q = new StaticDataNode(_newelement, ++counter);
-
-	if (q)
-	{
-		if (!root)
-		{
-			root = q;
-			last = root;
-		}
-		else
-		{
-			last->Right = q;
-			last = q;
-			root = Balance(root);
-		}
-	}
-	return root;
-}
-
->>>>>>> dc573c73fbc89a1fd726f4bd7e6faffc7f3b1af8
 Stack::Stack()
 {
 	root = NULL;
