@@ -3,8 +3,11 @@
 #include "BoxInfo.h"
 #include "CompareAdress.h"
 
-#define REGISTRYMODE        1
-#define OPQMODE             2
+enum EXECUTEMODES
+{
+    REGISTRYMODE    =   1,
+    OPQMODE         =   2
+};
 
 #define GETADRESS(_ARG_NUM) stack.GetAdress(dataid[_ARG_NUM])
 #define GETTYPE(_ARG_NUM) 	stack.GetType(dataid[_ARG_NUM])
@@ -75,9 +78,15 @@ if(!status)                         \
     }                                               \
 }
 
+<<<<<<< HEAD
 inline void Print(Adress __ADR, Type __TYPE)
 {
     switch (__TYPE)
+=======
+inline void Print(Adress __ADR, Type _type)
+{
+    switch (_type)
+>>>>>>> dc573c73fbc89a1fd726f4bd7e6faffc7f3b1af8
     {
         case _CHAR:		printf("%c",    *__ADR); 			break;
         case _STRING:	printf("%s",    __ADR);             break;
@@ -89,6 +98,7 @@ inline void Print(Adress __ADR, Type __TYPE)
     }
 }
 
+<<<<<<< HEAD
 inline void PrintLN(Adress __ADR, Type __TYPE)
 {
     #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
@@ -113,6 +123,32 @@ inline void PrintLN(Adress __ADR, Type __TYPE)
         case _FLOAT:	printf("%f\n",    *(float *)__ADR);	break;
         case _DOUBLE:	printf("%lf\n",   *(double *)__ADR);  break;
     }
+=======
+inline void Println(Adress __ADR, Type _type)
+{
+    #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+        switch (_type)
+        {
+            case _CHAR:		printf("%c\r\n",    *__ADR); 			break;
+            case _STRING:	printf("%s\r\n",    __ADR);             break;
+            case _INT:		printf("%d\r\n",    *(int *)__ADR); 	break;
+            case _SHORT:	printf("%hd\r\n",   *(short *)__ADR);	break;
+            case _LONG:		printf("%ld\r\n",   *(long *)__ADR);	break;
+            case _FLOAT:	printf("%f\r\n",    *(float *)__ADR);	break;
+            case _DOUBLE:	printf("%lf\r\n",   *(double *)__ADR);  break;
+        }
+    #else                               \
+        switch (_type)
+        {
+            case _CHAR:		printf("%c\n",    *__ADR);          break;
+            case _STRING:	printf("%s\n",    __ADR);           break;
+            case _INT:		printf("%d\n",    *(int *)__ADR); 	break;
+            case _SHORT:	printf("%hd\n",   *(short *)__ADR);	break;
+            case _LONG:		printf("%ld\n",   *(long *)__ADR);	break;
+            case _FLOAT:	printf("%f\n",    *(float *)__ADR);	break;
+            case _DOUBLE:	printf("%lf\n",   *(double *)__ADR);break;
+        }
+>>>>>>> dc573c73fbc89a1fd726f4bd7e6faffc7f3b1af8
     #endif
 }
 

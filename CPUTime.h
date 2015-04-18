@@ -1,6 +1,7 @@
 #ifndef CPUTIME_H
 #define CPUTIME_H
 #include "BoxInfo.h"
+<<<<<<< HEAD
 
 #if defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) && defined(__MACH__))
 class CPUTime {
@@ -35,9 +36,48 @@ private:
 };
 #else
 #include <iomanip>
+=======
+>>>>>>> dc573c73fbc89a1fd726f4bd7e6faffc7f3b1af8
+
+#if defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) && defined(__MACH__))
+class CPUTime {
+public:
+<<<<<<< HEAD
+=======
+	CPUTime()
+	{
+		start = stop = 0;
+	}
+
+	inline void Start()
+	{
+		start = clock();
+	}
+
+	inline void Stop()
+	{
+		stop = clock();
+	}
+
+	double GetCPUTime()
+	{
+		return (double)(stop - start) * 1000 / CLOCKS_PER_SEC;
+	}
+
+	double GetCPU()
+	{
+		return stop-start;
+	}
+private:
+    double start;
+    double stop;
+};
+#else
+#include <iomanip>
 
 class CPUTime {
 public:
+>>>>>>> dc573c73fbc89a1fd726f4bd7e6faffc7f3b1af8
     CPUTime()
     {
         QueryPerformanceFrequency(&freq);

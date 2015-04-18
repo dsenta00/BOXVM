@@ -147,7 +147,11 @@ Status Execute::OpQ(Stack &stack, Heap &heap)
                 Print(POPADRESS, type);
             continue;
             case PRINTLN:
+<<<<<<< HEAD
                 PrintLN(POPADRESS, type);
+=======
+                Println(POPADRESS, type);
+>>>>>>> dc573c73fbc89a1fd726f4bd7e6faffc7f3b1af8
             continue;
             case NEW:
                 dataid[0] = *READBYTECODE;
@@ -483,7 +487,11 @@ Status Execute::Reg(Stack &stack, Heap &heap)
                 GETREGISTRY(op1);
                 if (!status)
                 {
+<<<<<<< HEAD
                     PrintLN(op1, type);
+=======
+                    Println(op1, type);
+>>>>>>> dc573c73fbc89a1fd726f4bd7e6faffc7f3b1af8
                 }
             continue;
             case NEW:
