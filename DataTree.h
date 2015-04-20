@@ -2,6 +2,7 @@
 #define DATATREE_H
 
 #include "BoxInfo.h"
+#include "ProgramMonitor.h"
 #include "DataNode.h"
 
 class DataTree {
@@ -13,7 +14,6 @@ public:
     DataNode *Balance(DataNode *);
     DataNode *DeleteTree(DataNode *);
     inline Data *SearchFor(Count);
-    Status GetStatus();
     ~DataTree();
 protected:
     DataNode *Push(Data *);
@@ -21,13 +21,15 @@ protected:
     DataNode *root;
     DataNode *last;
     Count counter;
-	Status status;
+    ProgramMonitor *monitor;
 };
 
 DataTree::DataTree()
 {
     counter = 0;
-    status = EVERYTHING_OK;
+    root = NULL;
+    last = NULL;
+    monitor = NULL;
 }
 
 DataNode *DataTree::Push(Data *_element)
@@ -69,11 +71,6 @@ inline Data *DataTree::SearchFor(Count _count)
         return curr->GetDataInfo();
     else
         return NULL;
-}
-
-Status DataTree::GetStatus()
-{
-	return status;
 }
 
 Size DataTree::Height(DataNode *current)

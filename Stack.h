@@ -10,8 +10,9 @@
 class Stack : public DataTree {
 public:
     Stack();
-    Status PushStack(Type, Adress);				//	--	Push data on stack
-    Status SetVirtualMemory(Size);				//	--	Set stack limit size
+    void SetMonitor(ProgramMonitor *);
+    void PushStack(Type, Adress);				//	--	Push data on stack
+    void SetVirtualMemory(Size);				//	--	Set stack limit size
     Adress GetAdress(Count);					//	--	Get adress of data by ID
     Type GetType(Count);                        //	--	Get type of data by ID
 protected:
@@ -20,14 +21,18 @@ protected:
 
 Stack::Stack()
 {
-	root = NULL;
-	last = NULL;
-    counter = 0;
-	status = EVERYTHING_OK;
+    root = NULL;
+    last = NULL;
+    monitor = NULL;
     counter = 0;
 }
 
-Status Stack::PushStack(Type _type, Adress _value)
+void Stack::SetMonitor(ProgramMonitor *_monitor)
+{
+    monitor = _monitor;
+}
+
+void Stack::PushStack(Type _type, Adress _value)
 {
     Data *dataS = NULL;
 	Adress startadr = vsm.GetNext();
@@ -38,23 +43,27 @@ Status Stack::PushStack(Type _type, Adress _value)
 
 		if (dataS)
 		{
-			status = dataS->SetValue(_value);
+            SETERR(dataS->SetValue(_value));
 
-			if (status == 0)
+            if (EOK)
 			{
 				root = Push(dataS);
 				vsm.SetNext(dataS->GetEndAdress());
 			}
 			else
-				status = STACK_SET_ERR;
+            {
+                SETERR(STACK_SET_ERR);
+            }
 		}
 		else
-			status = STACK_MALL_ERR;
+        {
+            SETERR(STACK_MALL_ERR);
+        }
 	}
 	else
-		status = STATIC_OVERFLOW;
-
-	return status;
+    {
+        SETERR(STATIC_OVERFLOW);
+    }
 }
 
 Adress Stack::GetAdress(Count _count)
@@ -72,14 +81,17 @@ Type Stack::GetType(Count _count)
     Data *search_data = SearchFor(_count);
 
 	if (!search_data)
-		return UKNOWN_TYPE_ERR;
+    {
+        SETERR(UKNOWN_TYPE_ERR);
+        return 0;
+    }
 	else
 		return search_data->GetType();
 }
 
-Status Stack::SetVirtualMemory(Size _limit)
+void Stack::SetVirtualMemory(Size _limit)
 {
-	return vsm.Initialize(_limit);
+    vsm.Initialize(_limit, monitor);
 }
 
 #endif

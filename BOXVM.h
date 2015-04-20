@@ -1,85 +1,84 @@
 #ifndef BOXVM_H
 #define BOXVM_H
 #include "BoxInfo.h"
+#include "ProgramMonitor.h"
 #include "BoxProgram.h"
 #include "CPUTime.h"
-#include "WriteLogFileReport.h"
 
-CPUTime startTime;
-CPUTime invokingProgramTime;
-CPUTime settingStackData;
-CPUTime settingPool;
-CPUTime settingHeapData;
-CPUTime executingProgram;
-
-Status RunProgram(char *_execpath)
+void RunProgram(char *_execpath)
 {
-	Status status = EVERYTHING_OK;
-	BoxProgram program;
-
+    ProgramMonitor monitor;
+    BoxProgram program(&monitor);
 	srand((unsigned)time(NULL));
 
-	status = program.ReadSourceCode(_execpath);
+    monitor.SetPath(_execpath);
+    program.ReadSourceCode(_execpath);
 
-	if (!status)
-	{
-		status = program.SetStack();
+    if (monitor.OK())
+    {
+        program.SetStack();
 
-		if (!status)
-		{
-			status = program.SetPool();
+        if (monitor.OK())
+        {
+            program.SetPool();
 
-			if (!status)
-			{
-				status = program.SetHeap();
+            if (monitor.OK())
+            {
+                program.SetHeap();
 
-				if (!status)
-				{
-                    status = program.ExecuteProgram();
-				}
-			}
-		}
-	}
-
-	return status;
+                if (monitor.OK())
+                {
+                    program.ExecuteProgram();
+                }
+            }
+        }
+    }
 }
 
-Status RunProgramPercentage(char *_execpath)
+void RunProgramPercentage(char *_execpath)
 {
-    Status status = EVERYTHING_OK;
     double fulltime = 0;
+    CPUTime startTime;
+    CPUTime invokingProgramTime;
+    CPUTime settingStackData;
+    CPUTime settingPool;
+    CPUTime settingHeapData;
+    CPUTime executingProgram;
 
     startTime.Start();
-    BoxProgram program;
+    ProgramMonitor monitor;
+    BoxProgram program(&monitor);
     srand((unsigned)time(NULL));
+
+    monitor.SetPath(_execpath);
     startTime.Stop();
 
     invokingProgramTime.Start();
-    status = program.ReadSourceCode(_execpath);
+    program.ReadSourceCode(_execpath);
     invokingProgramTime.Stop();
 
-    if (!status)
+    if (monitor.OK())
     {
         settingStackData.Start();
-        status = program.SetStack();
+        program.SetStack();
         settingStackData.Stop();
 
-        if (!status)
+        if (monitor.OK())
         {
             settingPool.Start();
-            status = program.SetPool();
+            program.SetPool();
             settingPool.Stop();
 
-            if (!status)
+            if (monitor.OK())
             {
                 settingHeapData.Start();
-                status = program.SetHeap();
+                program.SetHeap();
                 settingHeapData.Stop();
 
-                if (!status)
+                if (monitor.OK())
                 {
                     executingProgram.Start();
-                    status = program.ExecuteProgram();
+                    program.ExecuteProgram();
                     executingProgram.Stop();
                 }
             }
@@ -89,20 +88,12 @@ Status RunProgramPercentage(char *_execpath)
     fulltime = startTime.GetCPU() + invokingProgramTime.GetCPU() + settingStackData.GetCPU() \
                 + settingPool.GetCPU() + settingHeapData.GetCPU() + executingProgram.GetCPU();
 
-    std::cout << "\n\tVirtual machines setting data:\t" << startTime.GetCPUTime();
-    std::cout << "\t" << startTime.GetCPU() / fulltime * 100 << " %";
-    std::cout << "\n\tInvoking program:\t\t" << invokingProgramTime.GetCPUTime();
-    std::cout << "\t" << invokingProgramTime.GetCPU() / fulltime * 100 << " %";
-    std::cout << "\n\tSetting stack data:\t\t" << settingStackData.GetCPUTime();
-    std::cout << "\t" << settingStackData.GetCPU() / fulltime * 100 << " %";
-    std::cout << "\n\tInitializing memory pool:\t" << settingPool.GetCPUTime();
-    std::cout << "\t" << settingPool.GetCPU() / fulltime * 100 << " %";
-    std::cout << "\n\tSetting heap data:\t\t" << settingHeapData.GetCPUTime();
-    std::cout << "\t" << settingHeapData.GetCPU() / fulltime * 100 << " %";
-    std::cout << "\n\tProgram executing:\t\t" << executingProgram.GetCPUTime();
-    std::cout << "\t" << executingProgram.GetCPU() / fulltime * 100 << " %\n";
-
-    return status;
+    std::cout << "\n\tVirtual machines setting data:\t" <<  startTime.GetCPU() / fulltime * 100 << " %";
+    std::cout << "\n\tInvoking program:\t\t" << invokingProgramTime.GetCPU() / fulltime * 100 << " %";
+    std::cout << "\n\tSetting stack data:\t\t" << settingStackData.GetCPU() / fulltime * 100 << " %";
+    std::cout << "\n\tInitializing memory pool:\t" << settingPool.GetCPU() / fulltime * 100 << " %";
+    std::cout << "\n\tSetting heap data:\t\t" << settingHeapData.GetCPU() / fulltime * 100 << " %";
+    std::cout << "\n\tProgram executing:\t\t" << executingProgram.GetCPU() / fulltime * 100 << " %\n";
 }
 
 #endif

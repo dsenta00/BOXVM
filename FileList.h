@@ -2,142 +2,137 @@
 #define FILELIST_H
 
 #include "BoxInfo.h"
+#include "ProgramMonitor.h"
 #include "File.h"
 
-class FileList
-{
-	File Head;
-	File *pfile;
-	Status status;
+class FileList {
 public:
 	FileList();
 	~FileList();
 
-	Status PushFile(Count, char *, int);
-	Status ReadOperationFileString(Adress, Count);
-	Status WriteOperationFileString(Adress, Count);
-	Status ReadAllFile(Adress, Size, Count);
-	Status GetLine(Adress, Count);
+    void PushFile(Count, char *, int);
+    void SetMonitor(ProgramMonitor *);
+    void ReadOperationFileString(Adress, Count);
+    void WriteOperationFileString(Adress, Count);
+    void ReadAllFile(Adress, Size, Count);
+    void GetLine(Adress, Count);
 
 	template <typename T>
-	Status ReadOperationFile(T *, Count);
+    void ReadOperationFile(T *, Count);
 
 	template <typename T>
-	Status WriteOperationFile(T *, Count);
+    void WriteOperationFile(T *, Count);
+protected:
+    File Head;
+    File *pfile;
+    ProgramMonitor *monitor;
 };
 
 FileList::FileList()
 {
 	pfile = NULL;
-	status = EVERYTHING_OK;
+    monitor = NULL;
 }
 
-Status FileList::PushFile(Count _count, char *_path, int _mode)
+void FileList::SetMonitor(ProgramMonitor *_monitor)
+{
+    monitor = _monitor;
+}
+
+void FileList::PushFile(Count _count, char *_path, int _mode)
 {
 	if (Head.GetCount() == 0)
-		status = Head.Open(_path, _mode, _count);
+        SETERR(Head.Open(_path, _mode, _count));
 	else
 	{
 		pfile = FINDFILE(_count);
 
 		if (pfile)
-			status = ALLRDY_OPEN;
+            SETERR(ALLRDY_OPEN);
 		else
 			pfile = new File();
 
-		if (!status)
+        if (EOK)
 		{
 			if (pfile)
 			{
-				status = pfile->Open(_path, _mode, _count);
+                SETERR(pfile->Open(_path, _mode, _count));
 
-				if (!status)
+                if (EOK)
 				{
 					pfile->next = Head.next;
 					Head.next = pfile;
 				}
 			}
 			else
-				status = PUSH_FILE_ERR;
+            {
+                SETERR(PUSH_FILE_ERR);
+            }
 		}
-	}
-
-	return status;
+    }
 }
 
 template <typename T>
-Status FileList::ReadOperationFile(T *read_data, Count _count)
+void FileList::ReadOperationFile(T *read_data, Count _count)
 {
 	pfile = FINDFILE(_count);
 
 	if (!pfile)
-		status = FILE_OPER_ERR;
+        SETERR(FILE_OPER_ERR);
 	else
-		status = pfile->ReadOperationFile(read_data);
-
-	return status;
+        SETERR(pfile->ReadOperationFile(read_data));
 }
 
 template <typename T>
-Status FileList::WriteOperationFile(T *write_data, Count _count)
+void FileList::WriteOperationFile(T *write_data, Count _count)
 {
 	pfile = FINDFILE(_count);
 
 	if (!pfile)
-		status = FILE_OPER_ERR;
+        SETERR(FILE_OPER_ERR);
 	else
-		status = pfile->WriteOperationFile(write_data);
-
-	return status;
+        SETERR(pfile->WriteOperationFile(write_data));
 }
 
-Status FileList::ReadOperationFileString(Adress read_data, Count _count)
+void FileList::ReadOperationFileString(Adress read_data, Count _count)
 {
 	pfile = FINDFILE(_count);
 
 	if (!pfile)
-		status = FILE_OPER_ERR;
+        SETERR(FILE_OPER_ERR);
 	else
-		status = pfile->ReadOperationFileString(read_data);
-
-	return status;
+        SETERR(pfile->ReadOperationFileString(read_data));
 }
 
-Status FileList::WriteOperationFileString(Adress read_data, Count _count)
+void FileList::WriteOperationFileString(Adress read_data, Count _count)
 {
 	pfile = FINDFILE(_count);
 
 	if (!pfile)
-		status = FILE_OPER_ERR;
+        SETERR(FILE_OPER_ERR);
 	else
-		status = pfile->WriteOperationFileString(read_data);
-
-	return status;
+        SETERR(pfile->WriteOperationFileString(read_data));
 }
 
-Status FileList::ReadAllFile(Adress read_data, Size _size, Count _count)
+void FileList::ReadAllFile(Adress read_data, Size _size, Count _count)
 {
 
 	pfile = FINDFILE(_count);
 
 	if (!pfile)
-		status = FILE_OPER_ERR;
+        SETERR(FILE_OPER_ERR);
 	else
-		status = pfile->ReadAllFile(read_data, _size);
-
-	return status;
+        SETERR(pfile->ReadAllFile(read_data, _size));
 }
 
-Status FileList::GetLine(Adress read_data, Count _count)
+void FileList::GetLine(Adress read_data, Count _count)
 {
 	pfile = FINDFILE(_count);
 
 	if (!pfile)
-		status = FILE_OPER_ERR;
+        SETERR(FILE_OPER_ERR);
 	else
-		status = pfile->GetLine(read_data);
-
-	return status;
+        SETERR(pfile->GetLine(read_data));
 }
 
 FileList::~FileList()

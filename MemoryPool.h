@@ -1,88 +1,82 @@
 #ifndef MEMORYPOOL_H
 #define MEMORYPOOL_H
-
 #include "BoxInfo.h"
+#include "ProgramMonitor.h"
 
-class MemoryPool
-{
-	Adress vmp;         //  --  Virtual memory pool
-	Adress resaddr;     //  --  Next adress to reserve
-	Size size;          //  --  Memory pool size
-	Status status;
+class MemoryPool {
 public:
 	MemoryPool();
-	MemoryPool(Size);
-	~MemoryPool();
-
-	Status GetStatus();
-	Status ExpandSize(Size);
-	Status Free(Adress, Size);
-	Adress Malloc(Size);
+    MemoryPool(Size, ProgramMonitor *);
+    ~MemoryPool();
+    void ExpandSize(Size, DSize &);
+    void Free(Adress, Size);
+    Adress Malloc(Size, DSize &);
+protected:
+    Adress vmp;         //  --  Virtual memory pool
+    Adress resaddr;     //  --  Next adress to reserve
+    Size size;          //  --  Memory pool size
+    ProgramMonitor *monitor;
 };
 
 MemoryPool::MemoryPool()
 {
-	vmp = NULL;
-	resaddr = NULL;
-	size = 0;
-	status = EVERYTHING_OK;
+    vmp = NULL;
+    resaddr = NULL;
+    monitor = NULL;
+    size = 0;
 }
 
-MemoryPool::MemoryPool(Size _size)
+MemoryPool::MemoryPool(Size _size, ProgramMonitor *_monitor)
 {
+    monitor = _monitor;
+
 	if (_size > 0)
 	{
 		size = _size + EXTRASPACE;
 		vmp = resaddr = (Adress)calloc(size, 1);
 
-		if (vmp)
-			status = EVERYTHING_OK;
-		else
-			status = POOL_RESERVE_ERR;
+        if (!vmp)
+        {
+            SETERR(POOL_RESERVE_ERR);
+        }
 	}
 	else
-	{
-		vmp = NULL;
-		resaddr = NULL;
-		size = 0;
-		status = POOL_SIZE_ERR;
+    {
+        SETERR(POOL_SIZE_ERR);
 	}
 }
 
-Status MemoryPool::GetStatus()
+void MemoryPool::ExpandSize(Size _size, DSize &change)
 {
-	return status;
-}
+    Adress newvmp = NULL;
+    size += _size + EXTRASPACE;
 
-Status MemoryPool::ExpandSize(Size _size)
-{
-	Adress newVM = NULL;
-	size += _size + EXTRASPACE;
+    newvmp = (Adress)realloc(vmp, size);
 
-	newVM = (Adress)realloc(vmp, size);
-
-	if (newVM)
+    if (newvmp)
 	{
-		if (newVM != vmp)
+        if (newvmp != vmp)
+        {
+            change = (DSize)(vmp - newvmp);
+            memset(vmp, 0, sizeof(char));
 			free(vmp);
+        }
 
-		vmp = newVM;
+        vmp = newvmp;
 	}
 	else
-		status = POOL_RESERVE_ERR;
-
-	return status;
+        SETERR(POOL_RESERVE_ERR);
 }
 
-Adress MemoryPool::Malloc(Size _size)
+Adress MemoryPool::Malloc(Size _size, DSize &change)
 {
-	Adress retAdress = NULL;
+    Adress retAdress = NULL;
 	Size diff = (Size)(resaddr + _size - vmp - size);
 
 	if (diff > 0)
-		status = ExpandSize(diff);
+        ExpandSize(diff, change);
 
-	if (!status)
+    if (EOK)
 	{
 		retAdress = resaddr;
 		resaddr += _size;
@@ -91,7 +85,7 @@ Adress MemoryPool::Malloc(Size _size)
 	return retAdress;
 }
 
-Status MemoryPool::Free(Adress _addr, Size _size)
+void MemoryPool::Free(Adress _addr, Size _size)
 {
 	Adress nextaddr = _addr + _size;
 	Size nextsize = (Size)(resaddr - nextaddr);
@@ -103,9 +97,9 @@ Status MemoryPool::Free(Adress _addr, Size _size)
 		memset(resaddr, 0, (int)(vmp + size - resaddr));
 	}
 	else
-		status = FREE_OPER_ERR;
-
-	return status;
+    {
+        SETERR(FREE_OPER_ERR);
+    }
 }
 
 MemoryPool::~MemoryPool()

@@ -4,17 +4,10 @@
 #include "BoxInfo.h"
 #include "FileOperationsMacro.h"
 
-class File
-{
-	FILE *fp;
-	Count count;
-	int mode;
+class File {
 public:
-	File *next;
-
 	File();
 	~File();
-
 	Status Open(char *, int, Count);
 	Status ReadOperationFileString(char *);
 	Status WriteOperationFileString(char *);
@@ -35,6 +28,12 @@ public:
     READOPDECL(char)
     READOPDECL(float)
     READOPDECL(double)
+
+    File *next;
+protected:
+    FILE *fp;
+    Count count;
+    int mode;
 };
 
 File::File()

@@ -7,7 +7,6 @@ public:
     Data();
     Data(Type);
     Data(Adress , Type);
-
     Type GetType();							// --	Get variable type
     Adress GetEndAdress();					// --	Get variable end adress (end adr. is not part of var.)
     Status SetValue(Adress);				// --	Method for initialization any type of fundamental data
@@ -18,7 +17,8 @@ public:
     void SetAdress(Adress);
     void SetSize(Size);
 protected:
-    template <typename T> inline void Set(T *);
+    template <typename T>
+    inline void Set(T *);
 
     Adress starta;
     Adress enda;

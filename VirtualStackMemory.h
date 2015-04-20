@@ -1,19 +1,19 @@
 #ifndef VIRTUALSTACKMEMORY_H
 #define VIRTUALSTACKMEMORY_H
 #include "BoxInfo.h"
+#include "ProgramMonitor.h"
 
-class VirtualStackMemory
-{
-    Adress memory;
-    Adress nextaddr;
-    Size limit;
+class VirtualStackMemory {
 public:
     VirtualStackMemory();
     ~VirtualStackMemory();
-
-    inline Status Initialize(Size);
+    inline void Initialize(Size, ProgramMonitor *);
     Adress GetNext();
     void SetNext(Adress);
+protected:
+    Adress memory;
+    Adress nextaddr;
+    Size limit;
 };
 
 VirtualStackMemory::VirtualStackMemory()
@@ -35,7 +35,7 @@ VirtualStackMemory::~VirtualStackMemory()
     limit = 0;
 }
 
-inline Status VirtualStackMemory::Initialize(Size _limit)
+inline void VirtualStackMemory::Initialize(Size _limit, ProgramMonitor *monitor)
 {
     if (_limit > 0)
     {
@@ -43,12 +43,10 @@ inline Status VirtualStackMemory::Initialize(Size _limit)
         memory = nextaddr = (Adress)calloc(limit, sizeof(char));
 
         if (!memory)
-            return VM_MALL_ERR;
+            SETERR(VM_MALL_ERR);
     }
     else
-        return ZERO_VM_ERR;
-
-    return EVERYTHING_OK;
+        SETERR(ZERO_VM_ERR);
 }
 
 Adress VirtualStackMemory::GetNext()

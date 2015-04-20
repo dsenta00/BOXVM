@@ -1,30 +1,25 @@
 #ifndef INVOKEBOX_H
 #define INVOKEBOX_H
 #include "BoxInfo.h"
+#include "ProgramMonitor.h"
 
-class InvokeBox
-{
-    Bcode codeSeg;
-    Bcode p_codeSeg;
+class InvokeBox {
 public:
     InvokeBox();
-    ~InvokeBox();
-
-    Status ReadAll(char *);
+    void SetExecute(char *);
+    void ReadAll(char *, ProgramMonitor *);
     Bcode GetExecuteCode();
     Bcode GetCodeSegment();
 	template <typename T>
     inline void GetNextWord(T *);
+protected:
+    Bcode codeSeg;
+    Bcode p_codeSeg;
 };
 
 InvokeBox::InvokeBox()
 {
-    memset(this, 0, sizeof(InvokeBox));
-}
-
-InvokeBox::~InvokeBox()
-{
-    memset(this, 0, sizeof(InvokeBox)); //Koristi se u ByteCode, stoga ne smijes oslobadjat!!!
+    codeSeg = p_codeSeg = NULL;
 }
 
 Bcode InvokeBox::GetCodeSegment()
@@ -44,9 +39,8 @@ inline void InvokeBox::GetNextWord(T *_buffer)
     p_codeSeg += sizeof(T);
 }
 
-Status InvokeBox::ReadAll(char *_boxfilepath)
+void InvokeBox::ReadAll(char *_boxfilepath, ProgramMonitor *monitor)
 {
-    Status status = EVERYTHING_OK;
     DSize file_size = 0, read_size = 0;
     FILE *fp = NULL;
 
@@ -58,31 +52,39 @@ Status InvokeBox::ReadAll(char *_boxfilepath)
         file_size = ftell(fp);
 
         if (file_size > MAXFILESIZE)
-            status = LARGE_FILE_ERR;
-        else if (file_size == 0)
-            status = EMPTY_FILE;
+        {
+            SETERR(LARGE_FILE_ERR);
+        }
+        if (file_size == 0)
+        {
+            SETERR(EMPTY_FILE);
+        }
         else
         {
-            p_codeSeg = codeSeg = (Bcode)calloc(file_size + 1, sizeof(char));
+            p_codeSeg = codeSeg = (Bcode)calloc(file_size + 1, sizeof(Byte));
 
             if (codeSeg)
             {
                 rewind(fp);
-                read_size = fread(codeSeg, sizeof(char), file_size, fp);
+                read_size = fread(codeSeg, sizeof(Byte), file_size, fp);
 
-                if (read_size == 0 || read_size != file_size)
-                    status = ERROR_READ_BOX;
+                if (read_size != file_size)
+                {
+                    SETERR(ERROR_READ_BOX);
+                }
             }
             else
-                status = ERRBUFFCONT;
+            {
+                SETERR(ERRBUFFCONT);
+            }
         }
 
         fclose(fp);
     }
     else
-        status = ERROR_OPEN;
-
-    return status;
+    {
+        SETERR(ERROR_OPEN);
+    }
 }
 
 #endif

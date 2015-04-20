@@ -1,6 +1,14 @@
 #ifndef FILEOPERATIONSMACRO_H
 #define FILEOPERATIONSMACRO_H
 
+enum FILE_MODES
+{
+    _UNOPEN =	   -1,  // Unopened file stream.
+    _READ =			0,  // File stream opened for read.
+    _WRITE =		1,  // File stream opened for write.
+    _APPEND =		2   // File stream opened for append.
+};
+
 #define WRITEOPDECL(__TYPE) Status WriteOperationFile(__TYPE *);
 #define READOPDECL(__TYPE)  Status ReadOperationFile(__TYPE *);
 

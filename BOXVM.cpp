@@ -16,18 +16,10 @@
 
 int main(int argc, char *argv[])
 {
-	Status status = EVERYTHING_OK;
+    if (argc == 1)
+        Testing();
+    else
+        RunProgram(argv[1]);
 
-	if (argc == 1)
-    {
-		status = Testing();
-	}
-	else
-	{
-		status = RunProgram(argv[1]);
-		if (status < 0)
-			WriteLogErrorReport(argv[1], status);
-	}
-
-	return status;
+    return 0;
 }

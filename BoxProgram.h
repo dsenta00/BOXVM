@@ -2,6 +2,7 @@
 #define BOXPROGRAM_H
 
 #include "BoxInfo.h"
+#include "ProgramMonitor.h"
 #include "DataNode.h"
 #include "InvokeBox.h"
 #include "Execute.h"
@@ -9,64 +10,64 @@
 class BoxProgram {
 public:
 	BoxProgram();
+    BoxProgram(ProgramMonitor *);
 	~BoxProgram();
-	Status ReadSourceCode(char *);
-	Status SetStack();
-	Status SetPool();
-	Status SetHeap();
-    Status ExecuteProgram();
+    void ReadSourceCode(char *);
+    void SetStack();
+    void SetPool();
+    void SetHeap();
+    void ExecuteProgram();
 protected:
-    InvokeBox *boxfile;
+    InvokeBox boxfile;
     Stack stack;
     Heap *heap;
-    Status status;
+    ProgramMonitor *monitor;
 };
 
 BoxProgram::BoxProgram()
 {
-	status = 0;
-	boxfile = NULL;
-	heap = NULL;
+    heap = NULL;
+    monitor = NULL;
 }
 
-Status BoxProgram::ReadSourceCode(char *_filepath)
+BoxProgram::BoxProgram(ProgramMonitor *_monitor)
 {
-	boxfile = new InvokeBox();
-
-	if (boxfile)
-		status = boxfile->ReadAll(_filepath);
-	else
-		status = BOXREADERR;
-
-	return status;
+    heap = NULL;
+    monitor = _monitor;
 }
 
-Status BoxProgram::SetStack()
+void BoxProgram::ReadSourceCode(char *_filepath)
+{
+    boxfile.ReadAll(_filepath, monitor);
+}
+
+void BoxProgram::SetStack()
 {
 	Type datatype = 0;
 	int intID = 0, i = 0;
 	short shortID = 0;
 	char buffer[MAXBUFFERWORD] = { 0 };
 
-	boxfile->GetNextWord(&shortID);
+    stack.SetMonitor(monitor);
+    boxfile.GetNextWord(&shortID);
 
 	if (shortID == ID_STACK)
 	{
-		boxfile->GetNextWord(&intID);
+        boxfile.GetNextWord(&intID);
 		stack.SetVirtualMemory(intID);
-		boxfile->GetNextWord(&shortID);
+        boxfile.GetNextWord(&shortID);
 
 		if (shortID != ID_DATA)
-			status = UNDEF_DATA_ERR;
+            SETERR(UNDEF_DATA_ERR);
 	}
 	else
-		status = UNDEF_STACK_ERR;
+        SETERR(UNDEF_STACK_ERR);
 
-	if (!status)
+    if (EOK)
 	{
 		do
 		{
-			boxfile->GetNextWord(&shortID);
+            boxfile.GetNextWord(&shortID);
 
 			if (shortID == ID_POOL)
 				break;
@@ -96,79 +97,74 @@ Status BoxProgram::SetStack()
 				break;
 				default:
 				    datatype = 0;
-				    status = STAT_TYPE_ERR;
+                    SETERR(STAT_TYPE_ERR);
 				break;
 			}
 
 			switch (datatype)
 			{
-		                case _CHAR:
-		                    boxfile->GetNextWord(&buffer[0]);
-		                break;
-		                case _INT: case _FLOAT:
-		                    boxfile->GetNextWord(&buffer[0]);
-		                    boxfile->GetNextWord(&buffer[1]);
-		                    boxfile->GetNextWord(&buffer[2]);
-		                    boxfile->GetNextWord(&buffer[3]);
-		                break;
-		                case _LONG: case _DOUBLE:
-		                    boxfile->GetNextWord(&buffer[0]);
-		                    boxfile->GetNextWord(&buffer[1]);
-		                    boxfile->GetNextWord(&buffer[2]);
-		                    boxfile->GetNextWord(&buffer[3]);
-		                    boxfile->GetNextWord(&buffer[4]);
-		                    boxfile->GetNextWord(&buffer[5]);
-		                    boxfile->GetNextWord(&buffer[6]);
-		                    boxfile->GetNextWord(&buffer[7]);
-		                break;
-		                case _SHORT:
-		                    boxfile->GetNextWord(&buffer[0]);
-		                    boxfile->GetNextWord(&buffer[1]);
-		                break;
-		                case _STRING:
-		                    i = 0;
-		
-		                    boxfile->GetNextWord(&buffer[i]);
-		                    while (buffer[i]) 	// 0 is end of string
-		                        boxfile->GetNextWord(&buffer[++i]);
-		
-		                    buffer[i] = '\0';
-		                break;
+                case _CHAR:
+                    boxfile.GetNextWord(&buffer[0]);
+                break;
+                case _INT: case _FLOAT:
+                    boxfile.GetNextWord(&buffer[0]);
+                    boxfile.GetNextWord(&buffer[1]);
+                    boxfile.GetNextWord(&buffer[2]);
+                    boxfile.GetNextWord(&buffer[3]);
+                break;
+                case _LONG: case _DOUBLE:
+                    boxfile.GetNextWord(&buffer[0]);
+                    boxfile.GetNextWord(&buffer[1]);
+                    boxfile.GetNextWord(&buffer[2]);
+                    boxfile.GetNextWord(&buffer[3]);
+                    boxfile.GetNextWord(&buffer[4]);
+                    boxfile.GetNextWord(&buffer[5]);
+                    boxfile.GetNextWord(&buffer[6]);
+                    boxfile.GetNextWord(&buffer[7]);
+                break;
+                case _SHORT:
+                    boxfile.GetNextWord(&buffer[0]);
+                    boxfile.GetNextWord(&buffer[1]);
+                break;
+                case _STRING:
+                    i = 0;
+
+                    boxfile.GetNextWord(&buffer[i]);
+                    while (buffer[i]) 	// 0 is end of string
+                        boxfile.GetNextWord(&buffer[++i]);
+
+                    buffer[i] = '\0';
+                break;
 			}
 
-			if (!status)
-				status = stack.PushStack(datatype, buffer);
+            if (EOK)
+                stack.PushStack(datatype, buffer);
 
-		} while (!status);
-	}
-	return status;
+        }while (EOK);
+    }
 }
 
-Status BoxProgram::SetPool()
+void BoxProgram::SetPool()
 {
 	int intID = 0;
 
-	boxfile->GetNextWord(&intID);
+    boxfile.GetNextWord(&intID);
 
 	if (intID)
 	{
-		heap = new Heap(intID);
+        heap = new Heap(intID, monitor);
 
-		if (heap)
-			status = heap->GetStatus();
-		else
-			status = HEAPERR;
-	}
-
-	return status;
+        if (!heap)
+            SETERR(HEAPERR);
+    }
 }
 
-Status BoxProgram::SetHeap()
+void BoxProgram::SetHeap()
 {
 	short shortID = 0;
 
-	boxfile->GetNextWord(&shortID); //reads @h
-	boxfile->GetNextWord(&shortID);
+    boxfile.GetNextWord(&shortID); //reads @h
+    boxfile.GetNextWord(&shortID);
 
 	if (shortID != ID_CODE)
 	{
@@ -176,71 +172,66 @@ Status BoxProgram::SetHeap()
 		{
 			switch (shortID)
 			{
-		                case ID_CHAR:
-		                    status = heap->PushPointer(_CHAR);
-		                break;
-		                case ID_INT:
-		                    status = heap->PushPointer(_INT);
-		                break;
-		                case ID_SHORT:
-		                    status = heap->PushPointer(_SHORT);
-		                break;
-		                case ID_LONG:
-		                    status = heap->PushPointer(_LONG);
-		                break;
-		                case ID_DOUBLE:
-		                    status = heap->PushPointer(_DOUBLE);
-		                break;
-		                case ID_FLOAT:
-		                    status = heap->PushPointer(_FLOAT);
-		                break;
-		                default:
-		                    status = STAT_TYPE_ERR;
-		                break;
+                case ID_CHAR:
+                    heap->PushPointer(_CHAR);
+                break;
+                case ID_INT:
+                    heap->PushPointer(_INT);
+                break;
+                case ID_SHORT:
+                    heap->PushPointer(_SHORT);
+                break;
+                case ID_LONG:
+                    heap->PushPointer(_LONG);
+                break;
+                case ID_DOUBLE:
+                    heap->PushPointer(_DOUBLE);
+                break;
+                case ID_FLOAT:
+                    heap->PushPointer(_FLOAT);
+                break;
+                default:
+                    SETERR(DYN_TYPE_ERR);
+                break;
 			}
 
-			boxfile->GetNextWord(&shortID);
+            boxfile.GetNextWord(&shortID);
 
 			if (shortID == ID_CODE)
 				break;
 
-		} while (!status);
+        } while (EOK);
 	}
-	else if (shortID == ID_CODE)
-		status = EVERYTHING_OK;
+    else if (shortID == ID_CODE)
+    {
+        return;
+    }
 	else
-		status = DATA_HEAP_ERR;
-
-	return status;
+    {
+        SETERR(DATA_HEAP_ERR);
+    }
 }
 
-Status BoxProgram::ExecuteProgram()
+void BoxProgram::ExecuteProgram()
 {
-	Execute processor(
-		boxfile->GetCodeSegment(),
-		boxfile->GetExecuteCode()
-		);
+    Execute processor (
+        boxfile.GetCodeSegment(),
+        boxfile.GetExecuteCode(),
+        monitor
+    );
 
-	status = processor.GetStatus();
-
-	if (!status)
+    if (EOK)
 	{
-		status = processor.Do(stack, *heap);
-	}
-
-	return status;
+        processor.Do(stack, *heap);
+    }
 }
 
 BoxProgram::~BoxProgram()
 {
-	if (boxfile)
-		delete boxfile;
-
 	if(heap)
 		delete heap;
 
-	heap = NULL;
-	boxfile = NULL;
+    heap = NULL;
 }
 
 #endif	//BOXPROGRAM_H

@@ -3,18 +3,17 @@
 
 #include "BoxInfo.h"
 
-class ByteCode
-{
+class ByteCode {
+public:
+    ByteCode();
+    ByteCode(Bcode, Bcode);
+    ~ByteCode();
+    Bcode ReadByteCode();
+    void SetByteCode(Bcode);
+    void Jump(Byte);
+protected:
 	Bcode bytecode;
 	Bcode codesegment;
-public:
-	ByteCode();
-	ByteCode(Bcode, Bcode);
-	~ByteCode();
-
-	Bcode ReadByteCode();
-	void SetByteCode(Bcode);
-	void SkipByteCode(Size);
 };
 
 ByteCode::~ByteCode()
@@ -32,34 +31,70 @@ ByteCode::ByteCode()
 
 ByteCode::ByteCode(Bcode _codesegment, Bcode _bytecode)
 {
-	bytecode = _bytecode;
+    bytecode = _bytecode;
 	codesegment = _codesegment;
 }
-
-void ByteCode::SkipByteCode(Size n)
+/*
+inline bool Check(Byte &i)
 {
-	do
-	{
-		switch (*bytecode)
-		{
-            case ADD: case MUL: case DIV: case SUB: case RAND:
-            case SCAN: case PRINT: case PRINTLN: case MOD: case REPLOOP:
-                bytecode++;
-            break;
-            case MOV: case LEAC: case LEA:
-            case FNEW: case NEW: case NEWV: case FNEWV:
-                bytecode += 3;
-            break;
-            default:
-                bytecode += 2;
-            break;
-		}
+    if(i >= 0 && i <= MAXBUFFERSIZE)
+        return true;
+    else
+        return false;
+}
 
-		n--;
+bool CheckRegistryBounds()
+{
+    Bcode p = codesegment;
 
-	} while (n > 0);
+    do
+    {
+        switch(*p)
+        {
+            case ADD: case SUB: case MOV: case DIV:
+            case MUL:case MOD:
+                p++;
+                if(!Check(*p))
+                    return false;
+                p++;
+                if(!Check(*p))
+                    return false;
+                p++;
+            break;
+            case ADI: case SUC: case DIC: case MUC:
+            case MODC:
+                p++;
+                if(!Check(*p))
+                    return false;
+                p++;
+            break;
+            case SCAN: case PRINT: case PRINTLN: case RAND:
+                p++;
+                if(!Check(*p))
+                    return false;
+            break;
+            case LOOPE: case LOOPNE: case LOOPL: case LOOPG:
+            case LOOPLE: case LOOPGE: case CMPE: case CMPNE:
+            case CMPL: case CMPG: case CMPLE: case CMPGE:
+                p++;
+                if(!Check(*p))
+                    return false;
+                p++;
+                if(!Check(*p))
+                    return false;
+                p++;
+                p++;
+            break;
+        }
+    }
+    while(*p != ESTART);
 
-	bytecode--;
+    return true;
+}*/
+
+void ByteCode::Jump(Byte n)
+{
+    bytecode += n - 1;
 }
 
 Bcode ByteCode::ReadByteCode()

@@ -13,9 +13,10 @@
 */
 
 	#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-	        #define _CRT_SECURE_NO_WARNINGS
-	        #define _CRT_SECURE_NO_DEPRECATE
+        #define _CRT_SECURE_NO_WARNINGS
+        #define _CRT_SECURE_NO_DEPRECATE
 		#include <Windows.h>
+        #include <iomanip>
 	#endif
 
 	#include <iostream>
@@ -33,7 +34,7 @@
 
 	#define ID_STACK			0x7340
 	#define ID_DATA				0x6440
-	#define ID_POOL             		0x7040
+    #define ID_POOL             0x7040
 	#define ID_HEAP				0x6840
 	#define ID_CODE				0x6340
 
@@ -45,25 +46,25 @@
 	#define ID_DOUBLE			0x6425
 	#define ID_SHORT 			0x6825
 
-	#define MAXBUFFERSIZE       8
-	#define ENDBUFFER           &queuebuffer[MAXBUFFERSIZE-1]
-	#define STARTBUFFER         &queuebuffer[0]
-
+    #define MAXBUFFERSIZE       8
 	#define MAXFILESIZE         1048576
     #define MAXARGS             2
 	#define MAXPATHSIZE         1024
 	#define MAXBUFFERWORD       128
 
-	#define MAXLOOPSIZE		8
-	#define STARTLOOP		&LoopBuffer[0]
-	#define ENDLOOP			&LoopBuffer[MAXLOOPSIZE-1]
+    #define MAXLOOPSIZE         8
+    #define STARTLOOP           &buffer[0]
+    #define ENDLOOP             &buffer[MAXLOOPSIZE-1]
 
-	#define AREEQUAL            0
-	#define FIRSTBIGGER         1
-	#define SECONDBIGGER        2
+    #define AREEQUAL            alu.GetFlag() == 0
+    #define FIRSTBIGGER         alu.GetFlag() < 0
+    #define SECONDBIGGER        alu.GetFlag() > 0
 
 	#define BLOCK_SIZE          4096
 	#define EXTRASPACE          32
+
+    #define SETERR(__ERROR)     monitor->SetError(__ERROR)
+    #define EOK                 monitor->OK()
 
 	#define HeapReturnAdress(__size) starta + ((_index) * (__size))
 
@@ -81,8 +82,7 @@
 		LOOP_OVERFLOW =			-9,
 		LOOP_OUT_ERR =			-10,
 		STACK_SET_ERR =			-11,
-		STACK_MALL_ERR =		-12,
-		BUFF_MALL_ERR =			-13,
+        STACK_MALL_ERR =		-12,
 		UKNOWN_TYPE_ERR =		-14,
 		SET_NULL_ERR =			-15,
 		ERROR_OPEN =			-16,
@@ -103,22 +103,20 @@
 		ADR_COMP_ERR =			-31,
 		OPER_NULL_ERR =			-32,
 		DIV_NULL_ERR =			-33,
-		STATIC_OVERFLOW =		-34,
-		BOXREADERR =			-35,
+        STATIC_OVERFLOW =		-34,
 		ERRBUFFCONT =			-36,
-		FLIST_MAL_ERR =			-37,
-		LOOP_MAL_ERR =			-38,
-		BC_MAL_ERR =			-39,
+        BC_MAL_ERR =			-39,
 		UNDEF_DATA_ERR =		-40,
 		ERROR_WRITE =			-41,
 		POOL_MAL_ERR =			-42,
 		POOL_RESERVE_ERR =		-43,
 		POOL_SIZE_ERR =			-44,
-		HEAPERR =			-45,
+        HEAPERR =               -45,
 		UNDEF_POOL_ERR =		-46,
 		FREE_OPER_ERR =			-47,
 		ERROR_READ_BOX =		-48,
-		REGISTRYUNEX =          	-49
+        REGISTRYUNEX =          -49,
+        MONITORUNEX =           -50
 	};
 
 	enum DATA_TYPES
@@ -211,9 +209,7 @@
 		REPLOOP =	54,     //              [branch to loop start>
 		START =		55,     //              [start program marker>
 		ESTART =	56,     //              [end program marker>
-		MOV =		57,     // [any][any]   [copy value from right argument to left argument]
-		REG =       58,     //              [start marker for block of operations in registry mode]
-		ENDREG =    59      //              [end marker for block of operations in registry mode]
+        MOV =		57,     // [any][any]   [copy value from right argument to left argument]
     };
 
     /*** REGISTRY MODE DIFFERENCES **
@@ -240,27 +236,20 @@
      *      LEA     [ptr][n][rx]    *
      *      LEAC    [ptr][n][rx]    *
      *      PUSH    [ptr][rx]       *
-     *      PUT*    [var][rx]       *
-     *      GET*    [var][rx]       *
-     *      GETLINE [var][rx]       *
+     *      PUT*    [rx][rx]        *
+     *      GET*    [rx][rx]        *
+     *      GETLINE [rx][rx]        *
      *                              *
      *      CMP*    [rx][rx][n]     *
      *      LOOP*   [rx][rx][n]     *
      *                              *
      *******************************/
 
-	enum FILE_MODES
-	{
-		_UNOPEN =	   -1,  // Unopened file stream.
-		_READ =			0,  // File stream opened for read.
-		_WRITE =		1,  // File stream opened for write.
-		_APPEND =		2   // File stream opened for append.
-	};
-
     typedef short Type;
     typedef short Status;
     typedef char *Adress;
     typedef char *Bcode;
+    typedef char Byte;
     typedef short Size;
     typedef int DSize;
     typedef short Count;

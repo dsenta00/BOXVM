@@ -4,19 +4,19 @@
 #include "Data.h"
 
 class DataNode {
-protected:
-    Data *DataInfo;
-    Count count;
 public:
-    DataNode *Left;
-    DataNode *Right;
-
     DataNode(Data*, Count);
     DataNode();
     DataNode(Count);
     Count GetCount();
     Data *GetDataInfo();
     ~DataNode();
+
+    DataNode *Left;
+    DataNode *Right;
+protected:
+    Data *DataInfo;
+    Count count;
 };
 
 DataNode::DataNode(Data*_data, Count _count)

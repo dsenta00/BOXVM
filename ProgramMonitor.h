@@ -1,32 +1,71 @@
-#ifndef WRITELOGERRORREPORT_H
-#define WRITELOGERRORREPORT_H
-
+#ifndef PROGRAMMONITOR_H
+#define PROGRAMMONITOR_H
 #include "BoxInfo.h"
 
-void WriteLogErrorReport(char *path, Status error_code)
+class ProgramMonitor {
+public:
+    ProgramMonitor();
+    ~ProgramMonitor();
+    void SetError(Status);
+    void SetPath(char *);
+    void WriteErrorReport();
+    bool OK();
+protected:
+    Status status;
+    char *path;
+};
+
+ProgramMonitor::ProgramMonitor()
 {
-	char *p_path = NULL;
-	FILE *fp = NULL;
+    status = EVERYTHING_OK;
+    path = NULL;
+}
 
-	printf("\n\tFatal runtime error. [ERROR CODE = 0x%08x] (%d)", error_code, error_code);
-	printf("\n\tAll BOXVM reserved memory and connections are being released.\n");
+ProgramMonitor::~ProgramMonitor()
+{
+    if(status != EVERYTHING_OK)
+        this->WriteErrorReport();
+}
 
-	p_path = strchr(path, '.');
+void ProgramMonitor::SetPath(char *_execpath)
+{
+    path = _execpath;
+}
 
-	if (p_path)
-	{
-		strcpy(p_path, ".logbox");
-		fp = fopen(path, "w+");
-	}
+void ProgramMonitor::SetError(Status _stat)
+{
+    status = _stat;
+}
 
-	if (fp)
-	{
-		printf("\n\tPlease read the error report located at <\"%s\">\n", path);
-		fprintf(fp, "\n\tBOXVM RUNTIME ERROR REPORT:");
-		fprintf(fp, "\n\t[ERROR CODE = 0x%08x] (%d)\n\n\t*** ", error_code, error_code);
+bool ProgramMonitor::OK()
+{
+    return status == EVERYTHING_OK;
+}
 
-		switch (error_code)
-		{
+void ProgramMonitor::WriteErrorReport()
+{
+    char *p_path = NULL;
+    FILE *fp = NULL;
+
+    printf("\n\tFatal runtime error. [ERROR CODE = 0x%08x] (%d)", status, status);
+    printf("\n\tAll BOXVM reserved memory and connections are being released.\n");
+
+    p_path = strchr(path, '.');
+
+    if (p_path)
+    {
+        strcpy(p_path, ".logbox");
+        fp = fopen(path, "w+");
+    }
+
+    if (fp)
+    {
+        printf("\n\tPlease read the error report located at <\"%s\">\n", path);
+        fprintf(fp, "\n\tBOXVM RUNTIME ERROR REPORT:");
+        fprintf(fp, "\n\t[ERROR CODE = 0x%08x] (%d)\n\n\t*** ", status, status);
+
+        switch (status)
+        {
             case REGISTRYUNEX:
                 fprintf(fp, "Trying to do operation on unknown registry count.");
             break;
@@ -50,9 +89,6 @@ void WriteLogErrorReport(char *path, Status error_code)
             break;
             case ERRBUFFCONT:
                 fprintf(fp, "BOXVM internal error: Code segment memory allocation error.");
-            break;
-            case BOXREADERR:
-                fprintf(fp, "BOXVM internal error: class <ReadBoxFile> allocation error.");
             break;
             case STATIC_OVERFLOW:
                 fprintf(fp, "Static data virtual memory overflow.");
@@ -85,7 +121,7 @@ void WriteLogErrorReport(char *path, Status error_code)
                 fprintf(fp, "Error declaring heap data.");
             break;
             case BUFF_NULL_ERR:
-                fprintf(fp, "Operand queue reserved with corrupted memory [NULL] or unknown type from heap.");
+                fprintf(fp, "Registry reserved with corrupted memory [NULL] or unknown type from heap.");
             break;
             case HEAP_UNEX_ERR:
                 fprintf(fp, "Heap returned corrupted memory (NULL).");
@@ -107,15 +143,6 @@ void WriteLogErrorReport(char *path, Status error_code)
             break;
             case STACK_MALL_ERR:
                 fprintf(fp, "BOXVM internal error: Error allocating data in stack memory.");
-            break;
-            case BUFF_MALL_ERR:
-                fprintf(fp, "BOXVM internal error: Class <OperationQueue> allocation error.");
-            break;
-            case FLIST_MAL_ERR:
-                fprintf(fp, "BOXVM internal error: Class <FileList> allocation error.");
-            break;
-            case LOOP_MAL_ERR:
-                fprintf(fp, "BOXVM internal error: Class <Loop> allocation error.");
             break;
             case BC_MAL_ERR:
                 fprintf(fp, "BOXVM internal error: Class <ByteCode> allocation error.");
@@ -165,10 +192,10 @@ void WriteLogErrorReport(char *path, Status error_code)
             case ERROR_READ_BOX:
                 fprintf(fp, "Error loading BOX program content into memory.");
             break;
-		}
+        }
 
-		fclose(fp);
-	}
+        fclose(fp);
+    }
 }
 
-#endif  //WRITELOGERRORREPORT_H
+#endif // PROGRAMMONITOR_H

@@ -7,7 +7,6 @@ SOURCES += \
     BOXVM.cpp
 
 HEADERS += \
-    LoopNode.h \
     BOXVM.h \
     FileOperationsMacro.h \
     ByteCode.h \
@@ -22,14 +21,13 @@ HEADERS += \
     FileList.h \
     BoxInfo.h \
     BoxProgram.h \
-    WriteLogFileReport.h \
     Heap.h \
     Execute.h \
-    AritmethicalOperations.h \
-    CompareAdress.h \
     VirtualStackMemory.h \
     InvokeBox.h \
-    OperandQueue.h \
     Data.h \
-    DataNode.h
+    DataNode.h \
+    ProgramMonitor.h \
+    ALU.h \
+    Registry.h
 

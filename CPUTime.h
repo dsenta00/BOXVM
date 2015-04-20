@@ -2,73 +2,78 @@
 #define CPUTIME_H
 #include "BoxInfo.h"
 
-#if defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) && defined(__MACH__))
 class CPUTime {
 public:
-    CPUTime()
+    CPUTime();
+    inline void Start();
+    inline void Stop();
+    inline double GetCPUTime();
+    inline double GetCPU();
+protected:
+#if defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) && defined(__MACH__))
+    double start;
+    double stop;
+#else
+    LARGE_INTEGER t1;
+    LARGE_INTEGER t2;
+    LARGE_INTEGER freq;
+    double secs;
+#endif
+};
+
+#if defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) && defined(__MACH__))
+
+    CPUTime::CPUTime()
     {
         start = stop = 0;
     }
 
-    inline void Start()
+    inline void CPUTime::Start()
     {
         start = clock();
     }
 
-    inline void Stop()
+    inline void CPUTime::Stop()
     {
         stop = clock();
     }
 
-    double GetCPUTime()
+    inline double CPUTime::GetCPUTime()
     {
         return (double)(stop - start) * 1000 / CLOCKS_PER_SEC;
     }
 
-    double GetCPU()
+    inline double CPUTime::GetCPU()
     {
         return stop-start;
     }
-private:
-    double start;
-    double stop;
-};
 #else
-#include <iomanip>
 
-class CPUTime {
-public:
-    CPUTime()
+    CPUTime::CPUTime()
     {
         QueryPerformanceFrequency(&freq);
         secs = 0;
     }
 
-    inline void Start()
+    inline void CPUTime::Start()
     {
         QueryPerformanceCounter(&t1);
     }
 
-    inline void Stop()
+    inline void CPUTime::Stop()
     {
         QueryPerformanceCounter(&t2);
         secs = (double)(t2.QuadPart - t1.QuadPart) * 1000 / (double)freq.QuadPart;
     }
 
-    inline double GetCPU()
+    inline double CPUTime::GetCPU()
     {
         return (double)(t2.QuadPart - t1.QuadPart);
     }
 
-    double GetCPUTime()
+    inline double CPUTime::GetCPUTime()
     {
         return secs;
     }
-private:
-    LARGE_INTEGER t1;
-    LARGE_INTEGER t2;
-    LARGE_INTEGER freq;
-    double secs;
-};
 #endif
 #endif
