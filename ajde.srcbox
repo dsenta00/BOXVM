@@ -15,7 +15,7 @@ $code
 		pushs pi r3
 		pushs temp r4
 
-		loopl r0 r1 27
+		loopl r0 r1 25
 			mov r4 r2
 			div r4 r0
 			add r3 r4

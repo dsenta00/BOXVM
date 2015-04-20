@@ -24,7 +24,6 @@ $code
 			div r4 r0
 			sub r3 r4
 			adi r0 2
-			println r3
 		reploop
 	estart
 $endcode
