@@ -34,67 +34,10 @@ ByteCode::ByteCode(Bcode _codesegment, Bcode _bytecode)
     bytecode = _bytecode;
 	codesegment = _codesegment;
 }
-/*
-inline bool Check(Byte &i)
-{
-    if(i >= 0 && i <= MAXBUFFERSIZE)
-        return true;
-    else
-        return false;
-}
-
-bool CheckRegistryBounds()
-{
-    Bcode p = codesegment;
-
-    do
-    {
-        switch(*p)
-        {
-            case ADD: case SUB: case MOV: case DIV:
-            case MUL:case MOD:
-                p++;
-                if(!Check(*p))
-                    return false;
-                p++;
-                if(!Check(*p))
-                    return false;
-                p++;
-            break;
-            case ADI: case SUC: case DIC: case MUC:
-            case MODC:
-                p++;
-                if(!Check(*p))
-                    return false;
-                p++;
-            break;
-            case SCAN: case PRINT: case PRINTLN: case RAND:
-                p++;
-                if(!Check(*p))
-                    return false;
-            break;
-            case LOOPE: case LOOPNE: case LOOPL: case LOOPG:
-            case LOOPLE: case LOOPGE: case CMPE: case CMPNE:
-            case CMPL: case CMPG: case CMPLE: case CMPGE:
-                p++;
-                if(!Check(*p))
-                    return false;
-                p++;
-                if(!Check(*p))
-                    return false;
-                p++;
-                p++;
-            break;
-        }
-    }
-    while(*p != ESTART);
-
-    return true;
-}*/
 
 void ByteCode::Jump(Byte n)
 {
-    bytecode += n - 1;
+    bytecode += n;
 }
 
 Bcode ByteCode::ReadByteCode()

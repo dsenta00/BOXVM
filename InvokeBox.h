@@ -29,7 +29,7 @@ Bcode InvokeBox::GetCodeSegment()
 
 Bcode InvokeBox::GetExecuteCode()
 {
-    return p_codeSeg;
+    return p_codeSeg-1;
 }
 
 template <typename T>

@@ -22,7 +22,7 @@ Loop::Loop()
 {
     curr = STARTLOOP;
     make = STARTLOOP;
-    monitor = NULL;
+    memset(buffer, 0, sizeof(Bcode));
 }
 
 void Loop::SetMonitor(ProgramMonitor *_monitor)
@@ -33,25 +33,29 @@ void Loop::SetMonitor(ProgramMonitor *_monitor)
 void Loop::PushLoop(Bcode _adress)
 {
     if (make == ENDLOOP)
-        SETERR(LOOP_OVERFLOW);
-    else
-	{
+    {
         *make = _adress;
         curr = make;
         make++;
+    }
+    else
+    {
+        SETERR(LOOP_OVERFLOW);
     }
 }
 
 void Loop::PopLoop()
 {
     if (make == STARTLOOP)
-        SETERR(LOOP_OUT_ERR);
-	else
-	{
+    {
         make = curr;
 
         if (curr != STARTLOOP)
             make--;
+    }
+	else
+    {
+        SETERR(LOOP_OUT_ERR);
     }
 }
 

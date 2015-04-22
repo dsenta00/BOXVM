@@ -15,26 +15,34 @@ if(EOK)                                                 \
     file_list._FOP((_TYPE *)op1, dataid[0]);
 
 #define OPENFILE(__MODE)                            \
-dataid[0] = *READBYTECODE;                          \
-file_list.PushFile(dataid[0], GETADRESS(0), __MODE);
+GETREGISTRY(op1);                          \
+file_list.PushFile(dataid[0], op1, __MODE);
 
-#define LOOPCHECKANDPUSHREG                         \
-GETREGISTRY(op1)\
-GETREGISTRY(op2)                                \
-if(EOK)                     \
-{                                               \
-    if(loop_list.GetStartLoop() != operation)  \
-        loop_list.PushLoop(operation);\
-    if(EOK)                 \
-        alu.CheckStatement(op1, op2, type);\
+
+#define COMPARE \
+GETREGISTRY(op1);\
+GETREGISTRY(op2);\
+dataid[0] = *READBYTECODE;\
+if(EOK)\
+{\
+    alu.CheckStatement(op1, op2, type);\
 }
 
-#define CMPCHECKANDPUSHREG                          \
-GETREGISTRY(op1)\
-GETREGISTRY(op2)                                \
-if(EOK)                     \
-{                                               \
-    alu.CheckStatement(op1, op2, type);    \
+#define EXITLOOPIF(__STAT) COMPARE \
+if (__STAT)\
+{\
+    bytecode->Jump(dataid[0]);\
+    loop_list.PopLoop();\
+}\
+else if(loop_list.GetStartLoop() != operation)\
+{\
+    loop_list.PushLoop(operation);\
+}
+
+#define BRANCHIF(__STAT) COMPARE \
+if (__STAT)\
+{\
+    bytecode->Jump(dataid[0]);\
 }
 
 #endif // EXECUTEMACRO_H

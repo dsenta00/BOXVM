@@ -84,9 +84,6 @@ void ProgramMonitor::WriteErrorReport()
             case POOL_MAL_ERR:
                 fprintf(fp, "BOXVM internal error: Class <MemoryPool> allocation error.");
             break;
-            case UNDEF_DATA_ERR:
-                fprintf(fp, "Undefined data segment error.");
-            break;
             case ERRBUFFCONT:
                 fprintf(fp, "BOXVM internal error: Code segment memory allocation error.");
             break;
@@ -105,9 +102,6 @@ void ProgramMonitor::WriteErrorReport()
             case UKNOWN_OPER_ERR:
                 fprintf(fp, "Trying to execute an unknown bytecode operation.");
             break;
-            case UNDEF_STACK_ERR:
-                fprintf(fp, "Undefined stack segment.");
-            break;
             case DYN_TYPE_ERR:
                 fprintf(fp, "Bad dynamic data type declaration.");
             break;
@@ -116,9 +110,6 @@ void ProgramMonitor::WriteErrorReport()
             break;
             case INIT_DATA_ERR:
                 fprintf(fp, "Data initialization error.");
-            break;
-            case DATA_HEAP_ERR:
-                fprintf(fp, "Error declaring heap data.");
             break;
             case BUFF_NULL_ERR:
                 fprintf(fp, "Registry reserved with corrupted memory [NULL] or unknown type from heap.");
@@ -185,9 +176,6 @@ void ProgramMonitor::WriteErrorReport()
             break;
             case VM_MALL_ERR:
                 fprintf(fp, "BOXVM internal error error: Static virtual memory allocation error.");
-            break;
-            case QUEUE_OVERFLOW:
-                fprintf(fp, "Operand queue overflow (n > %d).", MAXBUFFERSIZE);
             break;
             case ERROR_READ_BOX:
                 fprintf(fp, "Error loading BOX program content into memory.");

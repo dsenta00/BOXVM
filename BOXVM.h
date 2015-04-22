@@ -85,15 +85,18 @@ void RunProgramPercentage(char *_execpath)
         }
     }
 
-    fulltime = startTime.GetCPU() + invokingProgramTime.GetCPU() + settingStackData.GetCPU() \
-                + settingPool.GetCPU() + settingHeapData.GetCPU() + executingProgram.GetCPU();
+    if(monitor.OK())
+    {
+        fulltime = startTime.GetCPU() + invokingProgramTime.GetCPU() + settingStackData.GetCPU() \
+                    + settingPool.GetCPU() + settingHeapData.GetCPU() + executingProgram.GetCPU();
 
-    std::cout << "\n\tVirtual machines setting data:\t" <<  startTime.GetCPU() / fulltime * 100 << " %";
-    std::cout << "\n\tInvoking program:\t\t" << invokingProgramTime.GetCPU() / fulltime * 100 << " %";
-    std::cout << "\n\tSetting stack data:\t\t" << settingStackData.GetCPU() / fulltime * 100 << " %";
-    std::cout << "\n\tInitializing memory pool:\t" << settingPool.GetCPU() / fulltime * 100 << " %";
-    std::cout << "\n\tSetting heap data:\t\t" << settingHeapData.GetCPU() / fulltime * 100 << " %";
-    std::cout << "\n\tProgram executing:\t\t" << executingProgram.GetCPU() / fulltime * 100 << " %\n";
+        std::cout << "\n\tVirtual machines setting data:\t" <<  startTime.GetCPU() / fulltime * 100 << " %";
+        std::cout << "\n\tInvoking program:\t\t" << invokingProgramTime.GetCPU() / fulltime * 100 << " %";
+        std::cout << "\n\tSetting stack data:\t\t" << settingStackData.GetCPU() / fulltime * 100 << " %";
+        std::cout << "\n\tInitializing memory pool:\t" << settingPool.GetCPU() / fulltime * 100 << " %";
+        std::cout << "\n\tSetting heap data:\t\t" << settingHeapData.GetCPU() / fulltime * 100 << " %";
+        std::cout << "\n\tProgram executing:\t\t" << executingProgram.GetCPU() / fulltime * 100 << " %\n";
+    }
 }
 
 #endif

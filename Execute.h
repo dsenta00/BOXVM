@@ -15,6 +15,7 @@ public:
 	Execute();
     Execute(Bcode, Bcode, ProgramMonitor *);
     ~Execute();
+
     void Do(Stack &, Heap &);
 protected:
     Registry registry;
@@ -29,8 +30,8 @@ protected:
     Type type;
     Type temp;
     Data *data;
-    char dataid[MAXARGS];
-    char op_index;
+    Byte dataid[MAXARGS];
+    Byte op_index;
     Status status;
 };
 
@@ -122,21 +123,21 @@ void Execute::Do(Stack &stack, Heap &heap)
             continue;
             case NEWV:
                 dataid[0] = *READBYTECODE;
-                dataid[1] = *READBYTECODE;
-                heap.MallocDefrag(dataid[0], *(int *)GETADRESS(1));
+                GETREGISTRY(op1);
+                heap.MallocDefrag(dataid[0], *(Size *)op1);
             continue;
             case FNEWV:
                 dataid[0] = *READBYTECODE;
-                dataid[1] = *READBYTECODE;
-                heap.Malloc(dataid[0], *(int *)GETADRESS(1));
+                GETREGISTRY(op1);
+                heap.Malloc(dataid[0], *(Size *)op1);
             continue;
             case FREE:
                 heap.Free(*READBYTECODE);
             continue;
             case LEA:
                 dataid[0] = *READBYTECODE;
-                dataid[1] = *READBYTECODE;
-                heap.Lea(registry, &type, dataid[0], *(int *)GETADRESS(1), *READBYTECODE);
+                GETREGISTRY(op1);
+                heap.Lea(registry, &type, dataid[0], *(Count *)op1, *READBYTECODE);
             continue;
             case LEAC:
                 dataid[0] = *READBYTECODE;
@@ -145,7 +146,7 @@ void Execute::Do(Stack &stack, Heap &heap)
             continue;
             case PUSH:
                 dataid[0] = *READBYTECODE;
-                heap.Lea(registry, &type, -1, dataid[0], *READBYTECODE);
+                heap.Lea(registry, &type, -1, dataid[0], 0);
             continue;
             case PUSHS:
                 data = stack.SearchFor(*READBYTECODE);
@@ -197,135 +198,44 @@ void Execute::Do(Stack &stack, Heap &heap)
                 FILEOPREG(GetLine, char);
             continue;
             case CMPE:
-                CMPCHECKANDPUSHREG;
-                dataid[0] = *READBYTECODE;
-
-                if (AREEQUAL)
-                {
-                    READBYTECODE;
-                    bytecode->Jump(dataid[0]);
-                }
-
+                BRANCHIF(!AREEQUAL);
             continue;
             case LOOPE:
-                LOOPCHECKANDPUSHREG;
-                dataid[0] = *READBYTECODE;
-
-                if (AREEQUAL)
-                {
-                    READBYTECODE; //preskace se jedan byte
-                    bytecode->Jump(dataid[0]);
-                    loop_list.PopLoop();
-                }
+                EXITLOOPIF(!AREEQUAL);
             continue;
             case CMPNE:
-                CMPCHECKANDPUSHREG;
-                dataid[0] = *READBYTECODE;
-
-                if (AREEQUAL)
-                {
-                    READBYTECODE;
-                    bytecode->Jump(dataid[0]);
-                }
+                BRANCHIF(AREEQUAL);
             continue;
             case LOOPNE:
-                LOOPCHECKANDPUSHREG;
-                dataid[0] = *READBYTECODE;
-
-                if (AREEQUAL)
-                {
-                    READBYTECODE; //preskace se jedan byte
-                    bytecode->Jump(dataid[0]);
-                    loop_list.PopLoop();
-                }
+                EXITLOOPIF(AREEQUAL);
             continue;
             case CMPG:
-                CMPCHECKANDPUSHREG;
-                dataid[0] = *READBYTECODE;
-
-                if (AREEQUAL || FIRSTBIGGER)
-                {
-                    READBYTECODE;
-                    bytecode->Jump(dataid[0]);
-                }
+                BRANCHIF(AREEQUAL || FIRSTBIGGER);
             continue;
             case LOOPG:
-                LOOPCHECKANDPUSHREG;
-                dataid[0] = *READBYTECODE;
-
-                if (AREEQUAL || FIRSTBIGGER)
-                {
-                    READBYTECODE; //preskace se jedan byte
-                    bytecode->Jump(dataid[0]);
-                    loop_list.PopLoop();
-                }
+                EXITLOOPIF(AREEQUAL || FIRSTBIGGER);
             continue;
             case CMPL:
-                CMPCHECKANDPUSHREG;
-                dataid[0] = *READBYTECODE;
-
-                if (AREEQUAL || SECONDBIGGER)
-                {
-                    READBYTECODE;
-                    bytecode->Jump(dataid[0]);
-                }
+                BRANCHIF(AREEQUAL || SECONDBIGGER);
             continue;
             case LOOPL:
-                LOOPCHECKANDPUSHREG;
-                dataid[0] = *READBYTECODE;
-
-                if (AREEQUAL || SECONDBIGGER)
-                {
-                    READBYTECODE; //preskace se jedan byte
-                    bytecode->Jump(dataid[0]);
-                    loop_list.PopLoop();
-                }
+                EXITLOOPIF(AREEQUAL || SECONDBIGGER);
             continue;
             case CMPGE:
-                CMPCHECKANDPUSHREG;
-                dataid[0] = *READBYTECODE;
-
-                if (SECONDBIGGER)
-                {
-                    READBYTECODE;
-                    bytecode->Jump(dataid[0]);
-                }
+                BRANCHIF(SECONDBIGGER);
             continue;
             case LOOPGE:
-                LOOPCHECKANDPUSHREG;
-                dataid[0] = *READBYTECODE;
-
-                if (SECONDBIGGER)
-                {
-                    READBYTECODE; //preskace se jedan byte
-                    bytecode->Jump(dataid[0]);
-                    loop_list.PopLoop();
-                }
+                EXITLOOPIF(SECONDBIGGER);
             continue;
             case CMPLE:
-                CMPCHECKANDPUSHREG;
-                dataid[0] = *READBYTECODE;
-
-                if (FIRSTBIGGER)
-                {
-                    READBYTECODE;
-                    bytecode->Jump(dataid[0]);
-                }
+                BRANCHIF(FIRSTBIGGER);
             continue;
             case LOOPLE:
-                LOOPCHECKANDPUSHREG;
-                dataid[0] = *READBYTECODE;
-
-                if (FIRSTBIGGER)
-                {
-                    READBYTECODE; //preskace se jedan byte
-                    bytecode->Jump(dataid[0]);
-                    loop_list.PopLoop();
-                }
+                EXITLOOPIF(FIRSTBIGGER);
             continue;
                 //operation [none]
             case REPLOOP:
-                bytecode->SetByteCode(loop_list.GetStartLoop() - 1);
+                bytecode->SetByteCode(loop_list.GetStartLoop()-1);
             continue;
             case OPENW:
                 OPENFILE(_WRITE);
@@ -340,8 +250,7 @@ void Execute::Do(Stack &stack, Heap &heap)
                 GETREGISTRY(op1);
                 if (EOK)
                 {
-                    status = rand();
-                    alu.Operation(op_index, op1, (char *)&status, type);
+                    alu.Rand(op1,type);
                 }
             continue;
             case ESTART:
@@ -349,7 +258,7 @@ void Execute::Do(Stack &stack, Heap &heap)
             continue;
             default:
                 SETERR(UKNOWN_OPER_ERR);
-            continue;
+            break;
 		}
 
     } while(EOK);

@@ -10,33 +10,33 @@ public:
     template <typename T>
     inline void AddOperation(T *, T *);
     template <typename T>
-    inline void AddOperation(T *, Size);
+    inline void AddOperation(T *, Byte);
     template <typename T>
     inline void SubOperation(T *, T *);
     template <typename T>
-    inline void SubOperation(T *, Size);
+    inline void SubOperation(T *, Byte);
     template <typename T>
     inline void MulOperation(T *, T *);
     template <typename T>
-    inline void MulOperation(T *, Size);
+    inline void MulOperation(T *, Byte);
     template <typename T>
     inline void DivOperation(T *, T *);
     template <typename T>
-    inline void DivOperation(T *, Size);
+    inline void DivOperation(T *, Byte);
     template <typename T>
     inline void ModOperation(T *, T *);
     template <typename T>
-    inline void ModOperation(T *, Size);
+    inline void ModOperation(T *, Byte);
     template <typename T>
     inline void MovOperation(T *, T *);
     template <typename T>
     inline void CheckAdressEquality(T *, T *);
     void CheckStatement(Adress, Adress, Type);
     inline void Print(Adress, Type);
-
+    inline void Rand(Adress, Type);
     inline void PrintLN(Adress, Type);
     inline void Scan(Adress, Type);
-    void Operation(Byte, Adress, Size, Type);
+    void Operation(Byte, Adress, Byte, Type);
     void Operation(Byte, Adress, Adress, Type);
 
     long GetFlag();
@@ -59,44 +59,41 @@ long ALU::GetFlag()
 template <typename T>
 inline void ALU::CheckAdressEquality(T *adress1, T* adress2)
 {
-    if (adress1 && adress2)
-    {
-        flag = (long)(*adress1 - *adress2);
-    }
-    else
-    {
-        SETERR(ADR_COMP_ERR);
-    }
+    flag = (long)(*adress1 - *adress2);
 }
 
 void ALU::CheckStatement(Adress adress1, Adress adress2, Type type)
 {
-    switch (type)
+    if(adress1 && adress2)
     {
-        case _CHAR:
-            CheckAdressEquality(adress1, adress2);
-        break;
-        case _INT:
-            CheckAdressEquality((int *)adress1, (int *)adress2);
-        break;
-        case _SHORT:
-            CheckAdressEquality((short *)adress1, (short *)adress2);
-        break;
-        case _LONG:
-            CheckAdressEquality((long *)adress1, (long *)adress2);
-        break;
-        case _FLOAT:
-            CheckAdressEquality((float *)adress1, (float *)adress2);
-        break;
-        case _DOUBLE:
-            CheckAdressEquality((double *)adress1, (double *)adress2);
-        break;
-        case _STRING:
-            flag = strcmp(adress1, adress2);
-        break;
-        default:
-            SETERR(ADR_COMP_ERR);
-        break;
+        switch (type)
+        {
+            case _CHAR:
+                CheckAdressEquality(adress1, adress2);
+            break;
+            case _INT:
+                CheckAdressEquality((int *)adress1, (int *)adress2);
+            break;
+            case _SHORT:
+                CheckAdressEquality((short *)adress1, (short *)adress2);
+            break;
+            case _LONG:
+                CheckAdressEquality((long *)adress1, (long *)adress2);
+            break;
+            case _FLOAT:
+                CheckAdressEquality((float *)adress1, (float *)adress2);
+            break;
+            case _DOUBLE:
+                CheckAdressEquality((double *)adress1, (double *)adress2);
+            break;
+            case _STRING:
+                flag = strcmp(adress1, adress2);
+            break;
+        }
+    }
+    else
+    {
+        SETERR(ADR_COMP_ERR);
     }
 }
 
@@ -155,6 +152,36 @@ inline void ALU::Scan(Adress __ADR, Type __TYPE)
     }
 }
 
+inline void ALU::Rand(Adress __ADR, Type __TYPE)
+{
+    int randnum = rand();
+
+    switch (__TYPE)
+    {
+        case _CHAR:
+            *__ADR = randnum % 128;
+        break;
+        case _STRING:
+            sprintf(__ADR, "%d", randnum);
+        break;
+        case _SHORT:
+            *(short *)__ADR = randnum % 32768;
+        break;
+        case _INT:
+            *(int *)__ADR = randnum;
+        break;
+        case _LONG:
+            *(long *)__ADR = randnum;
+        break;
+        case _FLOAT:
+            *(float *)__ADR = randnum;
+        break;
+        case _DOUBLE:
+            *(double *)__ADR = randnum;
+        break;
+    }
+}
+
 void ALU::SetMonitor(ProgramMonitor *_monitor)
 {
     monitor = _monitor;
@@ -163,408 +190,380 @@ void ALU::SetMonitor(ProgramMonitor *_monitor)
 template <typename T>
 inline void ALU::AddOperation(T *operand1, T *operand2)
 {
-	if (operand1 && operand2)
-		*operand1 += *operand2;
-	else
-       SETERR(OPER_NULL_ERR);
+    *operand1 += *operand2;
 }
 
 template <typename T>
-inline void ALU::AddOperation(T *operand1, Size increment)
+inline void ALU::AddOperation(T *operand1, Byte increment)
 {
-	if (operand1)
-		*operand1 += increment;
-	else
-        SETERR(OPER_NULL_ERR);
+    *operand1 += increment;
 }
 
 template <typename T>
 inline void ALU::SubOperation(T *operand1, T *operand2)
 {
-	if (operand1 && operand2)
-		*operand1 -= *operand2;
-	else
-        SETERR(OPER_NULL_ERR);
+    *operand1 -= *operand2;
 }
 
 template <typename T>
-inline void ALU::SubOperation(T *operand1, Size increment)
+inline void ALU::SubOperation(T *operand1, Byte increment)
 {
-	if (operand1)
-		*operand1 -= increment;
-	else
-        SETERR(OPER_NULL_ERR);
+    *operand1 -= increment;
 }
 
 template <typename T>
 inline void ALU::MulOperation(T *operand1, T *operand2)
 {
-	if (operand1 && operand2)
-		*operand1 *= *operand2;
-	else
-        SETERR(OPER_NULL_ERR);
+    *operand1 *= *operand2;
 }
 
 template <typename T>
-inline void ALU::MulOperation(T *operand1, Size increment)
+inline void ALU::MulOperation(T *operand1, Byte increment)
 {
-	if (operand1)
-		*operand1 *= increment;
-	else
-        SETERR(OPER_NULL_ERR);
+    *operand1 *= increment;
 }
 
 template <typename T>
 inline void ALU::DivOperation(T *operand1, T *operand2)
 {
-	if (operand1 && operand2)
-	{
-		if (*operand2)
-			*operand1 /= *operand2;
-		else
-            SETERR(DIV_NULL_ERR);
-	}
-	else
+    if (*operand2)
     {
-        SETERR(OPER_NULL_ERR);
+        *operand1 /= *operand2;
+    }
+    else
+    {
+        SETERR(DIV_NULL_ERR);
     }
 }
 
 template <typename T>
-inline void ALU::DivOperation(T *operand1, Size increment)
+inline void ALU::DivOperation(T *operand1, Byte increment)
 {
-	if (operand1)
-	{
-		if (increment)
-			*operand1 /= increment;
-        else
-            SETERR(DIV_NULL_ERR);
+    if (increment)
+    {
+        *operand1 /= increment;
     }
     else
     {
-        SETERR(OPER_NULL_ERR);
+        SETERR(DIV_NULL_ERR);
     }
 }
 
 template <typename T>
 inline void ALU::ModOperation(T *operand1, T *operand2)
 {
-	if (operand1 && operand2)
-	{
-		if (*operand2)
-			*operand1 %= *operand2;
-        else
-            SETERR(DIV_NULL_ERR);
+    if (*operand2)
+    {
+        *operand1 %= *operand2;
     }
     else
     {
-        SETERR(OPER_NULL_ERR);
+        SETERR(DIV_NULL_ERR);
     }
 }
 
 template <typename T>
-inline void ALU::ModOperation(T *operand1, Size increment)
+inline void ALU::ModOperation(T *operand1, Byte increment)
 {
-	if (operand1)
+    if (increment)
     {
-        if (increment)
-            *operand1 %= increment;
-        else
-            SETERR(DIV_NULL_ERR);
+        *operand1 %= increment;
     }
     else
     {
-        SETERR(OPER_NULL_ERR);
+        SETERR(DIV_NULL_ERR);
     }
 }
 
 template <typename T>
 inline void ALU::MovOperation(T *operand1, T *operand2)
 {
-	if (operand1 && operand2)
-		*operand1 = *operand2;
-	else
-        SETERR(OPER_NULL_ERR);
+    *operand1 = *operand2;
 }
 
-inline void ALU::Operation(char OP, Adress store_adress, Adress adress, Type type)
+inline void ALU::Operation(Byte OP, Adress store_adress, Adress adress, Type type)
 {
-	if (OP == MOV)
-	{
-		switch (type)
-		{
-            case _CHAR:
-                MovOperation(store_adress, adress);
-            break;
-            case _INT:
-                MovOperation((int *)store_adress, (int *)adress);
-            break;
-            case _SHORT:
-                MovOperation((short *)store_adress, (short *)adress);
-            break;
-            case _LONG:
-                MovOperation((long *)store_adress, (long *)adress);
-            break;
-            case _FLOAT:
-                MovOperation((float *)store_adress, (float *)adress);
-            break;
-            case _DOUBLE:
-                MovOperation((double *)store_adress, (double *)adress);
-            break;
-            case _STRING:
-                if (store_adress && adress)
+    if(store_adress && adress)
+    {
+        if (OP == MOV)
+        {
+            switch (type)
+            {
+                case _CHAR:
+                    MovOperation(store_adress, adress);
+                break;
+                case _INT:
+                    MovOperation((int *)store_adress, (int *)adress);
+                break;
+                case _SHORT:
+                    MovOperation((short *)store_adress, (short *)adress);
+                break;
+                case _LONG:
+                    MovOperation((long *)store_adress, (long *)adress);
+                break;
+                case _FLOAT:
+                    MovOperation((float *)store_adress, (float *)adress);
+                break;
+                case _DOUBLE:
+                    MovOperation((double *)store_adress, (double *)adress);
+                break;
+                case _STRING:
                     strcpy(store_adress, adress);
-                else
-                    SETERR(OPER_NULL_ERR);
-            break;
-		}
-	}
-	else if (OP == ADD)
-	{
-		switch (type)
-		{
-            case _CHAR:
-                AddOperation(store_adress, adress);
-            break;
-            case _INT:
-                AddOperation((int *)store_adress, (int *)adress);
-            break;
-            case _SHORT:
-                AddOperation((short *)store_adress, (short *)adress);
-            break;
-            case _LONG:
-                AddOperation((long *)store_adress, (long *)adress);
-            break;
-            case _FLOAT:
-                AddOperation((float *)store_adress, (float *)adress);
-            break;
-            case _DOUBLE:
-                AddOperation((double *)store_adress, (double *)adress);
-            break;
-            case _STRING:
-                if (store_adress && adress)
+                break;
+            }
+        }
+        else if (OP == ADD)
+        {
+            switch (type)
+            {
+                case _CHAR:
+                    AddOperation(store_adress, adress);
+                break;
+                case _INT:
+                    AddOperation((int *)store_adress, (int *)adress);
+                break;
+                case _SHORT:
+                    AddOperation((short *)store_adress, (short *)adress);
+                break;
+                case _LONG:
+                    AddOperation((long *)store_adress, (long *)adress);
+                break;
+                case _FLOAT:
+                    AddOperation((float *)store_adress, (float *)adress);
+                break;
+                case _DOUBLE:
+                    AddOperation((double *)store_adress, (double *)adress);
+                break;
+                case _STRING:
                     strcat(store_adress, adress);
-                else
-                   SETERR(OPER_NULL_ERR);
-            break;
-		}
-	}
-	else if (OP == MUL)
-	{
-		switch (type)
-		{
-            case _CHAR:
-                MulOperation(store_adress, adress);
-            break;
-            case _INT:
-                MulOperation((int *)store_adress, (int *)adress);
-            break;
-            case _SHORT:
-                MulOperation((short *)store_adress, (short *)adress);
-            break;
-            case _LONG:
-                MulOperation((long *)store_adress, (long *)adress);
-            break;
-            case _FLOAT:
-                MulOperation((float *)store_adress, (float *)adress);
-            break;
-            case _DOUBLE:
-                MulOperation((double *)store_adress, (double *)adress);
-            break;
-		}
-	}
-	else if (OP == DIV)
-	{
-		switch (type)
-		{
-            case _CHAR:
-                DivOperation(store_adress, adress);
-            break;
-            case _INT:
-                DivOperation((int *)store_adress, (int *)adress);
-            break;
-            case _SHORT:
-                DivOperation((short *)store_adress, (short *)adress);
-            break;
-            case _LONG:
-                DivOperation((long *)store_adress, (long *)adress);
-            break;
-            case _FLOAT:
-                DivOperation((float *)store_adress, (float *)adress);
-            break;
-            case _DOUBLE:
-                DivOperation((double *)store_adress, (double *)adress);
-            break;
-		}
-	}
-	else if (OP == SUB)
-	{
-		switch (type)
-		{
-            case _CHAR:
-                SubOperation(store_adress, adress);
-            break;
-            case _INT:
-                SubOperation((int *)store_adress, (int *)adress);
-            break;
-            case _SHORT:
-                SubOperation((short *)store_adress, (short *)adress);
-            break;
-            case _LONG:
-                SubOperation((long *)store_adress, (long *)adress);
-            break;
-            case _FLOAT:
-                SubOperation((float *)store_adress, (float *)adress);
-            break;
-            case _DOUBLE:
-                SubOperation((double *)store_adress, (double *)adress);
-            break;
-		}
-	}
-	else if (OP == MOD)
-	{
-		switch (type)
-		{
-            case _CHAR:
-                ModOperation(store_adress, adress);
-            break;
-            case _INT:
-                ModOperation((int *)store_adress, (int *)adress);
-            break;
-            case _SHORT:
-                ModOperation((short *)store_adress, (short *)adress);
-            break;
-            case _LONG:
-                ModOperation((long *)store_adress, (long *)adress);
-            break;
-		}
+                break;
+            }
+        }
+        else if (OP == MUL)
+        {
+            switch (type)
+            {
+                case _CHAR:
+                    MulOperation(store_adress, adress);
+                break;
+                case _INT:
+                    MulOperation((int *)store_adress, (int *)adress);
+                break;
+                case _SHORT:
+                    MulOperation((short *)store_adress, (short *)adress);
+                break;
+                case _LONG:
+                    MulOperation((long *)store_adress, (long *)adress);
+                break;
+                case _FLOAT:
+                    MulOperation((float *)store_adress, (float *)adress);
+                break;
+                case _DOUBLE:
+                    MulOperation((double *)store_adress, (double *)adress);
+                break;
+            }
+        }
+        else if (OP == DIV)
+        {
+            switch (type)
+            {
+                case _CHAR:
+                    DivOperation(store_adress, adress);
+                break;
+                case _INT:
+                    DivOperation((int *)store_adress, (int *)adress);
+                break;
+                case _SHORT:
+                    DivOperation((short *)store_adress, (short *)adress);
+                break;
+                case _LONG:
+                    DivOperation((long *)store_adress, (long *)adress);
+                break;
+                case _FLOAT:
+                    DivOperation((float *)store_adress, (float *)adress);
+                break;
+                case _DOUBLE:
+                    DivOperation((double *)store_adress, (double *)adress);
+                break;
+            }
+        }
+        else if (OP == SUB)
+        {
+            switch (type)
+            {
+                case _CHAR:
+                    SubOperation(store_adress, adress);
+                break;
+                case _INT:
+                    SubOperation((int *)store_adress, (int *)adress);
+                break;
+                case _SHORT:
+                    SubOperation((short *)store_adress, (short *)adress);
+                break;
+                case _LONG:
+                    SubOperation((long *)store_adress, (long *)adress);
+                break;
+                case _FLOAT:
+                    SubOperation((float *)store_adress, (float *)adress);
+                break;
+                case _DOUBLE:
+                    SubOperation((double *)store_adress, (double *)adress);
+                break;
+            }
+        }
+        else if (OP == MOD)
+        {
+            switch (type)
+            {
+                case _CHAR:
+                    ModOperation(store_adress, adress);
+                break;
+                case _INT:
+                    ModOperation((int *)store_adress, (int *)adress);
+                break;
+                case _SHORT:
+                    ModOperation((short *)store_adress, (short *)adress);
+                break;
+                case _LONG:
+                    ModOperation((long *)store_adress, (long *)adress);
+                break;
+            }
+        }
+    }
+    else
+    {
+        SETERR(OPER_NULL_ERR);
     }
 }
 
-inline void ALU::Operation(char OP, Adress store_adress, Size increment, Type type)
+void ALU::Operation(Byte OP, Adress store_adress, Byte increment, Type type)
 {
-	if (OP == ADI)
-	{
-		switch (type)
-		{
-            case _CHAR:
-                AddOperation(store_adress, increment);
-            break;
-            case _INT:
-                AddOperation((int *)store_adress, increment);
-            break;
-            case _SHORT:
-                AddOperation((short *)store_adress, increment);
-            break;
-            case _LONG:
-                AddOperation((long *)store_adress, increment);
-            break;
-            case _FLOAT:
-                AddOperation((float *)store_adress, increment);
-            break;
-            case _DOUBLE:
-                AddOperation((double *)store_adress, increment);
-            break;
-            case _STRING:
-                sprintf(p_itoa, "%d", (int)increment);
-
-                if (store_adress)
+    if(store_adress)
+    {
+        if (OP == ADI)
+        {
+            switch (type)
+            {
+                case _CHAR:
+                    AddOperation(store_adress, increment);
+                break;
+                case _INT:
+                    AddOperation((int *)store_adress, increment);
+                break;
+                case _SHORT:
+                    AddOperation((short *)store_adress, increment);
+                break;
+                case _LONG:
+                    AddOperation((long *)store_adress, increment);
+                break;
+                case _FLOAT:
+                    AddOperation((float *)store_adress, increment);
+                break;
+                case _DOUBLE:
+                    AddOperation((double *)store_adress, increment);
+                break;
+                case _STRING:
+                    sprintf(p_itoa, "%d", (int)increment);
                     strcat(store_adress, p_itoa);
-                else
-                    SETERR(OPER_NULL_ERR);
-            break;
-		}
-	}
-	else if (OP == MUC)
-	{
-		switch (type)
-		{
-            case _CHAR:
-                MulOperation(store_adress, increment);
-            break;
-            case _INT:
-                MulOperation((int *)store_adress, increment);
-            break;
-            case _SHORT:
-                MulOperation((short *)store_adress, increment);
-            break;
-            case _LONG:
-                MulOperation((long *)store_adress, increment);
-            break;
-            case _FLOAT:
-                MulOperation((float *)store_adress, increment);
-            break;
-            case _DOUBLE:
-                MulOperation((double *)store_adress, increment);
-            break;
-		}
-	}
-	else if (OP == DIC)
-	{
-		switch (type)
-		{
-            case _CHAR:
-                DivOperation(store_adress, increment);
-            break;
-            case _INT:
-                DivOperation((int *)store_adress, increment);
-            break;
-            case _SHORT:
-                DivOperation((short *)store_adress, increment);
-            break;
-            case _LONG:
-                DivOperation((long *)store_adress, increment);
-            break;
-            case _FLOAT:
-                DivOperation((float *)store_adress, increment);
-            break;
-            case _DOUBLE:
-                DivOperation((double *)store_adress, increment);
-            break;
-		}
-	}
-	else if (OP == SUC)
-	{
-		switch (type)
-		{
-            case _CHAR:
-                SubOperation(store_adress, increment);
-            break;
-            case _INT:
-                SubOperation((int *)store_adress, increment);
-            break;
-            case _SHORT:
-                SubOperation((short *)store_adress, increment);
-            break;
-            case _LONG:
-                SubOperation((long *)store_adress, increment);
-            break;
-            case _FLOAT:
-                SubOperation((float *)store_adress, increment);
-            break;
-            case _DOUBLE:
-                SubOperation((double *)store_adress, increment);
-            break;
-		}
-	}
-	else if (OP == MODC)
-	{
-		switch (type)
-		{
-            case _CHAR:
-                ModOperation(store_adress, increment);
-            break;
-            case _INT:
-                ModOperation((int *)store_adress, increment);
-            break;
-            case _SHORT:
-                ModOperation((short *)store_adress, increment);
-            break;
-            case _LONG:
-                ModOperation((long *)store_adress, increment);
-            break;
-		}
+                break;
+            }
+        }
+        else if (OP == MUC)
+        {
+            switch (type)
+            {
+                case _CHAR:
+                    MulOperation(store_adress, increment);
+                break;
+                case _INT:
+                    MulOperation((int *)store_adress, increment);
+                break;
+                case _SHORT:
+                    MulOperation((short *)store_adress, increment);
+                break;
+                case _LONG:
+                    MulOperation((long *)store_adress, increment);
+                break;
+                case _FLOAT:
+                    MulOperation((float *)store_adress, increment);
+                break;
+                case _DOUBLE:
+                    MulOperation((double *)store_adress, increment);
+                break;
+            }
+        }
+        else if (OP == DIC)
+        {
+            switch (type)
+            {
+                case _CHAR:
+                    DivOperation(store_adress, increment);
+                break;
+                case _INT:
+                    DivOperation((int *)store_adress, increment);
+                break;
+                case _SHORT:
+                    DivOperation((short *)store_adress, increment);
+                break;
+                case _LONG:
+                    DivOperation((long *)store_adress, increment);
+                break;
+                case _FLOAT:
+                    DivOperation((float *)store_adress, increment);
+                break;
+                case _DOUBLE:
+                    DivOperation((double *)store_adress, increment);
+                break;
+            }
+        }
+        else if (OP == SUC)
+        {
+            switch (type)
+            {
+                case _CHAR:
+                    SubOperation(store_adress, increment);
+                break;
+                case _INT:
+                    SubOperation((int *)store_adress, increment);
+                break;
+                case _SHORT:
+                    SubOperation((short *)store_adress, increment);
+                break;
+                case _LONG:
+                    SubOperation((long *)store_adress, increment);
+                break;
+                case _FLOAT:
+                    SubOperation((float *)store_adress, increment);
+                break;
+                case _DOUBLE:
+                    SubOperation((double *)store_adress, increment);
+                break;
+            }
+        }
+        else if (OP == MODC)
+        {
+            switch (type)
+            {
+                case _CHAR:
+                    ModOperation(store_adress, increment);
+                break;
+                case _INT:
+                    ModOperation((int *)store_adress, increment);
+                break;
+                case _SHORT:
+                    ModOperation((short *)store_adress, increment);
+                break;
+                case _LONG:
+                    ModOperation((long *)store_adress, increment);
+                break;
+            }
+        }
     }
+    else
+    {
+        SETERR(OPER_NULL_ERR);
+    }
+
 }
 
 #endif // ARITMETHICALOPERATIONS_H

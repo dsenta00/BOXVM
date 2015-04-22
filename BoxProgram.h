@@ -44,65 +44,32 @@ void BoxProgram::ReadSourceCode(char *_filepath)
 void BoxProgram::SetStack()
 {
 	Type datatype = 0;
-	int intID = 0, i = 0;
-	short shortID = 0;
+    int intID = 0, i = 0;
 	char buffer[MAXBUFFERWORD] = { 0 };
 
     stack.SetMonitor(monitor);
-    boxfile.GetNextWord(&shortID);
 
-	if (shortID == ID_STACK)
-	{
-        boxfile.GetNextWord(&intID);
-		stack.SetVirtualMemory(intID);
-        boxfile.GetNextWord(&shortID);
-
-		if (shortID != ID_DATA)
-            SETERR(UNDEF_DATA_ERR);
-	}
-	else
-        SETERR(UNDEF_STACK_ERR);
+    boxfile.GetNextWord(&intID);
+    stack.SetVirtualMemory(intID);
 
     if (EOK)
-	{
-		do
-		{
-            boxfile.GetNextWord(&shortID);
+    {
+        do
+        {
+            boxfile.GetNextWord(&datatype);
 
-			if (shortID == ID_POOL)
-				break;
+            if (datatype == '@')
+            {
+                break;
+            }
+            else if(datatype > 6 || datatype < 0)
+            {
+                SETERR(STAT_TYPE_ERR);
+                break;
+            }
 
-			switch (shortID)
-			{
-				case ID_STRING:
-				    datatype = _STRING;
-				break;
-				case ID_CHAR:
-				    datatype = _CHAR;
-				break;
-				case ID_INT:
-				    datatype = _INT;
-				break;
-				case ID_SHORT:
-				    datatype = _SHORT;
-				break;
-				case ID_LONG:
-				    datatype = _LONG;
-				break;
-				case ID_DOUBLE:
-				    datatype = _DOUBLE;
-				break;
-				case ID_FLOAT:
-				    datatype = _FLOAT;
-				break;
-				default:
-				    datatype = 0;
-                    SETERR(STAT_TYPE_ERR);
-				break;
-			}
-
-			switch (datatype)
-			{
+            switch (datatype)
+            {
                 case _CHAR:
                     boxfile.GetNextWord(&buffer[0]);
                 break;
@@ -135,12 +102,11 @@ void BoxProgram::SetStack()
 
                     buffer[i] = '\0';
                 break;
-			}
+            }
 
-            if (EOK)
-                stack.PushStack(datatype, buffer);
+            stack.PushStack(datatype, buffer);
 
-        }while (EOK);
+        }while(EOK);
     }
 }
 
@@ -155,61 +121,34 @@ void BoxProgram::SetPool()
         heap = new Heap(intID, monitor);
 
         if (!heap)
+        {
             SETERR(HEAPERR);
+        }
     }
 }
 
 void BoxProgram::SetHeap()
 {
-	short shortID = 0;
+    Type datatype = 0;
 
-    boxfile.GetNextWord(&shortID); //reads @h
-    boxfile.GetNextWord(&shortID);
-
-	if (shortID != ID_CODE)
-	{
-		do
-		{
-			switch (shortID)
-			{
-                case ID_CHAR:
-                    heap->PushPointer(_CHAR);
-                break;
-                case ID_INT:
-                    heap->PushPointer(_INT);
-                break;
-                case ID_SHORT:
-                    heap->PushPointer(_SHORT);
-                break;
-                case ID_LONG:
-                    heap->PushPointer(_LONG);
-                break;
-                case ID_DOUBLE:
-                    heap->PushPointer(_DOUBLE);
-                break;
-                case ID_FLOAT:
-                    heap->PushPointer(_FLOAT);
-                break;
-                default:
-                    SETERR(DYN_TYPE_ERR);
-                break;
-			}
-
-            boxfile.GetNextWord(&shortID);
-
-			if (shortID == ID_CODE)
-				break;
-
-        } while (EOK);
-	}
-    else if (shortID == ID_CODE)
+    do
     {
-        return;
-    }
-	else
-    {
-        SETERR(DATA_HEAP_ERR);
-    }
+        boxfile.GetNextWord(&datatype);
+
+        if(datatype >= _CHAR && datatype <= _STRING)
+        {
+            heap->PushPointer(datatype);
+        }
+        else if(datatype == START)
+        {
+            break;
+        }
+        else
+        {
+            SETERR(DYN_TYPE_ERR);
+            break;
+        }
+    } while (EOK);
 }
 
 void BoxProgram::ExecuteProgram()
