@@ -18,7 +18,7 @@ protected:
 ProgramMonitor::ProgramMonitor()
 {
     status = EVERYTHING_OK;
-    path = NULL;
+    path = null;
 }
 
 ProgramMonitor::~ProgramMonitor()
@@ -44,8 +44,8 @@ bool ProgramMonitor::OK()
 
 void ProgramMonitor::WriteErrorReport()
 {
-    char *p_path = NULL;
-    FILE *fp = NULL;
+    char *p_path = null;
+    FILE *fp = null;
 
     printf("\n\tFatal runtime error. [ERROR CODE = 0x%08x] (%d)", status, status);
     printf("\n\tAll BOXVM reserved memory and connections are being released.\n");
@@ -91,7 +91,7 @@ void ProgramMonitor::WriteErrorReport()
                 fprintf(fp, "Static data virtual memory overflow.");
             break;
             case OPER_NULL_ERR:
-                fprintf(fp, "Unable to do operation on NULL memory.");
+                fprintf(fp, "Unable to do operation on null memory.");
             break;
             case DIV_NULL_ERR:
                 fprintf(fp, "Error, division by zero value (0).");
@@ -112,10 +112,10 @@ void ProgramMonitor::WriteErrorReport()
                 fprintf(fp, "Data initialization error.");
             break;
             case BUFF_NULL_ERR:
-                fprintf(fp, "Registry reserved with corrupted memory [NULL] or unknown type from heap.");
+                fprintf(fp, "Registry reserved with corrupted memory [null] or unknown type from heap.");
             break;
             case HEAP_UNEX_ERR:
-                fprintf(fp, "Heap returned corrupted memory (NULL).");
+                fprintf(fp, "Heap returned corrupted memory (null).");
             break;
             case HEAP_SET_ERR:
                 fprintf(fp, "BOXVM internal memory heap data allocation error.");
@@ -129,9 +129,6 @@ void ProgramMonitor::WriteErrorReport()
             case LOOP_OUT_ERR:
                 fprintf(fp, "Memory underflow on loop stack (n < 0).");
             break;
-            case STACK_SET_ERR:
-                fprintf(fp, "Failed to set stack data memory.");
-            break;
             case STACK_MALL_ERR:
                 fprintf(fp, "BOXVM internal error: Error allocating data in stack memory.");
             break;
@@ -142,7 +139,7 @@ void ProgramMonitor::WriteErrorReport()
                 fprintf(fp, "Initializing unknown data type error.");
             break;
             case SET_NULL_ERR:
-                fprintf(fp, "Setting data memory value with corrupted memory [NULL].");
+                fprintf(fp, "Setting data memory value with corrupted memory [null].");
             break;
             case ERROR_OPEN:
                 fprintf(fp, "File opening error. Check if file exist!");
@@ -169,7 +166,7 @@ void ProgramMonitor::WriteErrorReport()
                 fprintf(fp, "Error allocating memory for file.");
             break;
             case FILE_OPER_ERR:
-                fprintf(fp, "Unable to execute write/read operation on corrupted file memory [NULL].");
+                fprintf(fp, "Unable to execute write/read operation on corrupted file memory [null].");
             break;
             case ZERO_VM_ERR:
                 fprintf(fp, "Unable to allocate zero elements of virtual memory.");

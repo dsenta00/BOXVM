@@ -28,14 +28,14 @@ protected:
 
 Data::Data()
 {
-    starta = enda = NULL;
+    starta = enda = null;
     size = 0;
     type = 0;
 }
 
 Data::Data(Type _type)
 {
-    starta = enda = NULL;
+    starta = enda = null;
     type = _type;
     size = 0;
 }
@@ -90,7 +90,9 @@ Status Data::SetValue(Adress _value)
         }
     }
     else
+    {
         return SET_NULL_ERR;
+    }
 
     return EVERYTHING_OK;
 }
@@ -129,7 +131,7 @@ void Data::SetSize(Size _size)
 Adress Data::GetAdress(int _index)
 {
     if (_index < 0 || _index >= size)
-        return NULL;
+        return null;
     else
     {
         switch (this->type)
@@ -147,7 +149,7 @@ Adress Data::GetAdress(int _index)
                 return HeapReturnAdress(8);
             break;
             default:
-                return NULL;
+                return null;
             break;
         }
     }

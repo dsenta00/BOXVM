@@ -20,9 +20,9 @@ protected:
 
 MemoryPool::MemoryPool()
 {
-    vmp = NULL;
-    resaddr = NULL;
-    monitor = NULL;
+    vmp = null;
+    resaddr = null;
+    monitor = null;
     size = 0;
 }
 
@@ -48,7 +48,7 @@ MemoryPool::MemoryPool(Size _size, ProgramMonitor *_monitor)
 
 void MemoryPool::ExpandSize(Size _size, DSize &change)
 {
-    Adress newvmp = NULL;
+    Adress newvmp = null;
     size += _size + EXTRASPACE;
 
     newvmp = (Adress)realloc(vmp, size);
@@ -65,12 +65,14 @@ void MemoryPool::ExpandSize(Size _size, DSize &change)
         vmp = newvmp;
 	}
 	else
+    {
         SETERR(POOL_RESERVE_ERR);
+    }
 }
 
 Adress MemoryPool::Malloc(Size _size, DSize &change)
 {
-    Adress retAdress = NULL;
+    Adress retAdress = null;
 	Size diff = (Size)(resaddr + _size - vmp - size);
 
 	if (diff > 0)

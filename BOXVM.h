@@ -9,7 +9,7 @@ void RunProgram(char *_execpath)
 {
     ProgramMonitor monitor;
     BoxProgram program(&monitor);
-	srand((unsigned)time(NULL));
+    srand((unsigned)time(null));
 
     monitor.SetPath(_execpath);
     program.ReadSourceCode(_execpath);
@@ -48,7 +48,7 @@ void RunProgramPercentage(char *_execpath)
     startTime.Start();
     ProgramMonitor monitor;
     BoxProgram program(&monitor);
-    srand((unsigned)time(NULL));
+    srand((unsigned)time(null));
 
     monitor.SetPath(_execpath);
     startTime.Stop();

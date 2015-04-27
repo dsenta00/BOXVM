@@ -25,7 +25,7 @@ protected:
 
     CPUTime::CPUTime()
     {
-        start = stop = 0;
+        start = stop = null;
     }
 
     inline void CPUTime::Start()

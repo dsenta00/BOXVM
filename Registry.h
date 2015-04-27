@@ -8,9 +8,9 @@
 class Registry {
 public:
     Registry();
-    void SetRegistry(Data *, Count);
-    void SetRegistry(Data *, Count, Count);
-    void GetRegistry(Adress &, Type &, Count);
+    inline void SetRegistry(Data *, Count);
+    inline void SetRegistry(Data *, Count, Count);
+    inline void GetRegistry(Adress &, Type &, Count);
     void ResetRegistry();
     void SetMonitor(ProgramMonitor *);
 protected:
@@ -60,9 +60,13 @@ void Registry::GetRegistry(Adress &_adress, Type &_type, Count _regnum)
     if(_regnum >= 0 && _regnum < MAXBUFFERSIZE)
     {
         if(index[_regnum])
+        {
             _adress = buffer[_regnum]->GetAdress(index[_regnum]);
+        }
         else
+        {
             _adress = buffer[_regnum]->GetAdress();
+        }
 
         _type = buffer[_regnum]->GetType();
     }

@@ -19,7 +19,7 @@ protected:
 
 InvokeBox::InvokeBox()
 {
-    codeSeg = p_codeSeg = NULL;
+    codeSeg = p_codeSeg = null;
 }
 
 Bcode InvokeBox::GetCodeSegment()
@@ -42,7 +42,7 @@ inline void InvokeBox::GetNextWord(T *_buffer)
 void InvokeBox::ReadAll(char *_boxfilepath, ProgramMonitor *monitor)
 {
     DSize file_size = 0, read_size = 0;
-    FILE *fp = NULL;
+    FILE *fp = null;
 
     fp = fopen(_boxfilepath, "r+b");
 

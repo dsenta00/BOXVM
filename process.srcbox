@@ -1,0 +1,11 @@
+$stack 40
+$data
+	string program "/home/duje/BOXVM 0.5/BOXVM/BOXVM"
+$pool 0
+$heap
+$code
+	start
+		pushs program r0
+		proc r0
+	estart
+$endcode

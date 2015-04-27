@@ -20,13 +20,13 @@ ByteCode::~ByteCode()
 {
 	if (codesegment)
 		free(codesegment);
-	bytecode = codesegment = NULL;
+    bytecode = codesegment = null;
 }
 
 ByteCode::ByteCode()
 {
-	bytecode = NULL;
-	codesegment = NULL;
+    bytecode = null;
+    codesegment = null;
 }
 
 ByteCode::ByteCode(Bcode _codesegment, Bcode _bytecode)

@@ -32,7 +32,7 @@ void Loop::SetMonitor(ProgramMonitor *_monitor)
 
 void Loop::PushLoop(Bcode _adress)
 {
-    if (make == ENDLOOP)
+    if (make != ENDLOOP)
     {
         *make = _adress;
         curr = make;
@@ -46,7 +46,7 @@ void Loop::PushLoop(Bcode _adress)
 
 void Loop::PopLoop()
 {
-    if (make == STARTLOOP)
+    if (make != STARTLOOP)
     {
         make = curr;
 

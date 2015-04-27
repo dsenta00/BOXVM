@@ -28,8 +28,8 @@ protected:
 
 Heap::Heap(Size _poolsize, ProgramMonitor *_monitor)
 {
-    root = NULL;
-    last = NULL;
+    root = null;
+    last = null;
     monitor = _monitor;
     memoryPool = new MemoryPool(_poolsize, monitor);
 
@@ -39,7 +39,7 @@ Heap::Heap(Size _poolsize, ProgramMonitor *_monitor)
 
 void Heap::SetNewAdresses(DataNode *element, Adress _adress, Size _size)
 {
-	Adress curradr = NULL;
+    Adress curradr = null;
 
 	if (element)
 	{
@@ -56,7 +56,7 @@ void Heap::SetNewAdresses(DataNode *element, Adress _adress, Size _size)
 
 void Heap::SetNewAdresses(DataNode *element, DSize &change)
 {
-    Adress curradr = NULL;
+    Adress curradr = null;
 
     if (element)
     {
@@ -69,20 +69,15 @@ void Heap::SetNewAdresses(DataNode *element, DSize &change)
 
 Heap::Heap()
 {
-    root = NULL;
-    last = NULL;
-    monitor = NULL;
-    memoryPool = NULL;
+    root = null;
+    last = null;
+    monitor = null;
+    memoryPool = null;
 }
 
 void Heap::Lea(Registry &opqueue, Type *_type, Count _count, Count _position, Count _regnum)
 {
-    Data *dat = NULL;
-
-    if (_count == -1)
-        dat = root->GetDataInfo();
-    else
-        dat = SearchFor(_count);
+    Data *dat = SearchFor(_count);
 
     if (dat)
     {
@@ -118,8 +113,8 @@ void Heap::PushPointer(Type _type)
 
 void Heap::Free(Count _count)
 {
-    Data *del = NULL;
-	Adress adress = NULL;
+    Data *del = null;
+    Adress adress = null;
 	Size size = 0;
 
 	del = SearchFor(_count);
@@ -145,7 +140,7 @@ void Heap::Free(Count _count)
         memoryPool->Free(adress, size);
 		SetNewAdresses(root, adress, size);
 
-        del->SetAdress(NULL);
+        del->SetAdress(null);
 		del->SetSize(0);
 	}
 	else
@@ -156,8 +151,9 @@ void Heap::Free(Count _count)
 
 void Heap::ReserveMemory(Data *_mal, Size _size)
 {
-    Adress adress = NULL;
+    Adress adress = null;
     DSize change = 0;
+
 	if (_mal)
 	{
 		switch (_mal->GetType())
@@ -202,7 +198,7 @@ void Heap::Malloc(Count _count, Size _size)
 
 void Heap::MallocDefrag(Count _count, Size _size)
 {
-	Adress adress = NULL;
+    Adress adress = null;
 	Size size = 0;
     DSize change = 0;
     Data *mal = SearchFor(_count);
@@ -230,34 +226,28 @@ void Heap::MallocDefrag(Count _count, Size _size)
                 break;
                 case _CHAR:
                 break;
-                default:
-                    SETERR(DYN_TYPE_ERR);
-                break;
 			}
 
-            if (EOK)
-			{
-				adress = mal->GetAdress();
+            adress = mal->GetAdress();
 
-				if (size == _size)
+            if (size == _size)
+            {
+                memset(adress, 0, size);
+            }
+            else
+            {
+                memoryPool->Free(adress, size);
+                adress = memoryPool->Malloc(_size, change);
+
+                if(change)
+                    SetNewAdresses(root, change);
+
+                if (EOK)
                 {
-					memset(adress, 0, size);
+                    mal->SetAdress(adress);
+                    mal->SetSize(_size);
                 }
-				else
-				{
-					memoryPool->Free(adress, size);
-                    adress = memoryPool->Malloc(_size, change);
-
-                    if(change)
-                        SetNewAdresses(root, change);
-
-                    if (EOK)
-					{
-						mal->SetAdress(adress);
-						mal->SetSize(_size);
-                    }
-				}
-			}
+            }
 		}
 
 	}

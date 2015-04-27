@@ -37,13 +37,13 @@ protected:
 
 Execute::Execute()
 {
-    bytecode = NULL;
-    operation = NULL;
-    op1 = op2 = NULL;
+    bytecode = null;
+    operation = null;
+    op1 = op2 = null;
     type = temp = 0;
 	op_index = START;
-    monitor = NULL;
-    status = 0;
+    monitor = null;
+    status = EVERYTHING_OK;
 }
 
 Execute::Execute(Bcode _codesegment, Bcode _bytecodestart, ProgramMonitor *_monitor)
@@ -54,8 +54,8 @@ Execute::Execute(Bcode _codesegment, Bcode _bytecodestart, ProgramMonitor *_moni
     loop_list.SetMonitor(monitor);
     alu.SetMonitor(monitor);
     op_index = START;
-    operation = NULL;
-    op1 = op2 = NULL;
+    operation = null;
+    op1 = op2 = null;
     type = temp = 0;
     bytecode = new ByteCode(_codesegment, _bytecodestart);
 
@@ -144,14 +144,28 @@ void Execute::Do(Stack &stack, Heap &heap)
                 dataid[1] = *READBYTECODE;
                 heap.Lea(registry, &type, dataid[0], dataid[1], *READBYTECODE);
             continue;
-            case PUSH:
-                dataid[0] = *READBYTECODE;
-                heap.Lea(registry, &type, -1, dataid[0], 0);
-            continue;
             case PUSHS:
                 data = stack.SearchFor(*READBYTECODE);
                 registry.SetRegistry(data, *READBYTECODE);
             continue;
+            case FEOF:
+                dataid[0] = *READBYTECODE;
+                dataid[1] = *READBYTECODE;
+
+                if(file_list.Feof(dataid[0]))
+                {
+                    bytecode->Jump(dataid[1]);
+                }
+            break;
+            case ISOPEN:
+                dataid[0] = *READBYTECODE;
+                dataid[1] = *READBYTECODE;
+
+                if(file_list.Feof(dataid[0]))
+                {
+                    bytecode->Jump(dataid[1]);
+                }
+            break;
             case GETD:
                 FILEOPREG(ReadOperationFile, double);
             continue;

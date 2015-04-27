@@ -1,22 +1,26 @@
 #ifndef BOXINFO_H
 #define BOXINFO_H
 
-/**
-*
-*	@file		BoxInfo.h
-*	@purpose	Defines headers, constants, type definitions and macros specified by operation system.
-*
-*	@author		Duje Senta
-*	@company	Faculty of Electrical Engineering, Mechanical Engineering and Naval Architecture, Split
-*	@version	0.5	30/03/2015
-*
-*/
+/*****************************************************************************************************************
+ *	PROGRAM DESCRIPTION
+ *
+ *	@program	BOX programming language virutal machine
+ *	@file		BOXVM.cpp
+ *	@purpose	Defines headers, constants, type definitions and macros specified by operation system.
+ *
+ *	@author		Duje Senta
+ *	@company	Faculty of Electrical Engineering, Mechanical Engineering and Naval Architecture, Split
+ *	@version	0.6	27/04/2015
+ *
+ *****************************************************************************************************************/
+
 
 	#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
         #define _CRT_SECURE_NO_WARNINGS
         #define _CRT_SECURE_NO_DEPRECATE
 		#include <Windows.h>
         #include <iomanip>
+        #include <conio.h>
 	#endif
 
 	#include <iostream>
@@ -32,6 +36,7 @@
 	        #include <fcntl.h>
 	#endif
 
+    #define null                0
     #define MAXBUFFERSIZE       8
 	#define MAXFILESIZE         1048576
     #define MAXARGS             2
@@ -42,9 +47,9 @@
     #define STARTLOOP           &buffer[0]
     #define ENDLOOP             &buffer[MAXLOOPSIZE]
 
-    #define AREEQUAL            (alu.GetFlag() == 0)
-    #define FIRSTBIGGER         (alu.GetFlag() < 0)
-    #define SECONDBIGGER        (alu.GetFlag() > 0)
+    #define AREEQUAL            (alu.GetFlag() == null)
+    #define FIRSTBIGGER         (alu.GetFlag() < null)
+    #define SECONDBIGGER        (alu.GetFlag() > null)
 
 	#define BLOCK_SIZE          4096
 	#define EXTRASPACE          32
@@ -64,8 +69,7 @@
 		HEAP_SET_ERR =			-7,
 		HEAP_MALL_ERR =			-8,
 		LOOP_OVERFLOW =			-9,
-		LOOP_OUT_ERR =			-10,
-		STACK_SET_ERR =			-11,
+        LOOP_OUT_ERR =			-10,
         STACK_MALL_ERR =		-12,
 		UKNOWN_TYPE_ERR =		-14,
 		SET_NULL_ERR =			-15,
@@ -121,8 +125,6 @@
     *   [str] - string static variable  *
     *   [rx]  - registry                *
     *                                   *
-    *   [OpQ]   operation queue         *
-    *                                   *
     *   [*C]    char                    *
     *   [*I]    integer                 *
     *   [*SH]   short integer           *
@@ -162,7 +164,6 @@
         LOOPL =		24,
         LOOPGE =	25,
         LOOPLE =	26,
-        PUSH =		27,
         FNEW =		28,
         NEW =		29,
         LEAC =		30,
@@ -174,24 +175,27 @@
         OPENW =		36,
         OPENR =		37,
         OPENA =		38,
-        PUTC =		39,
-        PUTI =		40,
-        PUTSH =		41,
-        PUTF =		42,
-        PUTL =		43,
-        PUTD =		44,
-        PUTS =		45,
-        GETC =		46,
-        GETI =		47,
-        GETSH =		48,
-        GETF =		49,
-        GETL =		50,
-        GETD =		51,
-        GETS =		52,
-        GETLINE =	53,
-		REPLOOP =	54,     //              [branch to loop start>
-		START =		55,     //              [start program marker>
-		ESTART =	56,     //              [end program marker>
+        FEOF =      39,
+        ISOPEN =    40,
+        PUTC =		41,
+        PUTI =		42,
+        PUTSH =		43,
+        PUTF =		44,
+        PUTL =		45,
+        PUTD =		46,
+        PUTS =		47,
+        GETC =		48,
+        GETI =		49,
+        GETSH =		50,
+        GETF =		51,
+        GETL =		52,
+        GETD =		53,
+        GETS =		54,
+        GETLINE =	55,
+        REPLOOP =	56,
+        PROC =      57,
+        START =		58,
+        ESTART =	59
     };
 
     /*** REGISTRY MODE FORMAT OPER **
@@ -227,8 +231,10 @@
      *      PUT*    [path][rx]      *
      *      GET*    [path][rx]      *
      *      GETLINE [path][rx]      *
+     *      FEOF    [path][n]       *
+     *      ISOPEN  [path]          *
      *                              *
-     *      OPEN*   [rx]            *
+     *      OPEN*   [path]          *
      *                              *
      *      CMP*    [rx][rx][n]     *
      *      LOOP*   [rx][rx][n]     *

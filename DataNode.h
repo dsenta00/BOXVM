@@ -21,19 +21,19 @@ protected:
 
 DataNode::DataNode(Data*_data, Count _count)
 {
-    Left = Right = NULL;
+    Left = Right = null;
     DataInfo = _data;
     count = _count;
 }
 
 DataNode::DataNode()
 {
-    memset(this, 0, sizeof(DataNode));
+    memset(this, null, sizeof(DataNode));
 }
 
 DataNode::DataNode(Count _count)
 {
-    memset(this, 0, sizeof(DataNode));
+    memset(this, null, sizeof(DataNode));
     count = _count;
 }
 

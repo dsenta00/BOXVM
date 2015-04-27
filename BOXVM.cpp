@@ -7,7 +7,7 @@
  *
  *	@author		Duje Senta
  *	@company	Faculty of Electrical Engineering, Mechanical Engineering and Naval Architecture, Split
- *	@version	0.5	30/03/2015
+ *	@version	0.6	27/04/2015
  *
  *****************************************************************************************************************/
 
@@ -17,9 +17,13 @@
 int main(int argc, char *argv[])
 {
     if (argc == 1)
+    {
         Testing();
+    }
     else
+    {
         RunProgram(argv[1]);
+    }
 
     return 0;
 }

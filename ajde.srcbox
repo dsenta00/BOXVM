@@ -1,13 +1,13 @@
-$stack 40
-$data
+@stack 40
+@data
 	double pi 0
 	double temp 0
 	double i 1
 	double limit 100000
 	double constant 4
-$pool 0
-$heap
-$code
+@pool 0
+@heap
+@code
 	start
 		pushs i r0
 		pushs limit r1
@@ -26,4 +26,4 @@ $code
 			adi r0 2
 		reploop
 	estart
-$endcode
+@endcode

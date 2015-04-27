@@ -26,10 +26,10 @@ protected:
 
 DataTree::DataTree()
 {
-    counter = 0;
-    root = NULL;
-    last = NULL;
-    monitor = NULL;
+    counter = null;
+    root = null;
+    last = null;
+    monitor = null;
 }
 
 DataNode *DataTree::Push(Data *_element)
@@ -70,7 +70,7 @@ inline Data *DataTree::SearchFor(Count _count)
     if (curr)
         return curr->GetDataInfo();
     else
-        return NULL;
+        return null;
 }
 
 Size DataTree::Height(DataNode *current)
@@ -96,7 +96,7 @@ Size DataTree::Difference(DataNode *_current)
 
 DataNode *DataTree::RR_Rotation(DataNode *_parent)
 {
-    DataNode *temp = NULL;
+    DataNode *temp = null;
 
 	temp = _parent->Right;
 	_parent->Right = temp->Left;
@@ -128,7 +128,7 @@ DataNode *DataTree::DeleteTree(DataNode *_current)
 			_current->Right = DeleteTree(_current->Right);
 
 		delete _current;
-		_current = NULL;
+        _current = null;
 	}
 
 	return _current;

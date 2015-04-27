@@ -2,18 +2,22 @@
 #define FILE_H
 
 #include "BoxInfo.h"
+#include "ProgramMonitor.h"
 #include "FileOperationsMacro.h"
 
 class File {
 public:
 	File();
+    File(ProgramMonitor *);
 	~File();
-	Status Open(char *, int, Count);
-	Status ReadOperationFileString(char *);
-	Status WriteOperationFileString(char *);
-	Status GetLine(char *);
-	Status ReadAllFile(char *, DSize);
+    void Open(char *, int, Count);
+    void ReadOperationFileString(char *);
+    void WriteOperationFileString(char *);
+    void GetLine(char *);
+    void ReadAllFile(char *, DSize);
 	Count GetCount();
+    Type GetMode();
+    FILE *Getfp();
 
 	WRITEOPDECL(int)
     WRITEOPDECL(short)
@@ -33,7 +37,8 @@ public:
 protected:
     FILE *fp;
     Count count;
-    int mode;
+    Type mode;
+    ProgramMonitor *monitor;
 };
 
 File::File()
@@ -41,7 +46,23 @@ File::File()
     memset(this, 0, sizeof(File));
 }
 
-Status File::Open(char *_path, int _mode, Count _count)
+File::File(ProgramMonitor *_monitor)
+{
+    memset(this, 0, sizeof(File));
+    monitor = _monitor;
+}
+
+FILE *File::Getfp()
+{
+    return fp;
+}
+
+Type File::GetMode()
+{
+    return mode;
+}
+
+void File::Open(char *_path, int _mode, Count _count)
 {
 	count = _count;
 	mode = _mode;
@@ -60,9 +81,9 @@ Status File::Open(char *_path, int _mode, Count _count)
 	}
 
 	if (!fp)
-		return ERROR_OPEN;
-	else
-		return EVERYTHING_OK;
+    {
+        mode = _UNOPEN;
+    }
 }
 
 WRITEOP(int, "%d")
@@ -79,44 +100,22 @@ READOP(char, " %c")
 READOP(float, " %f")
 READOP(double, " %lf")
 
-Status File::ReadOperationFileString(char *_data)
+void File::ReadOperationFileString(char *_data)
 {
-	if (mode == _READ)
-	{
-		if (!feof(fp))
-		{
-			fscanf(fp, " %s", _data);
-			return EVERYTHING_OK;
-		}
-		else
-			return READ_END_ERR;
-	}
-	else
-		return ERROR_READ;
+    fscanf(fp, " %s", _data);
 }
 
-Status File::WriteOperationFileString(char *_data)
+void File::WriteOperationFileString(char *_data)
 {
-	if (mode != _READ)
-	{
-		fprintf(fp, "%s", _data);
-		return EVERYTHING_OK;
-	}
-	else
-		return ERROR_WRITE;
+    fprintf(fp, "%s", _data);
 }
 
-Status File::GetLine(char *buffer)
+void File::GetLine(char *buffer)
 {
-	if (mode != _READ)
-		return ERROR_READ;
-	else if (!fgets(buffer, BLOCK_SIZE, fp))
-		return READ_END_ERR;
-	else
-		return EVERYTHING_OK;
+    fgets(buffer, BLOCK_SIZE, fp);
 }
 
-Status File::ReadAllFile(char *container, DSize container_size)
+void File::ReadAllFile(char *container, DSize container_size)
 {
 	DSize file_size = 0;
 
@@ -128,12 +127,14 @@ Status File::ReadAllFile(char *container, DSize container_size)
 		rewind(fp);
 
 		if (!fread(container, sizeof(char), file_size, fp))
-			return EMPTY_FILE;
-		else
-			return EVERYTHING_OK;
+        {
+            SETERR(EMPTY_FILE);
+        }
 	}
 	else
-		return LARGE_FILE_ERR;
+    {
+        SETERR(LARGE_FILE_ERR);
+    }
 }
 
 Count File::GetCount()

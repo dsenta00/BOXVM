@@ -21,9 +21,9 @@ protected:
 
 Stack::Stack()
 {
-    root = NULL;
-    last = NULL;
-    monitor = NULL;
+    root = null;
+    last = null;
+    monitor = null;
     counter = 0;
 }
 
@@ -34,10 +34,10 @@ void Stack::SetMonitor(ProgramMonitor *_monitor)
 
 void Stack::PushStack(Type _type, Adress _value)
 {
-    Data *dataS = NULL;
+    Data *dataS = null;
 	Adress startadr = vsm.GetNext();
 
-	if (startadr)
+    if (EOK)
 	{
         dataS = new Data(startadr, _type);
 
@@ -49,20 +49,12 @@ void Stack::PushStack(Type _type, Adress _value)
 			{
 				root = Push(dataS);
 				vsm.SetNext(dataS->GetEndAdress());
-			}
-			else
-            {
-                SETERR(STACK_SET_ERR);
             }
 		}
 		else
         {
             SETERR(STACK_MALL_ERR);
         }
-	}
-	else
-    {
-        SETERR(STATIC_OVERFLOW);
     }
 }
 
@@ -70,23 +62,29 @@ Adress Stack::GetAdress(Count _count)
 {
     Data *search_data = SearchFor(_count);
 
-	if (!search_data)
-		return NULL;
-	else
+    if (search_data)
+    {
         return search_data->GetAdress();
+    }
+	else
+    {
+        return null;
+    }
 }
 
 Type Stack::GetType(Count _count)
 {
     Data *search_data = SearchFor(_count);
 
-	if (!search_data)
+    if(search_data)
+    {
+		return search_data->GetType();
+    }
+    else
     {
         SETERR(UKNOWN_TYPE_ERR);
-        return 0;
+        return null;
     }
-	else
-		return search_data->GetType();
 }
 
 void Stack::SetVirtualMemory(Size _limit)

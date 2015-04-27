@@ -48,7 +48,7 @@ protected:
 
 ALU::ALU()
 {
-    memset(this, 0, sizeof(ALU));
+    memset(this, null, sizeof(ALU));
 }
 
 long ALU::GetFlag()
@@ -239,14 +239,7 @@ inline void ALU::DivOperation(T *operand1, T *operand2)
 template <typename T>
 inline void ALU::DivOperation(T *operand1, Byte increment)
 {
-    if (increment)
-    {
-        *operand1 /= increment;
-    }
-    else
-    {
-        SETERR(DIV_NULL_ERR);
-    }
+    *operand1 /= increment;
 }
 
 template <typename T>
@@ -265,14 +258,7 @@ inline void ALU::ModOperation(T *operand1, T *operand2)
 template <typename T>
 inline void ALU::ModOperation(T *operand1, Byte increment)
 {
-    if (increment)
-    {
-        *operand1 %= increment;
-    }
-    else
-    {
-        SETERR(DIV_NULL_ERR);
-    }
+    *operand1 %= increment;
 }
 
 template <typename T>
@@ -518,44 +504,58 @@ void ALU::Operation(Byte OP, Adress store_adress, Byte increment, Type type)
         }
         else if (OP == SUC)
         {
-            switch (type)
+            if(increment)
             {
-                case _CHAR:
-                    SubOperation(store_adress, increment);
-                break;
-                case _INT:
-                    SubOperation((int *)store_adress, increment);
-                break;
-                case _SHORT:
-                    SubOperation((short *)store_adress, increment);
-                break;
-                case _LONG:
-                    SubOperation((long *)store_adress, increment);
-                break;
-                case _FLOAT:
-                    SubOperation((float *)store_adress, increment);
-                break;
-                case _DOUBLE:
-                    SubOperation((double *)store_adress, increment);
-                break;
+                switch (type)
+                {
+                    case _CHAR:
+                        SubOperation(store_adress, increment);
+                    break;
+                    case _INT:
+                        SubOperation((int *)store_adress, increment);
+                    break;
+                    case _SHORT:
+                        SubOperation((short *)store_adress, increment);
+                    break;
+                    case _LONG:
+                        SubOperation((long *)store_adress, increment);
+                    break;
+                    case _FLOAT:
+                        SubOperation((float *)store_adress, increment);
+                    break;
+                    case _DOUBLE:
+                        SubOperation((double *)store_adress, increment);
+                    break;
+                }
+            }
+            else
+            {
+                SETERR(DIV_NULL_ERR);
             }
         }
         else if (OP == MODC)
         {
-            switch (type)
+            if(increment)
             {
-                case _CHAR:
-                    ModOperation(store_adress, increment);
-                break;
-                case _INT:
-                    ModOperation((int *)store_adress, increment);
-                break;
-                case _SHORT:
-                    ModOperation((short *)store_adress, increment);
-                break;
-                case _LONG:
-                    ModOperation((long *)store_adress, increment);
-                break;
+                switch (type)
+                {
+                    case _CHAR:
+                        ModOperation(store_adress, increment);
+                    break;
+                    case _INT:
+                        ModOperation((int *)store_adress, increment);
+                    break;
+                    case _SHORT:
+                        ModOperation((short *)store_adress, increment);
+                    break;
+                    case _LONG:
+                        ModOperation((long *)store_adress, increment);
+                    break;
+                }
+            }
+            else
+            {
+                SETERR(DIV_NULL_ERR);
             }
         }
     }

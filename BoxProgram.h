@@ -26,13 +26,13 @@ protected:
 
 BoxProgram::BoxProgram()
 {
-    heap = NULL;
-    monitor = NULL;
+    heap = null;
+    monitor = null;
 }
 
 BoxProgram::BoxProgram(ProgramMonitor *_monitor)
 {
-    heap = NULL;
+    heap = null;
     monitor = _monitor;
 }
 
@@ -170,7 +170,7 @@ BoxProgram::~BoxProgram()
 	if(heap)
 		delete heap;
 
-    heap = NULL;
+    heap = null;
 }
 
 #endif	//BOXPROGRAM_H
