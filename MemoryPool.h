@@ -9,11 +9,11 @@ public:
     MemoryPool(Size, ProgramMonitor *);
     ~MemoryPool();
     void ExpandSize(Size, DSize &);
-    void Free(Adress, Size);
-    Adress Malloc(Size, DSize &);
+    void Free(Address, Size);
+    Address Malloc(Size, DSize &);
 protected:
-    Adress vmp;         //  --  Virtual memory pool
-    Adress resaddr;     //  --  Next adress to reserve
+    Address vmp;         //  --  Virtual memory pool
+    Address resaddr;     //  --  Next adress to reserve
     Size size;          //  --  Memory pool size
     ProgramMonitor *monitor;
 };
@@ -33,7 +33,7 @@ MemoryPool::MemoryPool(Size _size, ProgramMonitor *_monitor)
 	if (_size > 0)
 	{
 		size = _size + EXTRASPACE;
-		vmp = resaddr = (Adress)calloc(size, 1);
+        vmp = resaddr = (Address)calloc(size, 1);
 
         if (!vmp)
         {
@@ -48,10 +48,10 @@ MemoryPool::MemoryPool(Size _size, ProgramMonitor *_monitor)
 
 void MemoryPool::ExpandSize(Size _size, DSize &change)
 {
-    Adress newvmp = null;
+    Address newvmp = null;
     size += _size + EXTRASPACE;
 
-    newvmp = (Adress)realloc(vmp, size);
+    newvmp = (Address)realloc(vmp, size);
 
     if (newvmp)
 	{
@@ -70,9 +70,9 @@ void MemoryPool::ExpandSize(Size _size, DSize &change)
     }
 }
 
-Adress MemoryPool::Malloc(Size _size, DSize &change)
+Address MemoryPool::Malloc(Size _size, DSize &change)
 {
-    Adress retAdress = null;
+    Address retAdress = null;
 	Size diff = (Size)(resaddr + _size - vmp - size);
 
 	if (diff > 0)
@@ -87,9 +87,9 @@ Adress MemoryPool::Malloc(Size _size, DSize &change)
 	return retAdress;
 }
 
-void MemoryPool::Free(Adress _addr, Size _size)
+void MemoryPool::Free(Address _addr, Size _size)
 {
-	Adress nextaddr = _addr + _size;
+    Address nextaddr = _addr + _size;
 	Size nextsize = (Size)(resaddr - nextaddr);
 
 	if (_addr)

@@ -6,22 +6,22 @@ class Data {
 public:
     Data();
     Data(Type);
-    Data(Adress , Type);
+    Data(Address , Type);
     Type GetType();							// --	Get variable type
-    Adress GetEndAdress();					// --	Get variable end adress (end adr. is not part of var.)
-    Status SetValue(Adress);				// --	Method for initialization any type of fundamental data
-    void SetExternData(Adress, Type);		// --	Set new start adress and type contained from heap
+    Address GetEndAddress();					// --	Get variable end address (end adr. is not part of var.)
+    Status SetValue(Address);				// --	Method for initialization any type of fundamental data
+    void SetExternData(Address, Type);		// --	Set new start address and type contained from heap
     Size GetSize();
-    Adress GetAdress();                     // --	Get variable start adress
-    Adress GetAdress(int);
-    void SetAdress(Adress);
+    Address GetAddress();                     // --	Get variable start address
+    Address GetAddress(int);
+    void SetAddress(Address);
     void SetSize(Size);
 protected:
     template <typename T>
     inline void Set(T *);
 
-    Adress starta;
-    Adress enda;
+    Address starta;
+    Address enda;
     Type type;
     Size size;
 };
@@ -40,7 +40,7 @@ Data::Data(Type _type)
     size = 0;
 }
 
-Data::Data(Adress _starta, Type _type)
+Data::Data(Address _starta, Type _type)
 {
     starta = _starta;
     type = _type;
@@ -54,7 +54,7 @@ inline void Data::Set(T *_value)
     enda = (char *)(++ptr);
 }
 
-Status Data::SetValue(Adress _value)
+Status Data::SetValue(Address _value)
 {
     if (_value)
     {
@@ -97,7 +97,7 @@ Status Data::SetValue(Adress _value)
     return EVERYTHING_OK;
 }
 
-void Data::SetExternData(Adress _extrn, Type _type)
+void Data::SetExternData(Address _extrn, Type _type)
 {
     starta = _extrn;
     type = _type;
@@ -108,19 +108,19 @@ Type Data::GetType()
     return type;
 }
 
-Adress Data::GetAdress()
+Address Data::GetAddress()
 {
     return starta;
 }
 
-Adress Data::GetEndAdress()
+Address Data::GetEndAddress()
 {
     return enda;
 }
 
-void Data::SetAdress(Adress _adress)
+void Data::SetAddress(Address _address)
 {
-    starta = _adress;
+    starta = _address;
 }
 
 void Data::SetSize(Size _size)
@@ -128,7 +128,7 @@ void Data::SetSize(Size _size)
     size = _size;
 }
 
-Adress Data::GetAdress(int _index)
+Address Data::GetAddress(int _index)
 {
     if (_index < 0 || _index >= size)
         return null;
@@ -137,16 +137,16 @@ Adress Data::GetAdress(int _index)
         switch (this->type)
         {
             case _CHAR:
-                return HeapReturnAdress(1);
+                return HeapReturnAddress(1);
             break;
             case _INT:  case _FLOAT:
-                return HeapReturnAdress(4);
+                return HeapReturnAddress(4);
             break;
             case _SHORT:
-                return HeapReturnAdress(2);
+                return HeapReturnAddress(2);
             break;
             case _LONG: case _DOUBLE:
-                return HeapReturnAdress(8);
+                return HeapReturnAddress(8);
             break;
             default:
                 return null;

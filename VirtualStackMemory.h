@@ -8,12 +8,12 @@ public:
     VirtualStackMemory();
     ~VirtualStackMemory();
     inline void Initialize(Size, ProgramMonitor *);
-    Adress GetNext();
-    void SetNext(Adress);
+    Address GetNext();
+    void SetNext(Address);
 protected:
     ProgramMonitor *monitor;
-    Adress memory;
-    Adress nextaddr;
+    Address memory;
+    Address nextaddr;
     Size limit;
 };
 
@@ -43,7 +43,7 @@ inline void VirtualStackMemory::Initialize(Size _limit, ProgramMonitor *_monitor
     if (_limit > 0)
     {
         limit = _limit;
-        memory = nextaddr = (Adress)calloc(limit, sizeof(char));
+        memory = nextaddr = (Address)calloc(limit, sizeof(char));
 
         if (!memory)
         {
@@ -56,7 +56,7 @@ inline void VirtualStackMemory::Initialize(Size _limit, ProgramMonitor *_monitor
     }
 }
 
-Adress VirtualStackMemory::GetNext()
+Address VirtualStackMemory::GetNext()
 {
     if(nextaddr < memory + limit)
     {
@@ -69,7 +69,7 @@ Adress VirtualStackMemory::GetNext()
     }
 }
 
-void VirtualStackMemory::SetNext(Adress _nextaddr)
+void VirtualStackMemory::SetNext(Address _nextaddr)
 {
     nextaddr = _nextaddr;
 }

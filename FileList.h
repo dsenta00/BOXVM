@@ -11,10 +11,10 @@ public:
 	~FileList();
     void PushFile(Count, char *, int);
     void SetMonitor(ProgramMonitor *);
-    void ReadOperationFileString(Adress, Count);
-    void WriteOperationFileString(Adress, Count);
-    void ReadAllFile(Adress, Size, Count);
-    void GetLine(Adress, Count);
+    void ReadOperationFileString(Address, Count);
+    void WriteOperationFileString(Address, Count);
+    void ReadAllFile(Address, Size, Count);
+    void GetLine(Address, Count);
     bool Feof(Count);
     bool IsOpened(Count);
 	template <typename T>
@@ -156,7 +156,7 @@ void FileList::WriteOperationFile(T *write_data, Count _count)
     }
 }
 
-void FileList::ReadOperationFileString(Adress read_data, Count _count)
+void FileList::ReadOperationFileString(Address read_data, Count _count)
 {
     pfile = FINDFILE(_count);
 
@@ -184,7 +184,7 @@ void FileList::ReadOperationFileString(Adress read_data, Count _count)
     }
 }
 
-void FileList::WriteOperationFileString(Adress write_data, Count _count)
+void FileList::WriteOperationFileString(Address write_data, Count _count)
 {
     pfile = FINDFILE(_count);
 
@@ -205,7 +205,7 @@ void FileList::WriteOperationFileString(Adress write_data, Count _count)
     }
 }
 
-void FileList::ReadAllFile(Adress read_data, Size _size, Count _count)
+void FileList::ReadAllFile(Address read_data, Size _size, Count _count)
 {
     pfile = FINDFILE(_count);
 
@@ -226,7 +226,7 @@ void FileList::ReadAllFile(Adress read_data, Size _size, Count _count)
     }
 }
 
-void FileList::GetLine(Adress read_data, Count _count)
+void FileList::GetLine(Address read_data, Count _count)
 {
     pfile = FINDFILE(_count);
 

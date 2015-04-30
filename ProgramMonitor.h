@@ -39,7 +39,7 @@ void ProgramMonitor::SetError(Status _stat)
 
 bool ProgramMonitor::OK()
 {
-    return status == EVERYTHING_OK;
+    return !status;
 }
 
 void ProgramMonitor::WriteErrorReport()

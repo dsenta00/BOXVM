@@ -30,14 +30,14 @@ public:
     template <typename T>
     inline void MovOperation(T *, T *);
     template <typename T>
-    inline void CheckAdressEquality(T *, T *);
-    void CheckStatement(Adress, Adress, Type);
-    inline void Print(Adress, Type);
-    inline void Rand(Adress, Type);
-    inline void PrintLN(Adress, Type);
-    inline void Scan(Adress, Type);
-    void Operation(Byte, Adress, Byte, Type);
-    void Operation(Byte, Adress, Adress, Type);
+    inline void CheckAddressEquality(T *, T *);
+    void CheckStatement(Address, Address, Type);
+    inline void Print(Address, Type);
+    inline void Rand(Address, Type);
+    inline void PrintLN(Address, Type);
+    inline void Scan(Address, Type);
+    void Operation(Byte, Address, Byte, Type);
+    void Operation(Byte, Address, Address, Type);
 
     long GetFlag();
 protected:
@@ -57,37 +57,37 @@ long ALU::GetFlag()
 }
 
 template <typename T>
-inline void ALU::CheckAdressEquality(T *adress1, T* adress2)
+inline void ALU::CheckAddressEquality(T *address1, T* address2)
 {
-    flag = (long)(*adress1 - *adress2);
+    flag = (long)(*address1 - *address2);
 }
 
-void ALU::CheckStatement(Adress adress1, Adress adress2, Type type)
+void ALU::CheckStatement(Address address1, Address address2, Type type)
 {
-    if(adress1 && adress2)
+    if(address1 && address2)
     {
         switch (type)
         {
             case _CHAR:
-                CheckAdressEquality(adress1, adress2);
+                CheckAddressEquality(address1, address2);
             break;
             case _INT:
-                CheckAdressEquality((int *)adress1, (int *)adress2);
+                CheckAddressEquality((int *)address1, (int *)address2);
             break;
             case _SHORT:
-                CheckAdressEquality((short *)adress1, (short *)adress2);
+                CheckAddressEquality((short *)address1, (short *)address2);
             break;
             case _LONG:
-                CheckAdressEquality((long *)adress1, (long *)adress2);
+                CheckAddressEquality((long *)address1, (long *)address2);
             break;
             case _FLOAT:
-                CheckAdressEquality((float *)adress1, (float *)adress2);
+                CheckAddressEquality((float *)address1, (float *)address2);
             break;
             case _DOUBLE:
-                CheckAdressEquality((double *)adress1, (double *)adress2);
+                CheckAddressEquality((double *)address1, (double *)address2);
             break;
             case _STRING:
-                flag = strcmp(adress1, adress2);
+                flag = strcmp(address1, address2);
             break;
         }
     }
@@ -97,7 +97,7 @@ void ALU::CheckStatement(Adress adress1, Adress adress2, Type type)
     }
 }
 
-inline void ALU::Print(Adress __ADR, Type __TYPE)
+inline void ALU::Print(Address __ADR, Type __TYPE)
 {
     switch (__TYPE)
     {
@@ -111,7 +111,7 @@ inline void ALU::Print(Adress __ADR, Type __TYPE)
     }
 }
 
-inline void ALU::PrintLN(Adress __ADR, Type __TYPE)
+inline void ALU::PrintLN(Address __ADR, Type __TYPE)
 {
     #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
     switch (__TYPE)
@@ -138,7 +138,7 @@ inline void ALU::PrintLN(Adress __ADR, Type __TYPE)
     #endif
 }
 
-inline void ALU::Scan(Adress __ADR, Type __TYPE)
+inline void ALU::Scan(Address __ADR, Type __TYPE)
 {
     switch (__TYPE)
     {
@@ -152,7 +152,7 @@ inline void ALU::Scan(Adress __ADR, Type __TYPE)
     }
 }
 
-inline void ALU::Rand(Adress __ADR, Type __TYPE)
+inline void ALU::Rand(Address __ADR, Type __TYPE)
 {
     int randnum = rand();
 
@@ -267,34 +267,34 @@ inline void ALU::MovOperation(T *operand1, T *operand2)
     *operand1 = *operand2;
 }
 
-inline void ALU::Operation(Byte OP, Adress store_adress, Adress adress, Type type)
+inline void ALU::Operation(Byte OP, Address store_address, Address address, Type type)
 {
-    if(store_adress && adress)
+    if(store_address && address)
     {
         if (OP == MOV)
         {
             switch (type)
             {
                 case _CHAR:
-                    MovOperation(store_adress, adress);
+                    MovOperation(store_address, address);
                 break;
                 case _INT:
-                    MovOperation((int *)store_adress, (int *)adress);
+                    MovOperation((int *)store_address, (int *)address);
                 break;
                 case _SHORT:
-                    MovOperation((short *)store_adress, (short *)adress);
+                    MovOperation((short *)store_address, (short *)address);
                 break;
                 case _LONG:
-                    MovOperation((long *)store_adress, (long *)adress);
+                    MovOperation((long *)store_address, (long *)address);
                 break;
                 case _FLOAT:
-                    MovOperation((float *)store_adress, (float *)adress);
+                    MovOperation((float *)store_address, (float *)address);
                 break;
                 case _DOUBLE:
-                    MovOperation((double *)store_adress, (double *)adress);
+                    MovOperation((double *)store_address, (double *)address);
                 break;
                 case _STRING:
-                    strcpy(store_adress, adress);
+                    strcpy(store_address, address);
                 break;
             }
         }
@@ -303,25 +303,25 @@ inline void ALU::Operation(Byte OP, Adress store_adress, Adress adress, Type typ
             switch (type)
             {
                 case _CHAR:
-                    AddOperation(store_adress, adress);
+                    AddOperation(store_address, address);
                 break;
                 case _INT:
-                    AddOperation((int *)store_adress, (int *)adress);
+                    AddOperation((int *)store_address, (int *)address);
                 break;
                 case _SHORT:
-                    AddOperation((short *)store_adress, (short *)adress);
+                    AddOperation((short *)store_address, (short *)address);
                 break;
                 case _LONG:
-                    AddOperation((long *)store_adress, (long *)adress);
+                    AddOperation((long *)store_address, (long *)address);
                 break;
                 case _FLOAT:
-                    AddOperation((float *)store_adress, (float *)adress);
+                    AddOperation((float *)store_address, (float *)address);
                 break;
                 case _DOUBLE:
-                    AddOperation((double *)store_adress, (double *)adress);
+                    AddOperation((double *)store_address, (double *)address);
                 break;
                 case _STRING:
-                    strcat(store_adress, adress);
+                    strcat(store_address, address);
                 break;
             }
         }
@@ -330,22 +330,22 @@ inline void ALU::Operation(Byte OP, Adress store_adress, Adress adress, Type typ
             switch (type)
             {
                 case _CHAR:
-                    MulOperation(store_adress, adress);
+                    MulOperation(store_address, address);
                 break;
                 case _INT:
-                    MulOperation((int *)store_adress, (int *)adress);
+                    MulOperation((int *)store_address, (int *)address);
                 break;
                 case _SHORT:
-                    MulOperation((short *)store_adress, (short *)adress);
+                    MulOperation((short *)store_address, (short *)address);
                 break;
                 case _LONG:
-                    MulOperation((long *)store_adress, (long *)adress);
+                    MulOperation((long *)store_address, (long *)address);
                 break;
                 case _FLOAT:
-                    MulOperation((float *)store_adress, (float *)adress);
+                    MulOperation((float *)store_address, (float *)address);
                 break;
                 case _DOUBLE:
-                    MulOperation((double *)store_adress, (double *)adress);
+                    MulOperation((double *)store_address, (double *)address);
                 break;
             }
         }
@@ -354,22 +354,22 @@ inline void ALU::Operation(Byte OP, Adress store_adress, Adress adress, Type typ
             switch (type)
             {
                 case _CHAR:
-                    DivOperation(store_adress, adress);
+                    DivOperation(store_address, address);
                 break;
                 case _INT:
-                    DivOperation((int *)store_adress, (int *)adress);
+                    DivOperation((int *)store_address, (int *)address);
                 break;
                 case _SHORT:
-                    DivOperation((short *)store_adress, (short *)adress);
+                    DivOperation((short *)store_address, (short *)address);
                 break;
                 case _LONG:
-                    DivOperation((long *)store_adress, (long *)adress);
+                    DivOperation((long *)store_address, (long *)address);
                 break;
                 case _FLOAT:
-                    DivOperation((float *)store_adress, (float *)adress);
+                    DivOperation((float *)store_address, (float *)address);
                 break;
                 case _DOUBLE:
-                    DivOperation((double *)store_adress, (double *)adress);
+                    DivOperation((double *)store_address, (double *)address);
                 break;
             }
         }
@@ -378,22 +378,22 @@ inline void ALU::Operation(Byte OP, Adress store_adress, Adress adress, Type typ
             switch (type)
             {
                 case _CHAR:
-                    SubOperation(store_adress, adress);
+                    SubOperation(store_address, address);
                 break;
                 case _INT:
-                    SubOperation((int *)store_adress, (int *)adress);
+                    SubOperation((int *)store_address, (int *)address);
                 break;
                 case _SHORT:
-                    SubOperation((short *)store_adress, (short *)adress);
+                    SubOperation((short *)store_address, (short *)address);
                 break;
                 case _LONG:
-                    SubOperation((long *)store_adress, (long *)adress);
+                    SubOperation((long *)store_address, (long *)address);
                 break;
                 case _FLOAT:
-                    SubOperation((float *)store_adress, (float *)adress);
+                    SubOperation((float *)store_address, (float *)address);
                 break;
                 case _DOUBLE:
-                    SubOperation((double *)store_adress, (double *)adress);
+                    SubOperation((double *)store_address, (double *)address);
                 break;
             }
         }
@@ -402,16 +402,16 @@ inline void ALU::Operation(Byte OP, Adress store_adress, Adress adress, Type typ
             switch (type)
             {
                 case _CHAR:
-                    ModOperation(store_adress, adress);
+                    ModOperation(store_address, address);
                 break;
                 case _INT:
-                    ModOperation((int *)store_adress, (int *)adress);
+                    ModOperation((int *)store_address, (int *)address);
                 break;
                 case _SHORT:
-                    ModOperation((short *)store_adress, (short *)adress);
+                    ModOperation((short *)store_address, (short *)address);
                 break;
                 case _LONG:
-                    ModOperation((long *)store_adress, (long *)adress);
+                    ModOperation((long *)store_address, (long *)address);
                 break;
             }
         }
@@ -422,35 +422,35 @@ inline void ALU::Operation(Byte OP, Adress store_adress, Adress adress, Type typ
     }
 }
 
-void ALU::Operation(Byte OP, Adress store_adress, Byte increment, Type type)
+void ALU::Operation(Byte OP, Address store_address, Byte increment, Type type)
 {
-    if(store_adress)
+    if(store_address)
     {
         if (OP == ADI)
         {
             switch (type)
             {
                 case _CHAR:
-                    AddOperation(store_adress, increment);
+                    AddOperation(store_address, increment);
                 break;
                 case _INT:
-                    AddOperation((int *)store_adress, increment);
+                    AddOperation((int *)store_address, increment);
                 break;
                 case _SHORT:
-                    AddOperation((short *)store_adress, increment);
+                    AddOperation((short *)store_address, increment);
                 break;
                 case _LONG:
-                    AddOperation((long *)store_adress, increment);
+                    AddOperation((long *)store_address, increment);
                 break;
                 case _FLOAT:
-                    AddOperation((float *)store_adress, increment);
+                    AddOperation((float *)store_address, increment);
                 break;
                 case _DOUBLE:
-                    AddOperation((double *)store_adress, increment);
+                    AddOperation((double *)store_address, increment);
                 break;
                 case _STRING:
                     sprintf(p_itoa, "%d", (int)increment);
-                    strcat(store_adress, p_itoa);
+                    strcat(store_address, p_itoa);
                 break;
             }
         }
@@ -459,22 +459,22 @@ void ALU::Operation(Byte OP, Adress store_adress, Byte increment, Type type)
             switch (type)
             {
                 case _CHAR:
-                    MulOperation(store_adress, increment);
+                    MulOperation(store_address, increment);
                 break;
                 case _INT:
-                    MulOperation((int *)store_adress, increment);
+                    MulOperation((int *)store_address, increment);
                 break;
                 case _SHORT:
-                    MulOperation((short *)store_adress, increment);
+                    MulOperation((short *)store_address, increment);
                 break;
                 case _LONG:
-                    MulOperation((long *)store_adress, increment);
+                    MulOperation((long *)store_address, increment);
                 break;
                 case _FLOAT:
-                    MulOperation((float *)store_adress, increment);
+                    MulOperation((float *)store_address, increment);
                 break;
                 case _DOUBLE:
-                    MulOperation((double *)store_adress, increment);
+                    MulOperation((double *)store_address, increment);
                 break;
             }
         }
@@ -483,22 +483,22 @@ void ALU::Operation(Byte OP, Adress store_adress, Byte increment, Type type)
             switch (type)
             {
                 case _CHAR:
-                    DivOperation(store_adress, increment);
+                    DivOperation(store_address, increment);
                 break;
                 case _INT:
-                    DivOperation((int *)store_adress, increment);
+                    DivOperation((int *)store_address, increment);
                 break;
                 case _SHORT:
-                    DivOperation((short *)store_adress, increment);
+                    DivOperation((short *)store_address, increment);
                 break;
                 case _LONG:
-                    DivOperation((long *)store_adress, increment);
+                    DivOperation((long *)store_address, increment);
                 break;
                 case _FLOAT:
-                    DivOperation((float *)store_adress, increment);
+                    DivOperation((float *)store_address, increment);
                 break;
                 case _DOUBLE:
-                    DivOperation((double *)store_adress, increment);
+                    DivOperation((double *)store_address, increment);
                 break;
             }
         }
@@ -509,22 +509,22 @@ void ALU::Operation(Byte OP, Adress store_adress, Byte increment, Type type)
                 switch (type)
                 {
                     case _CHAR:
-                        SubOperation(store_adress, increment);
+                        SubOperation(store_address, increment);
                     break;
                     case _INT:
-                        SubOperation((int *)store_adress, increment);
+                        SubOperation((int *)store_address, increment);
                     break;
                     case _SHORT:
-                        SubOperation((short *)store_adress, increment);
+                        SubOperation((short *)store_address, increment);
                     break;
                     case _LONG:
-                        SubOperation((long *)store_adress, increment);
+                        SubOperation((long *)store_address, increment);
                     break;
                     case _FLOAT:
-                        SubOperation((float *)store_adress, increment);
+                        SubOperation((float *)store_address, increment);
                     break;
                     case _DOUBLE:
-                        SubOperation((double *)store_adress, increment);
+                        SubOperation((double *)store_address, increment);
                     break;
                 }
             }
@@ -540,16 +540,16 @@ void ALU::Operation(Byte OP, Adress store_adress, Byte increment, Type type)
                 switch (type)
                 {
                     case _CHAR:
-                        ModOperation(store_adress, increment);
+                        ModOperation(store_address, increment);
                     break;
                     case _INT:
-                        ModOperation((int *)store_adress, increment);
+                        ModOperation((int *)store_address, increment);
                     break;
                     case _SHORT:
-                        ModOperation((short *)store_adress, increment);
+                        ModOperation((short *)store_address, increment);
                     break;
                     case _LONG:
-                        ModOperation((long *)store_adress, increment);
+                        ModOperation((long *)store_address, increment);
                     break;
                 }
             }

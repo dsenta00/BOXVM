@@ -11,9 +11,9 @@ class Stack : public DataTree {
 public:
     Stack();
     void SetMonitor(ProgramMonitor *);
-    void PushStack(Type, Adress);				//	--	Push data on stack
+    void PushStack(Type, Address);				//	--	Push data on stack
     void SetVirtualMemory(Size);				//	--	Set stack limit size
-    Adress GetAdress(Count);					//	--	Get adress of data by ID
+    Address GetAddress(Count);					//	--	Get address of data by ID
     Type GetType(Count);                        //	--	Get type of data by ID
 protected:
     VirtualStackMemory vsm;
@@ -32,10 +32,10 @@ void Stack::SetMonitor(ProgramMonitor *_monitor)
     monitor = _monitor;
 }
 
-void Stack::PushStack(Type _type, Adress _value)
+void Stack::PushStack(Type _type, Address _value)
 {
     Data *dataS = null;
-	Adress startadr = vsm.GetNext();
+    Address startadr = vsm.GetNext();
 
     if (EOK)
 	{
@@ -48,7 +48,7 @@ void Stack::PushStack(Type _type, Adress _value)
             if (EOK)
 			{
 				root = Push(dataS);
-				vsm.SetNext(dataS->GetEndAdress());
+                vsm.SetNext(dataS->GetEndAddress());
             }
 		}
 		else
@@ -58,13 +58,13 @@ void Stack::PushStack(Type _type, Adress _value)
     }
 }
 
-Adress Stack::GetAdress(Count _count)
+Address Stack::GetAddress(Count _count)
 {
     Data *search_data = SearchFor(_count);
 
     if (search_data)
     {
-        return search_data->GetAdress();
+        return search_data->GetAddress();
     }
 	else
     {

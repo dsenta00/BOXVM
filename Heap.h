@@ -19,8 +19,8 @@ public:
     void MallocDefrag(Count, Size);
     void Free(Count);
 private:
-    void SetNewAdresses(DataNode *, DSize &);
-    void SetNewAdresses(DataNode *, Adress, Size);  //  --  Sets new adresses in Data tree.
+    void SetNewAddresses(DataNode *, DSize &);
+    void SetNewAddresses(DataNode *, Address, Size);  //  --  Sets new addresses in Data tree.
     void ReserveMemory(Data *, Size);
 protected:
     MemoryPool *memoryPool;
@@ -37,33 +37,33 @@ Heap::Heap(Size _poolsize, ProgramMonitor *_monitor)
         SETERR(POOL_MAL_ERR);
 }
 
-void Heap::SetNewAdresses(DataNode *element, Adress _adress, Size _size)
+void Heap::SetNewAddresses(DataNode *element, Address _address, Size _size)
 {
-    Adress curradr = null;
+    Address curradr = null;
 
 	if (element)
 	{
-        curradr = element->GetDataInfo()->GetAdress();
+        curradr = element->GetDataInfo()->GetAddress();
 
-		SetNewAdresses(element->Left, _adress, _size);
+        SetNewAddresses(element->Left, _address, _size);
 
-		if (_adress < curradr)
-            element->GetDataInfo()->SetAdress(curradr - _size);
+        if (_address < curradr)
+            element->GetDataInfo()->SetAddress(curradr - _size);
 
-		SetNewAdresses(element->Right, _adress, _size);
+        SetNewAddresses(element->Right, _address, _size);
 	}
 }
 
-void Heap::SetNewAdresses(DataNode *element, DSize &change)
+void Heap::SetNewAddresses(DataNode *element, DSize &change)
 {
-    Adress curradr = null;
+    Address curradr = null;
 
     if (element)
     {
-        curradr = element->GetDataInfo()->GetAdress();
-        SetNewAdresses(element->Left, change);
-        element->GetDataInfo()->SetAdress(curradr + change);
-        SetNewAdresses(element->Right, change);
+        curradr = element->GetDataInfo()->GetAddress();
+        SetNewAddresses(element->Left, change);
+        element->GetDataInfo()->SetAddress(curradr + change);
+        SetNewAddresses(element->Right, change);
     }
 }
 
@@ -114,14 +114,14 @@ void Heap::PushPointer(Type _type)
 void Heap::Free(Count _count)
 {
     Data *del = null;
-    Adress adress = null;
+    Address address = null;
 	Size size = 0;
 
 	del = SearchFor(_count);
 
 	if (del)
 	{
-		adress = del->GetAdress();
+        address = del->GetAddress();
 		size = del->GetSize();
 
 		switch (del->GetType())
@@ -137,10 +137,10 @@ void Heap::Free(Count _count)
             break;
 		}
 
-        memoryPool->Free(adress, size);
-		SetNewAdresses(root, adress, size);
+        memoryPool->Free(address, size);
+        SetNewAddresses(root, address, size);
 
-        del->SetAdress(null);
+        del->SetAddress(null);
 		del->SetSize(0);
 	}
 	else
@@ -151,7 +151,7 @@ void Heap::Free(Count _count)
 
 void Heap::ReserveMemory(Data *_mal, Size _size)
 {
-    Adress adress = null;
+    Address address = null;
     DSize change = 0;
 
 	if (_mal)
@@ -159,25 +159,25 @@ void Heap::ReserveMemory(Data *_mal, Size _size)
 		switch (_mal->GetType())
 		{
             case _INT: case _FLOAT:
-                adress = memoryPool->Malloc(_size * 4, change);
+                address = memoryPool->Malloc(_size * 4, change);
             break;
             case _SHORT:
-                adress = memoryPool->Malloc(_size * 2, change);
+                address = memoryPool->Malloc(_size * 2, change);
             break;
             case _LONG: case _DOUBLE:
-                adress = memoryPool->Malloc(_size * 8, change);
+                address = memoryPool->Malloc(_size * 8, change);
             break;
             case _CHAR:
-                adress = memoryPool->Malloc(_size, change);
+                address = memoryPool->Malloc(_size, change);
             break;
 		}
 
         if(change)
-            SetNewAdresses(root, change);
+            SetNewAddresses(root, change);
 
-        if (adress)
+        if (address)
         {
-            _mal->SetAdress(adress);
+            _mal->SetAddress(address);
             _mal->SetSize(_size);
         }
         else
@@ -198,7 +198,7 @@ void Heap::Malloc(Count _count, Size _size)
 
 void Heap::MallocDefrag(Count _count, Size _size)
 {
-    Adress adress = null;
+    Address address = null;
 	Size size = 0;
     DSize change = 0;
     Data *mal = SearchFor(_count);
@@ -228,23 +228,23 @@ void Heap::MallocDefrag(Count _count, Size _size)
                 break;
 			}
 
-            adress = mal->GetAdress();
+            address = mal->GetAddress();
 
             if (size == _size)
             {
-                memset(adress, 0, size);
+                memset(address, 0, size);
             }
             else
             {
-                memoryPool->Free(adress, size);
-                adress = memoryPool->Malloc(_size, change);
+                memoryPool->Free(address, size);
+                address = memoryPool->Malloc(_size, change);
 
                 if(change)
-                    SetNewAdresses(root, change);
+                    SetNewAddresses(root, change);
 
                 if (EOK)
                 {
-                    mal->SetAdress(adress);
+                    mal->SetAddress(address);
                     mal->SetSize(_size);
                 }
             }

@@ -57,7 +57,7 @@
     #define SETERR(__ERROR)     monitor->SetError(__ERROR)
     #define EOK                 monitor->OK()
 
-	#define HeapReturnAdress(__size) starta + ((_index) * (__size))
+    #define HeapReturnAddress(__size) starta + ((_index) * (__size))
 
 	enum ERROR_CODES
 	{
@@ -243,7 +243,7 @@
 
     typedef char Type;
     typedef short Status;
-    typedef char *Adress;
+    typedef char *Address;
     typedef char *Bcode;
     typedef char Byte;
     typedef short Size;

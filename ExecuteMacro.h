@@ -15,7 +15,7 @@ if(EOK)                                                 \
     file_list._FOP((_TYPE *)op1, dataid[0]);
 
 #define OPENFILE(__MODE)\
-op1 = stack.GetAdress(dataid[*READBYTECODE]);\
+op1 = stack.GetAddress(dataid[*READBYTECODE]);\
 file_list.PushFile(dataid[0], op1, __MODE);
 
 #define COMPARE \

@@ -10,7 +10,7 @@ public:
     Registry();
     inline void SetRegistry(Data *, Count);
     inline void SetRegistry(Data *, Count, Count);
-    inline void GetRegistry(Adress &, Type &, Count);
+    inline void GetRegistry(Address &, Type &, Count);
     void ResetRegistry();
     void SetMonitor(ProgramMonitor *);
 protected:
@@ -55,17 +55,17 @@ void Registry::SetRegistry(Data *data, Count _regnum, Count _index)
     }
 }
 
-void Registry::GetRegistry(Adress &_adress, Type &_type, Count _regnum)
+void Registry::GetRegistry(Address &_address, Type &_type, Count _regnum)
 {
     if(_regnum >= 0 && _regnum < MAXBUFFERSIZE)
     {
         if(index[_regnum])
         {
-            _adress = buffer[_regnum]->GetAdress(index[_regnum]);
+            _address = buffer[_regnum]->GetAddress(index[_regnum]);
         }
         else
         {
-            _adress = buffer[_regnum]->GetAdress();
+            _address = buffer[_regnum]->GetAddress();
         }
 
         _type = buffer[_regnum]->GetType();
