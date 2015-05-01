@@ -9,87 +9,87 @@
 
 class Stack : public DataTree {
 public:
-    Stack();
-    void SetMonitor(ProgramMonitor *);
-    void PushStack(Type, Address);				//	--	Push data on stack
-    void SetVirtualMemory(Size);				//	--	Set stack limit size
-    Address GetAddress(Count);					//	--	Get address of data by ID
-    Type GetType(Count);                        //	--	Get type of data by ID
+	Stack();
+	void SetMonitor(ProgramMonitor *);
+	void PushStack(Type, Address);				//	--	Push data on stack
+	void SetVirtualMemory(Size);				//	--	Set stack limit size
+	Address GetAddress(Count);					//	--	Get address of data by ID
+	Type GetType(Count);                        //	--	Get type of data by ID
 protected:
-    VirtualStackMemory vsm;
+	VirtualStackMemory vsm;
 };
 
 Stack::Stack()
 {
-    root = null;
-    last = null;
-    monitor = null;
-    counter = 0;
+	root = null;
+	last = null;
+	monitor = null;
+	counter = 0;
 }
 
 void Stack::SetMonitor(ProgramMonitor *_monitor)
 {
-    monitor = _monitor;
+	monitor = _monitor;
 }
 
 void Stack::PushStack(Type _type, Address _value)
 {
-    Data *dataS = null;
-    Address startadr = vsm.GetNext();
+	Data *dataS = null;
+	Address startadr = vsm.GetNext();
 
-    if (EOK)
+	if (EOK)
 	{
-        dataS = new Data(startadr, _type);
+		dataS = new Data(startadr, _type);
 
 		if (dataS)
 		{
-            SETERR(dataS->SetValue(_value));
+			SETERR(dataS->SetValue(_value));
 
-            if (EOK)
+			if (EOK)
 			{
 				root = Push(dataS);
-                vsm.SetNext(dataS->GetEndAddress());
-            }
+				vsm.SetNext(dataS->GetEndAddress());
+			}
 		}
 		else
-        {
-            SETERR(STACK_MALL_ERR);
-        }
-    }
+		{
+			SETERR(STACK_MALL_ERR);
+		}
+	}
 }
 
 Address Stack::GetAddress(Count _count)
 {
-    Data *search_data = SearchFor(_count);
+	Data *search_data = SearchFor(_count);
 
-    if (search_data)
-    {
-        return search_data->GetAddress();
-    }
+	if (search_data)
+	{
+		return search_data->GetAddress();
+	}
 	else
-    {
-        return null;
-    }
+	{
+		return null;
+	}
 }
 
 Type Stack::GetType(Count _count)
 {
-    Data *search_data = SearchFor(_count);
+	Data *search_data = SearchFor(_count);
 
-    if(search_data)
-    {
+	if (search_data)
+	{
 		return search_data->GetType();
-    }
-    else
-    {
-        SETERR(UKNOWN_TYPE_ERR);
-        return null;
-    }
+	}
+	else
+	{
+		SETERR(UKNOWN_TYPE_ERR);
+		return null;
+	}
 }
 
 void Stack::SetVirtualMemory(Size _limit)
 {
-    vsm.Initialize(_limit, monitor);
+	vsm.Initialize(_limit, monitor);
 }
 
 #endif
