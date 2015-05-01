@@ -7,70 +7,70 @@
 
 class DataTree {
 public:
-    DataTree();
-    Size Height(DataNode *);
-    Size Difference(DataNode*);
-    DataNode *RR_Rotation(DataNode *);
-    DataNode *Balance(DataNode *);
-    DataNode *DeleteTree(DataNode *);
-    inline Data *SearchFor(Count);
-    ~DataTree();
+	DataTree();
+	Size Height(DataNode *);
+	Size Difference(DataNode*);
+	DataNode *RR_Rotation(DataNode *);
+	DataNode *Balance(DataNode *);
+	DataNode *DeleteTree(DataNode *);
+	inline Data *SearchFor(Count);
+	~DataTree();
 protected:
-    DataNode *Push(Data *);
+	DataNode *Push(Data *);
 
-    DataNode *root;
-    DataNode *last;
-    Count counter;
-    ProgramMonitor *monitor;
+	DataNode *root;
+	DataNode *last;
+	Count counter;
+	ProgramMonitor *monitor;
 };
 
 DataTree::DataTree()
 {
-    counter = null;
-    root = null;
-    last = null;
-    monitor = null;
+	counter = null;
+	root = null;
+	last = null;
+	monitor = null;
 }
 
 DataNode *DataTree::Push(Data *_element)
 {
-    DataNode *q = new DataNode(_element, ++counter);
+	DataNode *q = new DataNode(_element, ++counter);
 
-    if (q)
-    {
-        if (!root)
-        {
-            root = q;
-            last = root;
-        }
-        else
-        {
-            last->Right = q;
-            last = q;
-            root = Balance(root);
-        }
-    }
-    return root;
+	if (q)
+	{
+		if (!root)
+		{
+			root = q;
+			last = root;
+		}
+		else
+		{
+			last->Right = q;
+			last = q;
+			root = Balance(root);
+		}
+	}
+	return root;
 }
 
 inline Data *DataTree::SearchFor(Count _count)
 {
-    DataNode *curr = root;
+	DataNode *curr = root;
 
-    while (curr)
-    {
-        if (curr->GetCount() > _count)
-            curr = curr->Left;
-        else if (curr->GetCount() < _count)
-            curr = curr->Right;
-        else
-            break;
-    }
+	while (curr)
+	{
+		if (curr->GetCount() > _count)
+			curr = curr->Left;
+		else if (curr->GetCount() < _count)
+			curr = curr->Right;
+		else
+			break;
+	}
 
-    if (curr)
-        return curr->GetDataInfo();
-    else
-        return null;
+	if (curr)
+		return curr->GetDataInfo();
+	else
+		return null;
 }
 
 Size DataTree::Height(DataNode *current)
@@ -96,7 +96,7 @@ Size DataTree::Difference(DataNode *_current)
 
 DataNode *DataTree::RR_Rotation(DataNode *_parent)
 {
-    DataNode *temp = null;
+	DataNode *temp = null;
 
 	temp = _parent->Right;
 	_parent->Right = temp->Left;
@@ -128,7 +128,7 @@ DataNode *DataTree::DeleteTree(DataNode *_current)
 			_current->Right = DeleteTree(_current->Right);
 
 		delete _current;
-        _current = null;
+		_current = null;
 	}
 
 	return _current;
@@ -136,7 +136,7 @@ DataNode *DataTree::DeleteTree(DataNode *_current)
 
 DataTree::~DataTree()
 {
-    last = root = DeleteTree(root);
+	last = root = DeleteTree(root);
 }
 
 #endif // DATA_TREE_H
