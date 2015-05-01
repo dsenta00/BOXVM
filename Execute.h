@@ -10,15 +10,12 @@
 #include "ByteCode.h"
 #include "ExecuteMacro.h"
 
-
-
 class Execute {
 public:
 	Execute();
-    Execute(Bcode, Bcode, ProgramMonitor *);
-    ~Execute();
-    void Do(Stack &, Heap &);
-    void FileExecution();
+	Execute(Bcode, Bcode, ProgramMonitor *);
+	~Execute();
+	void Do(Stack &, Heap &);
 protected:
     Registry registry;
     ByteCode *bytecode;
@@ -36,11 +33,6 @@ protected:
     Byte op_index;
     Status status;
 };
-
-void Execute::FileExecution()
-{
-
-}
 
 Execute::Execute()
 {
