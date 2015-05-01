@@ -19,21 +19,21 @@ public:
 	Type GetMode();
 	FILE *Getfp();
 
-	WRITEOPDECL(int)
-		WRITEOPDECL(short)
-		WRITEOPDECL(long)
-		WRITEOPDECL(char)
-		WRITEOPDECL(float)
-		WRITEOPDECL(double)
-		WRITEOPDECL(char *)
-		READOPDECL(int)
-		READOPDECL(short)
-		READOPDECL(long)
-		READOPDECL(char)
-		READOPDECL(float)
-		READOPDECL(double)
+	WRITEOPDECL(int);
+	WRITEOPDECL(short);
+	WRITEOPDECL(long);
+	WRITEOPDECL(char);
+	WRITEOPDECL(float);
+	WRITEOPDECL(double);
+	WRITEOPDECL(char *);
+	READOPDECL(int);
+	READOPDECL(short);
+	READOPDECL(long);
+	READOPDECL(char);
+	READOPDECL(float);
+	READOPDECL(double);
 
-		File *next;
+	File *next;
 protected:
 	FILE *fp;
 	Count count;
@@ -147,5 +147,4 @@ File::~File()
 	if (fp)
 		fclose(fp);
 }
-
 #endif
