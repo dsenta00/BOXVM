@@ -5,51 +5,51 @@
 
 class DataNode {
 public:
-    DataNode(Data*, Count);
-    DataNode();
-    DataNode(Count);
-    Count GetCount();
-    Data *GetDataInfo();
-    ~DataNode();
+	DataNode(Data*, Count);
+	DataNode();
+	DataNode(Count);
+	Count GetCount();
+	Data *GetDataInfo();
+	~DataNode();
 
-    DataNode *Left;
-    DataNode *Right;
+	DataNode *Left;
+	DataNode *Right;
 protected:
-    Data *DataInfo;
-    Count count;
+	Data *DataInfo;
+	Count count;
 };
 
 DataNode::DataNode(Data*_data, Count _count)
 {
-    Left = Right = null;
-    DataInfo = _data;
-    count = _count;
+	Left = Right = null;
+	DataInfo = _data;
+	count = _count;
 }
 
 DataNode::DataNode()
 {
-    memset(this, null, sizeof(DataNode));
+	memset(this, null, sizeof(DataNode));
 }
 
 DataNode::DataNode(Count _count)
 {
-    memset(this, null, sizeof(DataNode));
-    count = _count;
+	memset(this, null, sizeof(DataNode));
+	count = _count;
 }
 
 Count DataNode::GetCount()
 {
-    return count;
+	return count;
 }
 
 Data*DataNode::GetDataInfo()
 {
-    return DataInfo;
+	return DataInfo;
 }
 
 DataNode::~DataNode()
 {
-    delete DataInfo;
+	delete DataInfo;
 }
 
 #endif // DATANODE_H

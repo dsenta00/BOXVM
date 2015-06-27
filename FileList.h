@@ -9,41 +9,41 @@ class FileList {
 public:
 	FileList();
 	~FileList();
-    void PushFile(Count, char *, int);
-    void SetMonitor(ProgramMonitor *);
-    void ReadOperationFileString(Address, Count);
-    void WriteOperationFileString(Address, Count);
-    void ReadAllFile(Address, Size, Count);
-    void GetLine(Address, Count);
-    bool Feof(Count);
-    bool IsOpened(Count);
+	void PushFile(Count, char *, int);
+	void SetMonitor(ProgramMonitor *);
+	void ReadOperationFileString(Address, Count);
+	void WriteOperationFileString(Address, Count);
+	void ReadAllFile(Address, Size, Count);
+	void GetLine(Address, Count);
+	bool Feof(Count);
+	bool IsOpened(Count);
 	template <typename T>
-    void ReadOperationFile(T *, Count);
+	void ReadOperationFile(T *, Count);
 	template <typename T>
-    void WriteOperationFile(T *, Count);
+	void WriteOperationFile(T *, Count);
 protected:
-    File Head;
-    File *pfile;
-    ProgramMonitor *monitor;
+	File Head;
+	File *pfile;
+	ProgramMonitor *monitor;
 };
 
 FileList::FileList()
 {
-    pfile = null;
-    monitor = null;
+	pfile = null;
+	monitor = null;
 }
 
 void FileList::SetMonitor(ProgramMonitor *_monitor)
 {
-    monitor = _monitor;
+	monitor = _monitor;
 }
 
 void FileList::PushFile(Count _count, char *_path, int _mode)
 {
 	if (Head.GetCount() == 0)
-    {
-        Head.Open(_path, _mode, _count);
-    }
+	{
+		Head.Open(_path, _mode, _count);
+	}
 	else
 	{
 		pfile = FINDFILE(_count);
@@ -60,41 +60,41 @@ void FileList::PushFile(Count _count, char *_path, int _mode)
             }
         }
 		else
-        {
-            SETERR(ALLRDY_OPEN);
-        }
-    }
+		{
+            rewind(pfile->Getfp());
+		}
+	}
 }
 
 bool FileList::Feof(Count _count)
 {
-    pfile = FINDFILE(_count);
+	pfile = FINDFILE(_count);
 
-    if(!pfile->Getfp())
-    {
-        if(!feof(pfile->Getfp()))
-        {
-            return true;
-        }
-    }
-    else
-    {
-        SETERR(FILE_OPER_ERR);
-    }
+	if (!pfile->Getfp())
+	{
+		if (!feof(pfile->Getfp()))
+		{
+			return true;
+		}
+	}
+	else
+	{
+		SETERR(FILE_OPER_ERR);
+	}
 
-    return false;
+	return false;
 }
 
 bool FileList::IsOpened(Count _count)
 {
-    pfile = FINDFILE(_count);
+	pfile = FINDFILE(_count);
 
-    if(pfile->Getfp())
-    {
-        return true;
-    }
+	if (pfile->Getfp())
+	{
+		return true;
+	}
 
-    return false;
+	return false;
 }
 
 template <typename T>
@@ -102,148 +102,148 @@ void FileList::ReadOperationFile(T *read_data, Count _count)
 {
 	pfile = FINDFILE(_count);
 
-    if (pfile)
-    {
-        if(pfile->GetMode() == _READ)
-        {
-            if(!feof(pfile->Getfp()))
-            {
-                pfile->ReadOperationFile(read_data);
-            }
-            else
-            {
-                SETERR(READ_END_ERR);
-            }
-        }
-        else
-        {
-            SETERR(ERROR_READ);
-        }
-    }
+	if (pfile)
+	{
+		if (pfile->GetMode() == _READ)
+		{
+			if (!feof(pfile->Getfp()))
+			{
+				pfile->ReadOperationFile(read_data);
+			}
+			else
+			{
+				SETERR(READ_END_ERR);
+			}
+		}
+		else
+		{
+			SETERR(ERROR_READ);
+		}
+	}
 	else
-    {
-        SETERR(FILE_OPER_ERR);
-    }
+	{
+		SETERR(FILE_OPER_ERR);
+	}
 }
 
 template <typename T>
 void FileList::WriteOperationFile(T *write_data, Count _count)
 {
-    pfile = FINDFILE(_count);
+	pfile = FINDFILE(_count);
 
-    if (pfile)
-    {
-        if(pfile->GetMode() != _READ)
-        {
-            pfile->WriteOperationFile(write_data);
-        }
-        else
-        {
-            SETERR(ERROR_WRITE);
-        }
-    }
-    else
-    {
-        SETERR(FILE_OPER_ERR);
-    }
+	if (pfile)
+	{
+		if (pfile->GetMode() != _READ)
+		{
+			pfile->WriteOperationFile(write_data);
+		}
+		else
+		{
+			SETERR(ERROR_WRITE);
+		}
+	}
+	else
+	{
+		SETERR(FILE_OPER_ERR);
+	}
 }
 
 void FileList::ReadOperationFileString(Address read_data, Count _count)
 {
-    pfile = FINDFILE(_count);
+	pfile = FINDFILE(_count);
 
-    if (pfile)
-    {
-        if(pfile->GetMode() == _READ)
-        {
-            if(!feof(pfile->Getfp()))
-            {
-                pfile->ReadOperationFileString(read_data);
-            }
-            else
-            {
-                SETERR(READ_END_ERR);
-            }
-        }
-        else
-        {
-            SETERR(ERROR_READ);
-        }
-    }
-    else
-    {
-        SETERR(FILE_OPER_ERR);
-    }
+	if (pfile)
+	{
+		if (pfile->GetMode() == _READ)
+		{
+			if (!feof(pfile->Getfp()))
+			{
+				pfile->ReadOperationFileString(read_data);
+			}
+			else
+			{
+				SETERR(READ_END_ERR);
+			}
+		}
+		else
+		{
+			SETERR(ERROR_READ);
+		}
+	}
+	else
+	{
+		SETERR(FILE_OPER_ERR);
+	}
 }
 
 void FileList::WriteOperationFileString(Address write_data, Count _count)
 {
-    pfile = FINDFILE(_count);
+	pfile = FINDFILE(_count);
 
-    if (pfile)
-    {
-        if(pfile->GetMode() != _READ)
-        {
-            pfile->WriteOperationFileString(write_data);
-        }
-        else
-        {
-            SETERR(ERROR_WRITE);
-        }
-    }
-    else
-    {
-        SETERR(FILE_OPER_ERR);
-    }
+	if (pfile)
+	{
+		if (pfile->GetMode() != _READ)
+		{
+			pfile->WriteOperationFileString(write_data);
+		}
+		else
+		{
+			SETERR(ERROR_WRITE);
+		}
+	}
+	else
+	{
+		SETERR(FILE_OPER_ERR);
+	}
 }
 
 void FileList::ReadAllFile(Address read_data, Size _size, Count _count)
 {
-    pfile = FINDFILE(_count);
+	pfile = FINDFILE(_count);
 
-    if (pfile)
-    {
-        if(pfile->GetMode() == _READ)
-        {
-            pfile->ReadAllFile(read_data, _size);
-        }
-        else
-        {
-            SETERR(ERROR_READ);
-        }
-    }
-    else
-    {
-        SETERR(FILE_OPER_ERR);
-    }
+	if (pfile)
+	{
+		if (pfile->GetMode() == _READ)
+		{
+			pfile->ReadAllFile(read_data, _size);
+		}
+		else
+		{
+			SETERR(ERROR_READ);
+		}
+	}
+	else
+	{
+		SETERR(FILE_OPER_ERR);
+	}
 }
 
 void FileList::GetLine(Address read_data, Count _count)
 {
-    pfile = FINDFILE(_count);
+	pfile = FINDFILE(_count);
 
-    if (pfile)
-    {
-        if(pfile->GetMode() == _READ)
-        {
-            if(!feof(pfile->Getfp()))
-            {
-                pfile->GetLine(read_data);
-            }
-            else
-            {
-                SETERR(READ_END_ERR);
-            }
-        }
-        else
-        {
-            SETERR(ERROR_READ);
-        }
-    }
-    else
-    {
-        SETERR(FILE_OPER_ERR);
-    }
+	if (pfile)
+	{
+		if (pfile->GetMode() == _READ)
+		{
+			if (!feof(pfile->Getfp()))
+			{
+				pfile->GetLine(read_data);
+			}
+			else
+			{
+				SETERR(READ_END_ERR);
+			}
+		}
+		else
+		{
+			SETERR(ERROR_READ);
+		}
+	}
+	else
+	{
+		SETERR(FILE_OPER_ERR);
+	}
 }
 
 FileList::~FileList()
@@ -255,7 +255,7 @@ FileList::~FileList()
 		delete pfile;
 	}
 
-    pfile = null;
+	pfile = null;
 }
 
 #endif

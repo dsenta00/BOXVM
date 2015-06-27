@@ -7,16 +7,16 @@
 
 class Registry {
 public:
-    Registry();
-    inline void SetRegistry(Data *, Count);
-    inline void SetRegistry(Data *, Count, Count);
-    inline void GetRegistry(Address &, Type &, Count);
-    void ResetRegistry();
-    void SetMonitor(ProgramMonitor *);
+	Registry();
+	inline void SetRegistry(Data *, Count);
+	inline void SetRegistry(Data *, Count, Count);
+	inline void GetRegistry(Address &, Type &, Count);
+	void ResetRegistry();
+	void SetMonitor(ProgramMonitor *);
 protected:
-    Data *buffer[MAXBUFFERSIZE];
-    Count index[MAXBUFFERSIZE];
-    ProgramMonitor *monitor;
+	Data *buffer[MAXBUFFERSIZE];
+	Count index[MAXBUFFERSIZE];
+	ProgramMonitor *monitor;
 };
 
 Registry::Registry()
@@ -26,7 +26,7 @@ Registry::Registry()
 
 void Registry::SetMonitor(ProgramMonitor *_monitor)
 {
-    monitor = _monitor;
+	monitor = _monitor;
 }
 
 void Registry::SetRegistry(Data *data, Count _regnum)
@@ -68,12 +68,12 @@ void Registry::GetRegistry(Address &_address, Type &_type, Count _regnum)
             _address = buffer[_regnum]->GetAddress();
         }
 
-        _type = buffer[_regnum]->GetType();
-    }
-    else
-    {
-        SETERR(REGISTRYUNEX);
-    }
+		_type = buffer[_regnum]->GetType();
+	}
+	else
+	{
+		SETERR(REGISTRYUNEX);
+	}
 }
 
 #endif

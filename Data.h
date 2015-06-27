@@ -4,128 +4,116 @@
 
 class Data {
 public:
-    Data();
-    Data(Type);
-    Data(Address , Type);
-    Type GetType();							// --	Get variable type
-    Address GetEndAddress();					// --	Get variable end address (end adr. is not part of var.)
-    Status SetValue(Address);				// --	Method for initialization any type of fundamental data
-    void SetExternData(Address, Type);		// --	Set new start address and type contained from heap
-    Size GetSize();
-    Address GetAddress();                     // --	Get variable start address
-    Address GetAddress(int);
-    void SetAddress(Address);
-    void SetSize(Size);
+	Data();
+	Data(Type);
+	Data(Address, Type);
+	Type GetType();
+	Address GetEndAddress();
+    void SetValue(Address);
+	void SetExternData(Address, Type);
+	Size GetSize();
+	Address GetAddress();
+	Address GetAddress(int);
+	void SetAddress(Address);
+	void SetSize(Size);
 protected:
-    template <typename T>
-    inline void Set(T *);
+	template <typename T>
+	inline void Set(T *);
 
-    Address starta;
-    Address enda;
-    Type type;
-    Size size;
+	Address starta;
+	Address enda;
+	Type type;
+	Size size;
 };
 
 Data::Data()
 {
-    starta = enda = null;
-    size = 0;
-    type = 0;
+	starta = enda = null;
+	size = 0;
+	type = 0;
 }
 
 Data::Data(Type _type)
 {
-    starta = enda = null;
-    type = _type;
-    size = 0;
+	starta = enda = null;
+	type = _type;
+	size = 0;
 }
 
 Data::Data(Address _starta, Type _type)
 {
-    starta = _starta;
-    type = _type;
+	starta = _starta;
+	type = _type;
 }
 
 template <typename T>
 inline void Data::Set(T *_value)
 {
-    T *ptr = (T *)starta;
-    *ptr = *(T *)_value;
-    enda = (char *)(++ptr);
+	T *ptr = (T *)starta;
+	*ptr = *(T *)_value;
+	enda = (char *)(++ptr);
 }
 
-Status Data::SetValue(Address _value)
+void Data::SetValue(Address _value)
 {
-    if (_value)
+    switch (type)
     {
-        switch (type)
-        {
-            case _CHAR:
-                Set(_value);
-            break;
-            case _INT:
-                Set((int *)_value);
-            break;
-            case _SHORT:
-                Set((short *)_value);
-            break;
-            case _LONG:
-                Set((long *)_value);
-            break;
-            case _FLOAT:
-                Set((float *)_value);
-            break;
-            case _DOUBLE:
-                Set((double *)_value);
-            break;
-            case _STRING:
-                strcpy(starta, _value);
-                enda = starta;
-                enda = strchr(enda, '\0');
-                enda++;
-            break;
-            default:
-                return UKNOWN_TYPE_ERR;
-            break;
-        }
+    case _CHAR:
+        Set(_value);
+        break;
+    case _INT:
+        Set((int *)_value);
+        break;
+    case _SHORT:
+        Set((short *)_value);
+        break;
+    case _LONG:
+        Set((long *)_value);
+        break;
+    case _FLOAT:
+        Set((float *)_value);
+        break;
+    case _DOUBLE:
+        Set((double *)_value);
+        break;
+    case _STRING:
+        strcpy(starta, _value);
+        enda = starta;
+        enda = strchr(enda, '\0');
+        enda++;
+        break;
     }
-    else
-    {
-        return SET_NULL_ERR;
-    }
-
-    return EVERYTHING_OK;
 }
 
 void Data::SetExternData(Address _extrn, Type _type)
 {
-    starta = _extrn;
-    type = _type;
+	starta = _extrn;
+	type = _type;
 }
 
 Type Data::GetType()
 {
-    return type;
+	return type;
 }
 
 Address Data::GetAddress()
 {
-    return starta;
+	return starta;
 }
 
 Address Data::GetEndAddress()
 {
-    return enda;
+	return enda;
 }
 
 void Data::SetAddress(Address _address)
 {
-    starta = _address;
+	starta = _address;
 }
 
 void Data::SetSize(Size _size)
 {
-    size = _size;
+	size = _size;
 }
 
 Address Data::GetAddress(int _index)
@@ -159,7 +147,7 @@ Address Data::GetAddress(int _index)
 
 Size Data::GetSize()
 {
-    return size;
+	return size;
 }
 
 

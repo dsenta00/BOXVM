@@ -59,28 +59,23 @@
 	enum ERROR_CODES
 	{
         EVERYTHING_OK =			 0,
-		STAT_TYPE_ERR =			-2,
-        INIT_DATA_ERR =			-3,
+        STAT_TYPE_ERR =			-2,
         HEAP_UNEX_ERR =			-6,
-		HEAP_MALL_ERR =			-8,
+        HEAP_MALL_ERR =			-8,
 		LOOP_OVERFLOW =			-9,
         LOOP_OUT_ERR =			-10,
-        UKNOWN_TYPE_ERR =		-14,
-		SET_NULL_ERR =			-15,
-		ERROR_OPEN =			-16,
+        ERROR_OPEN =			-16,
 		ERROR_READ =			-17,
-		READ_END_ERR =			-18,
+        READ_END_ERR =			-18,
 		EMPTY_FILE =			-19,
-		LARGE_FILE_ERR =		-20,
-        ALLRDY_OPEN =			-21,
+        LARGE_FILE_ERR =		-20,
 		FILE_OPER_ERR =			-23,
-		ZERO_VM_ERR =			-24,
+        ZERO_VM_ERR =			-24,
         VM_MALL_ERR =			-25,
-		ZERO_DYN_ERR =			-27,
         DYN_TYPE_ERR =			-28,
-		UKNOWN_OPER_ERR =		-30,
-		ADR_COMP_ERR =			-31,
-		OPER_NULL_ERR =			-32,
+        UKNOWN_OPER_ERR =		-30,
+        ADR_COMP_ERR =			-31,
+        OPER_NULL_ERR =			-32,
 		DIV_NULL_ERR =			-33,
         STATIC_OVERFLOW =		-34,
         ERRBUFFCONT =			-36,
@@ -89,9 +84,8 @@
         POOL_SIZE_ERR =			-44,
 		UNDEF_POOL_ERR =		-46,
 		FREE_OPER_ERR =			-47,
-		ERROR_READ_BOX =		-48,
+        ERROR_READ_BOX =		-48,
         REGISTRYUNEX =          -49,
-        MONITORUNEX =           -50
 	};
 
 	enum DATA_TYPES
@@ -231,12 +225,10 @@
      *******************************/
 
     typedef char Type;
-    typedef short Status;
+    typedef int Status;
     typedef char *Address;
     typedef char *Bcode;
     typedef char Byte;
-    typedef short Size;
-    typedef int DSize;
-    typedef short Count;
-
+    typedef int Size;
+    typedef int Count;
 #endif

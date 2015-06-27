@@ -7,29 +7,29 @@
 
 class DataTree {
 public:
-    DataTree();
-    Size Height(DataNode *);
-    Size Difference(DataNode*);
-    DataNode *RR_Rotation(DataNode *);
-    DataNode *Balance(DataNode *);
-    DataNode *DeleteTree(DataNode *);
-    inline Data *SearchFor(Count);
-    ~DataTree();
+	DataTree();
+	Size Height(DataNode *);
+	Size Difference(DataNode*);
+	DataNode *RR_Rotation(DataNode *);
+	DataNode *Balance(DataNode *);
+	DataNode *DeleteTree(DataNode *);
+	inline Data *SearchFor(Count);
+	~DataTree();
 protected:
-    DataNode *Push(Data *);
+	DataNode *Push(Data *);
 
-    DataNode *root;
-    DataNode *last;
-    Count counter;
-    ProgramMonitor *monitor;
+	DataNode *root;
+	DataNode *last;
+	Count counter;
+	ProgramMonitor *monitor;
 };
 
 DataTree::DataTree()
 {
-    counter = null;
-    root = null;
-    last = null;
-    monitor = null;
+	counter = null;
+	root = null;
+	last = null;
+	monitor = null;
 }
 
 DataNode *DataTree::Push(Data *_element)
@@ -108,7 +108,7 @@ Size DataTree::Difference(DataNode *_current)
 
 DataNode *DataTree::RR_Rotation(DataNode *_parent)
 {
-    DataNode *temp = null;
+	DataNode *temp = null;
 
 	temp = _parent->Right;
 	_parent->Right = temp->Left;
@@ -151,7 +151,7 @@ DataNode *DataTree::DeleteTree(DataNode *_current)
         }
 
 		delete _current;
-        _current = null;
+		_current = null;
 	}
 
 	return _current;

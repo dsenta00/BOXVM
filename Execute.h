@@ -12,7 +12,7 @@
 
 class Execute {
 public:
-	Execute();
+    Execute();
     Execute(Bcode, Bcode, ProgramMonitor *);
     void Do(Stack &, Heap &);
 protected:
@@ -249,7 +249,7 @@ void Execute::Do(Stack &stack, Heap &heap)
                 GETREGISTRY(op1);
                 if (EOK)
                 {
-                    alu.Rand(op1,type);
+                    alu.Rand(op1, type);
                 }
             continue;
             case ESTART:

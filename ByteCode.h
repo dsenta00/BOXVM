@@ -18,7 +18,7 @@ protected:
 
 ByteCode::~ByteCode()
 {
-	if (codesegment)
+    if (codesegment)
     {
         free(codesegment);
     }
@@ -26,19 +26,19 @@ ByteCode::~ByteCode()
 
 ByteCode::ByteCode()
 {
-    bytecode = null;
-    codesegment = null;
+	bytecode = null;
+	codesegment = null;
 }
 
 void ByteCode::InitByteCode(Bcode _codesegment, Bcode _bytecode)
 {
-    bytecode = _bytecode;
+	bytecode = _bytecode;
 	codesegment = _codesegment;
 }
 
 void ByteCode::Jump(Byte n)
 {
-    bytecode += n;
+	bytecode += n;
 }
 
 Bcode ByteCode::ReadByteCode()

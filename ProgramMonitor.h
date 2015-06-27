@@ -102,9 +102,6 @@ void ProgramMonitor::WriteErrorReport()
             case STAT_TYPE_ERR:
                 fprintf(fp, "Bad static data type declaration.");
             break;
-            case INIT_DATA_ERR:
-                fprintf(fp, "Data initialization error.");
-            break;
             case HEAP_UNEX_ERR:
                 fprintf(fp, "Heap returned corrupted memory (null).");
             break;
@@ -116,9 +113,6 @@ void ProgramMonitor::WriteErrorReport()
             break;
             case LOOP_OUT_ERR:
                 fprintf(fp, "Memory underflow on loop stack (n < 0).");
-            break;
-            case SET_NULL_ERR:
-                fprintf(fp, "Setting data memory value with corrupted memory [null].");
             break;
             case ERROR_OPEN:
                 fprintf(fp, "File opening error. Check if file exist!");
@@ -137,9 +131,6 @@ void ProgramMonitor::WriteErrorReport()
             break;
             case LARGE_FILE_ERR:
                 fprintf(fp, "File too big, unable to load into memory.");
-            break;
-            case ALLRDY_OPEN:
-                fprintf(fp, "Unable to open file that is already open.");
             break;
             case FILE_OPER_ERR:
                 fprintf(fp, "Unable to execute write/read operation on corrupted file memory [null].");
