@@ -6,7 +6,7 @@
 class ByteCode {
 public:
     ByteCode();
-    ByteCode(Bcode, Bcode);
+    void InitByteCode(Bcode, Bcode);
     ~ByteCode();
     Bcode ReadByteCode();
     void SetByteCode(Bcode);
@@ -19,8 +19,9 @@ protected:
 ByteCode::~ByteCode()
 {
 	if (codesegment)
-		free(codesegment);
-    bytecode = codesegment = null;
+    {
+        free(codesegment);
+    }
 }
 
 ByteCode::ByteCode()
@@ -29,7 +30,7 @@ ByteCode::ByteCode()
     codesegment = null;
 }
 
-ByteCode::ByteCode(Bcode _codesegment, Bcode _bytecode)
+void ByteCode::InitByteCode(Bcode _codesegment, Bcode _bytecode)
 {
     bytecode = _bytecode;
 	codesegment = _codesegment;

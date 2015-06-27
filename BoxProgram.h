@@ -119,11 +119,6 @@ void BoxProgram::SetPool()
 	if (intID)
 	{
         heap = new Heap(intID, monitor);
-
-        if (!heap)
-        {
-            SETERR(HEAPERR);
-        }
     }
 }
 
@@ -168,9 +163,9 @@ void BoxProgram::ExecuteProgram()
 BoxProgram::~BoxProgram()
 {
 	if(heap)
-		delete heap;
-
-    heap = null;
+    {
+        delete heap;
+    }
 }
 
 #endif	//BOXPROGRAM_H

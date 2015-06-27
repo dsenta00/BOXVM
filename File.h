@@ -145,7 +145,9 @@ Count File::GetCount()
 File::~File()
 {
 	if (fp)
+    {
 		fclose(fp);
+    }
 }
 
 #endif

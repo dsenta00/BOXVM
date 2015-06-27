@@ -131,7 +131,9 @@ void Data::SetSize(Size _size)
 Address Data::GetAddress(int _index)
 {
     if (_index < 0 || _index >= size)
+    {
         return null;
+    }
     else
     {
         switch (this->type)

@@ -36,20 +36,18 @@ DataNode *DataTree::Push(Data *_element)
 {
     DataNode *q = new DataNode(_element, ++counter);
 
-    if (q)
+    if (!root)
     {
-        if (!root)
-        {
-            root = q;
-            last = root;
-        }
-        else
-        {
-            last->Right = q;
-            last = q;
-            root = Balance(root);
-        }
+        root = q;
+        last = root;
     }
+    else
+    {
+        last->Right = q;
+        last = q;
+        root = Balance(root);
+    }
+
     return root;
 }
 
@@ -60,17 +58,27 @@ inline Data *DataTree::SearchFor(Count _count)
     while (curr)
     {
         if (curr->GetCount() > _count)
+        {
             curr = curr->Left;
+        }
         else if (curr->GetCount() < _count)
+        {
             curr = curr->Right;
+        }
         else
+        {
             break;
+        }
     }
 
     if (curr)
+    {
         return curr->GetDataInfo();
+    }
     else
+    {
         return null;
+    }
 }
 
 Size DataTree::Height(DataNode *current)
@@ -84,9 +92,13 @@ Size DataTree::Height(DataNode *current)
 	}
 
 	if (r_height > l_height)
+    {
 		return r_height + 1;
+    }
 	else
+    {
 		return l_height + 1;
+    }
 }
 
 Size DataTree::Difference(DataNode *_current)
@@ -108,12 +120,18 @@ DataNode *DataTree::RR_Rotation(DataNode *_parent)
 DataNode *DataTree::Balance(DataNode *_current)
 {
 	if (!_current->Right || !_current->Right->Right)
+    {
 		return _current;
+    }
 	else
+    {
 		_current->Right = Balance(_current->Right);
+    }
 
 	if (Difference(_current) == 2)
+    {
 		_current = RR_Rotation(_current);
+    }
 
 	return _current;
 }
@@ -123,9 +141,14 @@ DataNode *DataTree::DeleteTree(DataNode *_current)
 	if (_current)
 	{
 		if (_current->Left)
+        {
 			_current->Left = DeleteTree(_current->Left);
+        }
+
 		if (_current->Right)
+        {
 			_current->Right = DeleteTree(_current->Right);
+        }
 
 		delete _current;
         _current = null;
@@ -136,7 +159,7 @@ DataNode *DataTree::DeleteTree(DataNode *_current)
 
 DataTree::~DataTree()
 {
-    last = root = DeleteTree(root);
+    root = DeleteTree(root);
 }
 
 #endif // DATA_TREE_H

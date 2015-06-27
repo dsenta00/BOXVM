@@ -23,7 +23,7 @@ ProgramMonitor::ProgramMonitor()
 
 ProgramMonitor::~ProgramMonitor()
 {
-    if(status != EVERYTHING_OK)
+    if(status)
         this->WriteErrorReport();
 }
 
@@ -72,17 +72,11 @@ void ProgramMonitor::WriteErrorReport()
             case UNDEF_POOL_ERR:
                 fprintf(fp, "Undefined pool section.");
             break;
-            case HEAPERR:
-                fprintf(fp, "BOXVM internal error: Error allocating class <Heap>.");
-            break;
             case POOL_SIZE_ERR:
                 fprintf(fp, "Unable to allocate zero or negative size of pool space.");
             break;
             case POOL_RESERVE_ERR:
                 fprintf(fp, "BOXVM internal error: Memory pool reservation error.");
-            break;
-            case POOL_MAL_ERR:
-                fprintf(fp, "BOXVM internal error: Class <MemoryPool> allocation error.");
             break;
             case ERRBUFFCONT:
                 fprintf(fp, "BOXVM internal error: Code segment memory allocation error.");
@@ -111,14 +105,8 @@ void ProgramMonitor::WriteErrorReport()
             case INIT_DATA_ERR:
                 fprintf(fp, "Data initialization error.");
             break;
-            case BUFF_NULL_ERR:
-                fprintf(fp, "Registry reserved with corrupted memory [null] or unknown type from heap.");
-            break;
             case HEAP_UNEX_ERR:
                 fprintf(fp, "Heap returned corrupted memory (null).");
-            break;
-            case HEAP_SET_ERR:
-                fprintf(fp, "BOXVM internal memory heap data allocation error.");
             break;
             case HEAP_MALL_ERR:
                 fprintf(fp, "Non-existent data on heap, unable to allocate memory.");
@@ -128,15 +116,6 @@ void ProgramMonitor::WriteErrorReport()
             break;
             case LOOP_OUT_ERR:
                 fprintf(fp, "Memory underflow on loop stack (n < 0).");
-            break;
-            case STACK_MALL_ERR:
-                fprintf(fp, "BOXVM internal error: Error allocating data in stack memory.");
-            break;
-            case BC_MAL_ERR:
-                fprintf(fp, "BOXVM internal error: Class <ByteCode> allocation error.");
-            break;
-            case UKNOWN_TYPE_ERR:
-                fprintf(fp, "Initializing unknown data type error.");
             break;
             case SET_NULL_ERR:
                 fprintf(fp, "Setting data memory value with corrupted memory [null].");
@@ -161,9 +140,6 @@ void ProgramMonitor::WriteErrorReport()
             break;
             case ALLRDY_OPEN:
                 fprintf(fp, "Unable to open file that is already open.");
-            break;
-            case PUSH_FILE_ERR:
-                fprintf(fp, "Error allocating memory for file.");
             break;
             case FILE_OPER_ERR:
                 fprintf(fp, "Unable to execute write/read operation on corrupted file memory [null].");

@@ -14,13 +14,13 @@ public:
     ~Heap();
 
     void Lea(Registry &, Type *, Count, Count, Count); //	--	Sets in register [base by id][count][register]
-    void PushPointer(Type);                       //	--	Push new data type in tree
+    void PushPointer(Type);                       //	--	Push new (std::nothrow) data type in tree
     void Malloc(Count, Size);                     //	--	Dynamic allocation of data by id of N elements
     void MallocDefrag(Count, Size);
     void Free(Count);
 private:
     void SetNewAddresses(DataNode *, DSize &);
-    void SetNewAddresses(DataNode *, Address, Size);  //  --  Sets new addresses in Data tree.
+    void SetNewAddresses(DataNode *, Address, Size);  //  --  Sets new (std::nothrow) addresses in Data tree.
     void ReserveMemory(Data *, Size);
 protected:
     MemoryPool *memoryPool;
@@ -32,9 +32,6 @@ Heap::Heap(Size _poolsize, ProgramMonitor *_monitor)
     last = null;
     monitor = _monitor;
     memoryPool = new MemoryPool(_poolsize, monitor);
-
-    if (!memoryPool)
-        SETERR(POOL_MAL_ERR);
 }
 
 void Heap::SetNewAddresses(DataNode *element, Address _address, Size _size)
@@ -83,16 +80,13 @@ void Heap::Lea(Registry &opqueue, Type *_type, Count _count, Count _position, Co
     {
         *_type = dat->GetType();
 
-        if (EOK)
+        if(_position)
         {
-            if(_position)
-                opqueue.SetRegistry(dat, _regnum, _position);
-            else
-                opqueue.SetRegistry(dat, _regnum);
+            opqueue.SetRegistry(dat, _regnum, _position);
         }
         else
         {
-            SETERR(BUFF_NULL_ERR);
+            opqueue.SetRegistry(dat, _regnum);
         }
     }
     else
@@ -103,12 +97,7 @@ void Heap::Lea(Registry &opqueue, Type *_type, Count _count, Count _position, Co
 
 void Heap::PushPointer(Type _type)
 {
-    Data *ptr = new Data(_type);
-
-	if (ptr)
-		root = Push(ptr);
-	else
-        SETERR(HEAP_SET_ERR);
+    Push(new Data(_type));
 }
 
 void Heap::Free(Count _count)
@@ -141,7 +130,7 @@ void Heap::Free(Count _count)
         SetNewAddresses(root, address, size);
 
         del->SetAddress(null);
-		del->SetSize(0);
+        del->SetSize(null);
 	}
 	else
     {
@@ -172,17 +161,15 @@ void Heap::ReserveMemory(Data *_mal, Size _size)
             break;
 		}
 
-        if(change)
-            SetNewAddresses(root, change);
-
         if (address)
         {
+            if(change)
+            {
+                SetNewAddresses(root, change);
+            }
+
             _mal->SetAddress(address);
             _mal->SetSize(_size);
-        }
-        else
-        {
-            SETERR(DYN_MALLOC_ERR);
         }
 	}
 	else
@@ -240,7 +227,9 @@ void Heap::MallocDefrag(Count _count, Size _size)
                 address = memoryPool->Malloc(_size, change);
 
                 if(change)
+                {
                     SetNewAddresses(root, change);
+                }
 
                 if (EOK)
                 {

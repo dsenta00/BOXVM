@@ -28,12 +28,8 @@ VirtualStackMemory::~VirtualStackMemory()
 {
     if(memory)
     {
-        memset(memory, null, limit);
         free(memory);
     }
-
-    memory = nextaddr = null;
-    limit = 0;
 }
 
 inline void VirtualStackMemory::Initialize(Size _limit, ProgramMonitor *_monitor)

@@ -21,7 +21,7 @@ protected:
 
 Registry::Registry()
 {
-    memset(this, 0, sizeof(Registry));
+    memset(this, null, sizeof(Registry));
 }
 
 void Registry::SetMonitor(ProgramMonitor *_monitor)
@@ -31,7 +31,7 @@ void Registry::SetMonitor(ProgramMonitor *_monitor)
 
 void Registry::SetRegistry(Data *data, Count _regnum)
 {
-    if(_regnum >= 0 && _regnum < MAXBUFFERSIZE)
+    if(_regnum >= null && _regnum < MAXBUFFERSIZE)
     {
         buffer[_regnum] = data;
         index[_regnum] = 0;
@@ -44,7 +44,7 @@ void Registry::SetRegistry(Data *data, Count _regnum)
 
 void Registry::SetRegistry(Data *data, Count _regnum, Count _index)
 {
-    if(_regnum >= 0 && _regnum < MAXBUFFERSIZE)
+    if(_regnum >= null && _regnum < MAXBUFFERSIZE)
     {
         buffer[_regnum] = data;
         index[_regnum] = _index;
@@ -57,7 +57,7 @@ void Registry::SetRegistry(Data *data, Count _regnum, Count _index)
 
 void Registry::GetRegistry(Address &_address, Type &_type, Count _regnum)
 {
-    if(_regnum >= 0 && _regnum < MAXBUFFERSIZE)
+    if(_regnum >= null && _regnum < MAXBUFFERSIZE)
     {
         if(index[_regnum])
         {

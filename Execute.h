@@ -10,47 +10,23 @@
 #include "ByteCode.h"
 #include "ExecuteMacro.h"
 
-
-
 class Execute {
 public:
 	Execute();
     Execute(Bcode, Bcode, ProgramMonitor *);
-    ~Execute();
     void Do(Stack &, Heap &);
-    void FileExecution();
 protected:
     Registry registry;
-    ByteCode *bytecode;
+    ByteCode bytecode;
     FileList file_list;
     Loop loop_list;
-    Bcode operation;
     ALU alu;
     ProgramMonitor *monitor;
-    Address op1;
-    Address op2;
-    Type type;
-    Type temp;
-    Data *data;
-    Byte dataid[MAXARGS];
-    Byte op_index;
-    Status status;
 };
-
-void Execute::FileExecution()
-{
-
-}
 
 Execute::Execute()
 {
-    bytecode = null;
-    operation = null;
-    op1 = op2 = null;
-    type = temp = 0;
-	op_index = START;
     monitor = null;
-    status = EVERYTHING_OK;
 }
 
 Execute::Execute(Bcode _codesegment, Bcode _bytecodestart, ProgramMonitor *_monitor)
@@ -60,33 +36,35 @@ Execute::Execute(Bcode _codesegment, Bcode _bytecodestart, ProgramMonitor *_moni
     registry.SetMonitor(monitor);
     loop_list.SetMonitor(monitor);
     alu.SetMonitor(monitor);
-    op_index = START;
-    operation = null;
-    op1 = op2 = null;
-    type = temp = 0;
-    bytecode = new ByteCode(_codesegment, _bytecodestart);
-
-    if (!bytecode)
-        SETERR(BC_MAL_ERR);
+    bytecode.InitByteCode(_codesegment, _bytecodestart);
 }
 
 void Execute::Do(Stack &stack, Heap &heap)
 {
+    Address op1 = null;
+    Address op2 = null;
+    Type type = null;
+    Type tempType = null;
+    Data *data = null;
+    Byte dataid[MAXARGS] = {null};
+    Byte opIndex = START;
+    Bcode programCounter = null;
+
 	do
 	{
-		operation = READBYTECODE;
-		op_index = *operation;
+        programCounter = READBYTECODE;
+        opIndex = *programCounter;
 
-		switch (op_index)
+        switch (opIndex)
         {
             case MOV: case ADD: case SUB: case MUL: case DIV: case MOD:
                 GETREGISTRY(op1);
-                temp = type;
+                tempType = type;
                 GETREGISTRY(op2);
 
                 if (EOK)
                 {
-                    alu.Operation(op_index, op1, op2, temp);
+                    alu.Operation(opIndex, op1, op2, tempType);
                 }
             continue;
             case ADI: case SUC: case MUC: case DIC: case MODC:
@@ -94,7 +72,7 @@ void Execute::Do(Stack &stack, Heap &heap)
 
                 if (EOK)
                 {
-                    alu.Operation(op_index, op1, *READBYTECODE, type);
+                    alu.Operation(opIndex, op1, *READBYTECODE, type);
                 }
             continue;
             case SCAN:
@@ -161,7 +139,7 @@ void Execute::Do(Stack &stack, Heap &heap)
 
                 if(file_list.Feof(dataid[0]))
                 {
-                    bytecode->Jump(dataid[1]);
+                    bytecode.Jump(dataid[1]);
                 }
             break;
             case ISOPEN:
@@ -170,7 +148,7 @@ void Execute::Do(Stack &stack, Heap &heap)
 
                 if(file_list.Feof(dataid[0]))
                 {
-                    bytecode->Jump(dataid[1]);
+                    bytecode.Jump(dataid[1]);
                 }
             break;
             case GETD:
@@ -256,7 +234,7 @@ void Execute::Do(Stack &stack, Heap &heap)
             continue;
                 //operation [none]
             case REPLOOP:
-                bytecode->SetByteCode(loop_list.GetStartLoop()-1);
+                bytecode.SetByteCode(loop_list.GetStartLoop()-1);
             continue;
             case OPENW:
                 OPENFILE(_WRITE);
@@ -283,12 +261,6 @@ void Execute::Do(Stack &stack, Heap &heap)
 		}
 
     } while(EOK);
-}
-
-Execute::~Execute()
-{
-	if (bytecode)
-        delete bytecode;
 }
 
 #endif

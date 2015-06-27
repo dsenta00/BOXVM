@@ -58,8 +58,6 @@ void MemoryPool::ExpandSize(Size _size, DSize &change)
         if (newvmp != vmp)
         {
             change = (DSize)(vmp - newvmp);
-            memset(vmp, 0, sizeof(char));
-			free(vmp);
         }
 
         vmp = newvmp;
@@ -76,7 +74,9 @@ Address MemoryPool::Malloc(Size _size, DSize &change)
 	Size diff = (Size)(resaddr + _size - vmp - size);
 
 	if (diff > 0)
+    {
         ExpandSize(diff, change);
+    }
 
     if (EOK)
 	{
@@ -107,8 +107,7 @@ void MemoryPool::Free(Address _addr, Size _size)
 MemoryPool::~MemoryPool()
 {
 	if (vmp)
-	{
-		memset(vmp, 0, size);
+    {
 		free(vmp);
 	}
 }

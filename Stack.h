@@ -40,20 +40,12 @@ void Stack::PushStack(Type _type, Address _value)
     if (EOK)
 	{
         dataS = new Data(startadr, _type);
+        SETERR(dataS->SetValue(_value));
 
-		if (dataS)
-		{
-            SETERR(dataS->SetValue(_value));
-
-            if (EOK)
-			{
-				root = Push(dataS);
-                vsm.SetNext(dataS->GetEndAddress());
-            }
-		}
-		else
+        if (EOK)
         {
-            SETERR(STACK_MALL_ERR);
+            root = Push(dataS);
+            vsm.SetNext(dataS->GetEndAddress());
         }
     }
 }
@@ -82,7 +74,6 @@ Type Stack::GetType(Count _count)
     }
     else
     {
-        SETERR(UKNOWN_TYPE_ERR);
         return null;
     }
 }

@@ -51,20 +51,12 @@ void FileList::PushFile(Count _count, char *_path, int _mode)
         if (!pfile)
         {
             pfile = new File();
+            pfile->Open(_path, _mode, _count);
 
-            if (pfile)
+            if (EOK)
             {
-                pfile->Open(_path, _mode, _count);
-
-                if (EOK)
-                {
-                    pfile->next = Head.next;
-                    Head.next = pfile;
-                }
-            }
-            else
-            {
-                SETERR(PUSH_FILE_ERR);
+                pfile->next = Head.next;
+                Head.next = pfile;
             }
         }
 		else

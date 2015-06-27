@@ -23,17 +23,14 @@
         #include <conio.h>
 	#endif
 
-	#include <iostream>
-	#include <stdio.h>
-	#include <stdlib.h>
+    #include <iostream>
+    #include <stdio.h>
+    #include <stdlib.h>
 	#include <string.h>
 	#include <time.h>
 
 	#if defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) && defined(__MACH__))
-	        #include <unistd.h>
-	        #include <sys/resource.h>
-	        #include <sys/times.h>
-	        #include <fcntl.h>
+            #include <unistd.h>
 	#endif
 
     #define null                0
@@ -47,7 +44,7 @@
     #define STARTLOOP           &buffer[0]
     #define ENDLOOP             &buffer[MAXLOOPSIZE]
 
-    #define AREEQUAL            (alu.GetFlag() == null)
+    #define AREEQUAL            (!alu.GetFlag())
     #define FIRSTBIGGER         (alu.GetFlag() < null)
     #define SECONDBIGGER        (alu.GetFlag() > null)
 
@@ -64,40 +61,32 @@
         EVERYTHING_OK =			 0,
 		STAT_TYPE_ERR =			-2,
         INIT_DATA_ERR =			-3,
-		BUFF_NULL_ERR =			-5,
-		HEAP_UNEX_ERR =			-6,
-		HEAP_SET_ERR =			-7,
+        HEAP_UNEX_ERR =			-6,
 		HEAP_MALL_ERR =			-8,
 		LOOP_OVERFLOW =			-9,
         LOOP_OUT_ERR =			-10,
-        STACK_MALL_ERR =		-12,
-		UKNOWN_TYPE_ERR =		-14,
+        UKNOWN_TYPE_ERR =		-14,
 		SET_NULL_ERR =			-15,
 		ERROR_OPEN =			-16,
 		ERROR_READ =			-17,
 		READ_END_ERR =			-18,
 		EMPTY_FILE =			-19,
 		LARGE_FILE_ERR =		-20,
-		ALLRDY_OPEN =			-21,
-		PUSH_FILE_ERR =			-22,
+        ALLRDY_OPEN =			-21,
 		FILE_OPER_ERR =			-23,
 		ZERO_VM_ERR =			-24,
         VM_MALL_ERR =			-25,
 		ZERO_DYN_ERR =			-27,
-		DYN_TYPE_ERR =			-28,
-		DYN_MALLOC_ERR =		-29,
+        DYN_TYPE_ERR =			-28,
 		UKNOWN_OPER_ERR =		-30,
 		ADR_COMP_ERR =			-31,
 		OPER_NULL_ERR =			-32,
 		DIV_NULL_ERR =			-33,
         STATIC_OVERFLOW =		-34,
-		ERRBUFFCONT =			-36,
-        BC_MAL_ERR =			-39,
-		ERROR_WRITE =			-41,
-		POOL_MAL_ERR =			-42,
+        ERRBUFFCONT =			-36,
+        ERROR_WRITE =			-41,
 		POOL_RESERVE_ERR =		-43,
-		POOL_SIZE_ERR =			-44,
-        HEAPERR =               -45,
+        POOL_SIZE_ERR =			-44,
 		UNDEF_POOL_ERR =		-46,
 		FREE_OPER_ERR =			-47,
 		ERROR_READ_BOX =		-48,

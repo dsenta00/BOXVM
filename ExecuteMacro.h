@@ -4,7 +4,7 @@
 
 #define GETADRESS(_ARG_NUM) stack.GetAdress(dataid[_ARG_NUM])
 #define GETTYPE(_ARG_NUM) 	stack.GetType(dataid[_ARG_NUM])
-#define READBYTECODE 		bytecode->ReadByteCode()
+#define READBYTECODE 		bytecode.ReadByteCode()
 #define GETREGISTRY(__OP)   registry.GetRegistry(__OP, type, *READBYTECODE);
 
 #define FILEOPREG(_FOP, _TYPE)                          \
@@ -30,18 +30,18 @@ if(EOK)\
 #define EXITLOOPIF(__STAT) COMPARE \
 if (__STAT)\
 {\
-    bytecode->Jump(dataid[0]);\
+    bytecode.Jump(dataid[0]);\
     loop_list.PopLoop();\
 }\
-else if(loop_list.GetStartLoop() != operation)\
+else if(loop_list.GetStartLoop() != programCounter)\
 {\
-    loop_list.PushLoop(operation);\
+    loop_list.PushLoop(programCounter);\
 }
 
 #define BRANCHIF(__STAT) COMPARE \
 if (__STAT)\
 {\
-    bytecode->Jump(dataid[0]);\
+    bytecode.Jump(dataid[0]);\
 }
 
 #endif // EXECUTEMACRO_H
