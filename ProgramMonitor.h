@@ -23,18 +23,18 @@ enum ERROR_CODES
 const char *errorCodes[256]
 {
     "", // EVERYTHING_OK
-        "Failed to open file. File doesn't exist or you don't have permissions", // ERROR_OPEN
-        "Cannot read from file opened for writing", // ERRORFILE_READ
-        "Cannot write into file opened for reading.", // ERRORFILE_WRITE
-        "Reached end of file, can not read further", // READ_END_ERR
-        "Execute box file is empty", // EMPTY_FILE
-        "File to large to read", // LARGE_FILE_ERR
-        "Not found reference to file", // FILE_OPER_ERR
-        "Trying to execute an unknown bytecode operation.", // UKNOWN_OPER_ERR
-        "Trying to divide with with zero", // DIV_NULL_ERR
-        "Code segment allocation error", // ERR_ALLOC_CS
-        "Not enough resource to dynamicaly allocate memory pool", // POOL_RESERVE_ERR
-        "Not enough resource to allocate data" // MEM_ALOC_ERROR
+    "Failed to open file. File doesn't exist or you don't have permissions", // ERROR_OPEN
+    "Cannot read from file opened for writing", // ERRORFILE_READ
+    "Cannot write into file opened for reading.", // ERRORFILE_WRITE
+    "Reached end of file, can not read further", // READ_END_ERR
+    "Execute box file is empty", // EMPTY_FILE
+    "File to large to read", // LARGE_FILE_ERR
+    "Not found reference to file", // FILE_OPER_ERR
+    "Trying to execute an unknown bytecode operation.", // UKNOWN_OPER_ERR
+    "Trying to divide with with zero", // DIV_NULL_ERR
+    "Code segment allocation error", // ERR_ALLOC_CS
+    "Not enough resource to dynamicaly allocate memory pool", // POOL_RESERVE_ERR
+    "Not enough resource to allocate data" // MEM_ALOC_ERROR
 };
 
 class ProgramMonitor {
@@ -122,6 +122,6 @@ ProgramMonitor programMonitor;
 
 #define SETERR(__ERROR)     programMonitor.setError(__ERROR)
 #define EOK                 programMonitor.OK()
-#define NOK					programMonitor.notOK()
+#define NOK                 programMonitor.notOK()
 
 #endif // PROGRAMMONITOR_H
